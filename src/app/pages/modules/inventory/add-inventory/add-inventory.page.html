@@ -1,0 +1,356 @@
+<!---------------------------
+Name: tnsmart
+-----------------------------
+Author: Mohammed Rizwan S
+Data:   10/2/2024
+---------------------------->
+
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <ion-title>{{"Bridges"| translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button mode="ios" defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-grid>
+    <ion-row class="ion-padding-top">
+      <ion-col class="header-card">
+        <ion-label style="
+            font-size: var(--ion-font-regular);
+            color: var(--ion-color-primary);
+            font-weight: var(--ion-font-weight-medium);
+          ">
+          {{"Please fill out all the fields below" |
+          translate}}
+          <span class="note">Note: {{"Ensure that all details are accurate." |
+            translate}}
+
+          </span>
+        </ion-label>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-card style="padding: 16px 10px 10px 10px; margin-top: 12px">
+    <ion-select label="{{ 'District' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Select District" #departmentCtrl="ngModel" [(ngModel)]="department" required
+      errorText=" *Please select department" interface="action-sheet">
+      <ion-select-option *ngFor="let dept of department_data" value="{{dept.dept_id}}">
+        <span>{{dept.dept_name}}</span>
+      </ion-select-option>
+    </ion-select>
+
+    <ion-select label="{{ 'Taluk' | translate}}" label-placement="stacked" fill="outline" placeholder="Select taluk"
+      #sourceCtrl="ngModel" [(ngModel)]="source" required errorText=" *Please select source" interface="action-sheet">
+      <ion-select-option *ngFor="let source of source_data" value="{{source.source_code}}">
+        <span>{{source.source_name}}</span>
+      </ion-select-option>
+    </ion-select>
+
+    <ion-select label="{{ 'Firka' | translate}}" label-placement="stacked" fill="outline" placeholder="Select firka"
+      #sourceCtrl="ngModel" [(ngModel)]="source" required errorText=" *Please select source" interface="action-sheet">
+      <ion-select-option *ngFor="let source of source_data" value="{{source.source_code}}">
+        <span>{{source.source_name}}</span>
+      </ion-select-option>
+    </ion-select>
+
+
+    <ion-select label="{{ 'Village' | translate}}" label-placement="stacked" fill="outline" placeholder="Select village"
+      #sourceCtrl="ngModel" [(ngModel)]="source" required errorText=" *Please select source" interface="action-sheet">
+      <ion-select-option *ngFor="let source of source_data" value="{{source.source_code}}">
+        <span>{{source.source_name}}</span>
+      </ion-select-option>
+    </ion-select>
+
+
+  </ion-card>
+
+  <ion-card style="padding: 16px 10px 18px 10px; margin-top: 12px">
+
+
+
+    <ion-select label="{{ 'Type of bridge' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Select type of bridge" #firkaCtrl="ngModel" [(ngModel)]="firka_id" (ionChange)="getVillages()"
+      required errorText=" *Please select type of house" interface="action-sheet">
+      <ion-select-option *ngFor="let fir of firkas_data" value="{{fir.firka_id}}">
+        <span *ngIf="lang=='en'">{{fir.firka_name}}</span>
+        <span *ngIf="lang=='ta'">{{fir.firka_name_ta}}</span>
+      </ion-select-option>
+    </ion-select>
+
+
+
+    <ion-input label="{{ 'Name of bridge' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Enter name of bridge" #entityCtrl="ngModel" [(ngModel)]="entity"
+      errorText=" *Please enter company / individual name" required mode="md" spellcheck="true" autocapitalize="words"
+      minlength="3" maxlength="50" clearInput="true">
+      <!-- <label slot="end">₹</label> -->
+
+    </ion-input>
+    <ion-input label="{{ 'Length' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Enter length in KM" #entityCtrl="ngModel" [(ngModel)]="entity"
+      errorText=" *Please enter company / individual name" required mode="md" spellcheck="true" autocapitalize="words"
+      minlength="3" maxlength="50" clearInput="true">
+      <label slot="end">KM</label>
+
+    </ion-input>
+
+
+    <ion-input label="{{ 'Cost of Temporary restoration' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Enter temporary restoration cost" #entityCtrl="ngModel" [(ngModel)]="entity"
+      errorText=" *Please enter company / individual name" required mode="md" spellcheck="true" autocapitalize="words"
+      minlength="3" maxlength="50" clearInput="true">
+      <label slot="end">₹</label>
+    </ion-input>
+    <ion-input label="{{ 'Cost of Permanent restoration' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Enter permanent restoration cost" #entityCtrl="ngModel" [(ngModel)]="entity"
+      errorText=" *Please enter company / individual name" required mode="md" spellcheck="true" autocapitalize="words"
+      minlength="3" maxlength="50" clearInput="true">
+      <label slot="end">₹</label>
+    </ion-input>
+
+
+    <ion-input label="{{ 'Department Name' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Enter department name" #entityCtrl="ngModel" [(ngModel)]="entity"
+      errorText=" *Please enter company / individual name" required mode="md" spellcheck="true" autocapitalize="words"
+      minlength="3" maxlength="50" clearInput="true">
+    </ion-input>
+
+
+    <ion-input label="{{ 'Type of area' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Enter area type" #firkaCtrl="ngModel" [(ngModel)]="firka_id" (ionChange)="getVillages()" required
+      errorText=" *Please select area type" interface="action-sheet">
+    </ion-input>
+    <!-- 
+
+    
+
+    <ion-select label="{{ 'Type of area' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Select area type" #firkaCtrl="ngModel" [(ngModel)]="firka_id" (ionChange)="getVillages()" required
+      errorText=" *Please select area type" interface="action-sheet">
+    </ion-select>
+
+    <ion-select label="{{ 'Cause of damage' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Select cause of damage" #firkaCtrl="ngModel" [(ngModel)]="firka_id" (ionChange)="getVillages()"
+      required errorText=" *Please select area type" interface="action-sheet">
+    </ion-select> -->
+
+
+
+
+
+    <!-- <ion-input label="{{ 'Cause of damage' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Enter cause of damage" #entityCtrl="ngModel" [(ngModel)]="entity"
+      errorText=" *Please enter company / individual name" required mode="md" spellcheck="true" autocapitalize="words"
+      minlength="3" maxlength="50" clearInput="true">
+ <label slot="end">₹</label> 
+
+    </ion-input> -->
+
+    <!-- <ion-input label="{{ 'Department Name' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Enter department name" #entityCtrl="ngModel" [(ngModel)]="entity"
+      errorText=" *Please enter company / individual name" required mode="md" spellcheck="true" autocapitalize="words"
+      minlength="3" maxlength="50" clearInput="true">
+    </ion-input> -->
+
+
+    <!-- 
+
+    <ion-select label="{{ 'Date of death' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Enter death date" #districtCtrl="ngModel" [(ngModel)]="district_id" (ionChange)="getTaluks()"
+      required errorText=" *Please select district" interface="action-sheet">
+      <ion-select-option *ngFor="let dis of districts_data" value="{{dis.district_id}}">
+        <span *ngIf="lang=='en'">{{dis.district_name}}</span>
+        <span *ngIf="lang=='ta'">{{dis.t_district_name}}</span>
+      </ion-select-option>
+    </ion-select>
+ -->
+
+
+
+
+    <!-- <ion-select label="{{ 'No of days hospitalized' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Enter days hospitalized" #districtCtrl="ngModel" [(ngModel)]="district_id" (ionChange)="getTaluks()"
+      required errorText=" *Please select district" interface="action-sheet">
+      <ion-select-option *ngFor="let dis of districts_data" value="{{dis.district_id}}">
+        <span *ngIf="lang=='en'">{{dis.district_name}}</span>
+        <span *ngIf="lang=='ta'">{{dis.t_district_name}}</span>
+      </ion-select-option>
+    </ion-select> -->
+
+
+
+
+    <!-- <ion-input label="{{ 'Category' | translate}}" label-placement="stacked" fill="outline" placeholder="Enter category"
+      #entityCtrl="ngModel" [(ngModel)]="entity" errorText=" *Please enter company / individual name" required mode="md"
+      spellcheck="true" autocapitalize="words" minlength="3" maxlength="50" clearInput="true">
+    </ion-input>
+
+    <ion-input label="{{ 'Type of area' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Enter area type" #entityCtrl="ngModel" [(ngModel)]="entity"
+      errorText=" *Please enter company / individual name" required mode="md" spellcheck="true" autocapitalize="words"
+      minlength="3" maxlength="50" clearInput="true">
+    </ion-input>
+ -->
+
+    <ion-input label="{{ 'Attach Image' | translate}} (If
+    available)" class="ip-cursor" label-placement="stacked" fill="outline" class="attach-input" readonly clickable
+      mode="md">
+
+      <ion-button slot="start" size="small" fill="outline" style="width: 50px;margin-top: 20px;">
+        <ion-icon name="attach-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-input>
+
+
+  </ion-card>
+
+
+
+
+
+  <ion-grid>
+    <ion-row class="ion-padding-top">
+      <ion-col>
+        <ion-button Expand="block">
+          {{"Submit" | translate}}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-card style="padding: 16px 10px 18px 10px; margin-top: 12px">
+
+    <ion-item lines="none" class="ion-item-custom" mode="ios" style="
+                          margin-bottom: -60px;
+                          transform-origin: left top;
+                          transform: translateY(-32%) scale(0.75);
+                          margin-top: 20px;
+                          margin-left: 6px;
+                        ">
+      <ion-label class="headers custom-label" position="stacked" style>{{"Address" | translate}}</ion-label>
+    </ion-item>
+
+    <ion-select label="{{ 'District' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Select district" #districtCtrl="ngModel" [(ngModel)]="district_id" (ionChange)="getTaluks()" required
+      errorText=" *Please select district" interface="action-sheet">
+      <ion-select-option *ngFor="let dis of districts_data" value="{{dis.district_id}}">
+        <span *ngIf="lang=='en'">{{dis.district_name}}</span>
+        <span *ngIf="lang=='ta'">{{dis.t_district_name}}</span>
+      </ion-select-option>
+    </ion-select>
+
+    <ion-select label="{{ 'Taluk' | translate}}" label-placement="stacked" fill="outline" placeholder="Select taluk"
+      #talukCtrl="ngModel" [(ngModel)]="taluk_id" (ionChange)="getFirkas()" required errorText=" *Please select taluk"
+      interface="action-sheet">
+      <ion-select-option *ngFor="let tal of taluks_data" value="{{tal.taluk_id}}">
+        <span *ngIf="lang=='en'">{{tal.taluk_name}}</span>
+        <span *ngIf="lang=='ta'">{{tal.ta_taluk_name}}</span>
+      </ion-select-option>
+    </ion-select>
+
+    <ion-select label="{{ 'Firka' | translate}}" label-placement="stacked" fill="outline" placeholder="Select firka"
+      #firkaCtrl="ngModel" [(ngModel)]="firka_id" (ionChange)="getVillages()" required errorText=" *Please select firka"
+      interface="action-sheet">
+      <ion-select-option *ngFor="let fir of firkas_data" value="{{fir.firka_id}}">
+        <span *ngIf="lang=='en'">{{fir.firka_name}}</span>
+        <span *ngIf="lang=='ta'">{{fir.firka_name_ta}}</span>
+      </ion-select-option>
+    </ion-select>
+
+    <ion-select label="{{ 'Village' | translate}}" label-placement="stacked" fill="outline" placeholder="Select village"
+      #villageCtrl="ngModel" [(ngModel)]="village_id" required errorText=" *Please select village"
+      interface="action-sheet">
+      <ion-select-option *ngFor="let vil of villages_data" value="{{vil.village_id}}">
+        <span *ngIf="lang=='en'">{{vil.village_name}}</span>
+        <span *ngIf="lang=='ta'">{{vil.village_name_ta}}</span>
+      </ion-select-option>
+    </ion-select>
+  </ion-card>
+
+  <ion-card style="padding: 16px 10px 18px 10px; margin-top: 12px">
+
+    <ion-item lines="none" class="ion-item-custom" mode="ios" style="
+                                margin-bottom: -60px;
+                                transform-origin: left top;
+                                transform: translateY(-32%) scale(0.75);
+                                margin-top: 20px;
+                                margin-left: 6px;
+                              ">
+      <ion-label class="headers custom-label" position="stacked" style>{{"Equipments list" | translate}}</ion-label>
+    </ion-item>
+
+    <ion-button size="small" class="add-btn" (click)="addEquipment()">
+      <ion-icon name="add"></ion-icon>
+    </ion-button>
+
+    <div
+      style="position: relative;display:flex;align-items: flex-start;flex-direction: row;justify-content: space-between;margin:auto 5px;"
+      class="list">
+      <div class="list-col" style="transform-origin: left;
+        transform: translateY(0%) translateX(13px) scale(0.75);">
+        <ion-label class="headers custom-label">{{"Name" |
+          translate}}</ion-label>
+      </div>
+      <div class="list-col" style="
+      transform-origin: left;
+      transform: translateY(0%) translateX(0) scale(0.75);">
+        <ion-label class="headers custom-label" position="stacked">{{"Nos" |
+          translate}}</ion-label>
+      </div>
+    </div>
+
+    <div class="list" *ngFor="let list of equipment_list;let i=index;">
+
+      <div class="list-row">
+        <ion-input label-placement="stacked" fill="outline" placeholder="Enter equipment name"
+          #equipmentNamerCtrl="ngModel" [(ngModel)]="equipment_list[i]['name']" errorText=" *Please equipment name"
+          required mode="md" minlength="3" maxlength="50" clearInput="false" type="text">
+        </ion-input>
+        <ion-input label-placement="stacked" fill="outline" placeholder="nos" #equipmentQuantityCtrl="ngModel"
+          [(ngModel)]="equipment_list[i]['nos']" errorText=" *nos" required mode="md" minlength="1" min="1"
+          clearInput="false" type="number">
+        </ion-input>
+        <ion-button size="small" class="delete-btn" fill="clear" (click)="removeEquipment(i)">
+          <ion-icon name="close"></ion-icon>
+        </ion-button>
+      </div>
+
+    </div>
+
+  </ion-card>
+
+  <ion-card style="padding: 16px 10px 18px 10px; margin-top: 12px">
+    <ion-item lines="none" class="ion-item-custom" mode="ios" style="
+                              margin-bottom: -60px;
+                              transform-origin: left top;
+                              transform: translateY(-32%) scale(0.75);
+                              margin-top: 20px;
+                              margin-left: 6px;
+                            ">
+      <ion-label class="headers custom-label" position="stacked" style>{{"Functional status" | translate}}</ion-label>
+    </ion-item>
+
+
+
+    <ion-item lines="none" class="ion-item-custom" mode="ios">
+      <ion-radio-group value="functional_status" mode="ios" class="ion-padding-start" #functionalStatusCtrl="ngModel"
+        [(ngModel)]="functional_status" required errorText=" *Please select Yes/No">
+        <ion-item lines="none" class="ion-no-margin radio-item">
+          <ion-label>Yes</ion-label>
+          <ion-radio slot="start" value="yes"></ion-radio>
+        </ion-item>
+
+        <ion-item lines="none" class="ion-no-margin  radio-item">
+          <ion-label> No </ion-label>
+          <ion-radio slot="start" value="no">
+          </ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-item>
+
+
+  </ion-card>
+</ion-content>

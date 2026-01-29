@@ -1,0 +1,63 @@
+<ion-content>
+  <ion-header class="ion-no-border ion-text-center">
+    <ion-toolbar mode="ios">
+      <ion-title>{{"Status Map View"| translate}}</ion-title>
+      <!-- <ion-buttons slot="start">
+        <ion-back-button mode="ios" defaultHref="/home"></ion-back-button>
+      </ion-buttons> -->
+
+      <ion-buttons slot="start" class="module-close-btn">
+        <ion-button mode="ios" (click)="back()">
+          <ion-icon name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+
+  <div [ngClass]="fabState? 'backdrop':''"></div>
+
+  <div id="map"></div>
+
+
+
+
+
+  <ion-fab vertical="bottom">
+    <ion-fab-button (click)="showHideBackdrop()">
+      <ion-icon name="chevron-up-outline" style="color:#fff"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top" (click)="showHideBackdrop()">
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab == '6'? 'fab-active' :''"
+        (click)="updateFAB('6')">
+        <ion-label>{{"None" | translate}}</ion-label>
+      </ion-fab-button><ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab == '5'? 'fab-active' :''"
+        (click)="updateFAB('5')">
+        <ion-label>{{"Installed" | translate}}</ion-label>
+      </ion-fab-button>
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab == '4'? 'fab-active':''"
+        (click)="updateFAB('4')">
+        <ion-label>{{"Civil & Fence work" | translate}}</ion-label>
+      </ion-fab-button>
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab == '3'? 'fab-active' :''"
+        (click)="updateFAB('3')">
+        <ion-label>{{"Fence work" | translate}}</ion-label>
+      </ion-fab-button>
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab == '2'? 'fab-active' :''"
+        (click)="updateFAB('2')">
+        <ion-label>{{"Civil work" | translate}}</ion-label>
+      </ion-fab-button>
+      <ion-fab-button class="ion-no-padding ion-text-left" [ngClass]="fab == '1'? 'fab-active':''"
+        (click)="updateFAB('1')">
+        <ion-label>{{"All" | translate}}</ion-label>
+      </ion-fab-button>
+
+
+    </ion-fab-list>
+  </ion-fab>
+
+  <ion-footer>
+    <ion-img src="../../../../../assets/modules/forms/status-map/station_status_legend.png"></ion-img>
+  </ion-footer>
+
+</ion-content>

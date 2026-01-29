@@ -1,0 +1,327 @@
+// .ticket-card-label {
+//   font-weight: var(--ion-font-weight-medium);
+//   font-size: 18px;
+//   color: var(--ion-color-primary);
+// }
+
+// .ticket-card-p {
+//   font-weight: var(--ion-font-weight-medium);
+//   font-size: var(--ion-font-regular);
+//   margin: 10px auto;
+//   width: fit-content;
+// }
+
+// ion-searchbar {
+//   font-size: var(--ion-font-regular);
+// }
+
+// .ion-padding-card {
+//   padding: 15px 15px 5px 15px;
+// }
+
+// .call-btn {
+//   position: absolute;
+//   right: 10px;
+//   height: 25px;
+//   --box-shadow: none;
+//   font-weight: var(--ion-font-weight-medium);
+//   --background: #0c5300;
+// }
+
+// .vert-line {
+//   left: -10.99px;
+//   margin-top: 34px;
+//   min-height: calc(100% + 12px);
+//   display: block;
+//   position: absolute;
+//   position: absolute;
+//   border-left: 1.6px dotted black;
+//   left: -25px;
+//   margin-top: 34px;
+//   min-height: calc(100% + 12px);
+// }
+
+// .timestamp {
+//   color: #b3b3b3;
+//   font-size: 12px;
+//   margin-right: -6px;
+//   display: block;
+//   padding: 4px 0 4px 0;
+//   text-align: right;
+// }
+
+// .pointer {
+//   // margin-right: 4px;
+//   text-align: center;
+//   display: block;
+//   // color: var(--ion-color-primary);
+// }
+
+// ion-grid {
+//   .first-card {
+//     border-radius: 14px;
+//     padding: 10px;
+//     background: var(--ion-color-primary);
+//     border-bottom-left-radius: 0;
+//     border-bottom-right-radius: 0;
+//     ion-col {
+//       border: none;
+//       background: unset;
+//       ion-label {
+//         color: #fff;
+//       }
+//     }
+//   }
+
+//   ion-col {
+//     border-bottom: 1px solid #e1e1e1;
+//   }
+//   ion-col:first-child {
+//     border-right: 1px solid #e1e1e1;
+//     background: var(--ion-color-light);
+//   }
+//   .list {
+//     ion-col {
+//       border: unset;
+//       background: unset;
+//       border-bottom: 1px solid #e1e1e1;
+//       border-right: 1px solid #e1e1e1;
+//     }
+//     ion-col:last-child {
+//       border-right: unset;
+//     }
+//   }
+//   .list:last-child ion-col {
+//     border-bottom: unset;
+//   }
+// }
+
+.ticket-card-label {
+  font-weight: var(--ion-font-weight-medium);
+  font-size: 18px;
+  color: var(--ion-color-primary);
+  text-transform: capitalize;
+
+}
+
+.ticket-card-p {
+  font-weight: var(--ion-font-weight-medium);
+  font-size: var(--ion-font-regular);
+  margin: 10px auto;
+  width: fit-content;
+}
+
+ion-searchbar {
+  font-size: var(--ion-font-regular);
+}
+
+.ion-padding-card {
+  padding: 15px 15px 5px 15px;
+}
+
+.call-btn {
+  position: absolute;
+  right: 10px;
+  height: 25px;
+  --box-shadow: none;
+  font-weight: var(--ion-font-weight-medium);
+  --background: #0c5300;
+}
+
+.vert-line {
+  // display: block;
+  // position: absolute;
+  // position: absolute;
+  // border-left: 1.6px dotted black;
+  // margin-left: -10px;
+  // margin-top: 32px;
+  // min-height: calc(100% + 28px);
+
+  // margin-top: 68px;
+  // min-height: calc(100% + 42px);
+
+  // margin-left: -21px;
+  // margin-top: 34px;
+  // min-height: calc(100% + 12px);
+
+  left: -10.99px;
+  margin-top: 34px;
+  min-height: calc(100% + 12px);
+  display: block;
+  position: absolute;
+  position: absolute;
+  border-left: 1.6px dotted black;
+  left: -25px;
+  margin-top: 34px;
+  min-height: calc(100% + 12px);
+}
+
+.timestamp {
+  color: #b3b3b3;
+  font-size: 12px;
+  margin-right: -6px;
+  display: block;
+  padding: 4px 0 4px 0;
+  text-align: right;
+}
+
+.ticket-card {
+  ion-row {
+    // padding: 8px 4px;
+    // display: flex;
+    // align-items: flex-start;
+    min-height: 36px;
+    // border-bottom: 1px #ededed solid;
+
+    ion-col {
+      padding: 0;
+      // display: flex;
+      height: 100%;
+      align-items: center;
+      ion-label {
+        // min-height: 28px;
+        min-height: 36px;
+      }
+    }
+    ion-col:first-child {
+      //   justify-content: center;
+      //   max-width: 590px !important;
+      //   min-width: 90px !important;
+
+      ion-label {
+        padding: 0 10px;
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    ion-col:last-child {
+      ion-label {
+        font-weight: var(--ion-font-weight-medium);
+        padding-left: 10px;
+        display: flex;
+        align-items: center;
+      }
+    }
+    ion-icon {
+      padding: 2.2px 10px 17.8px 0;
+      min-width: 18px !important;
+      min-height: 18px !important;
+      max-width: 18px !important;
+      max-height: 18px !important;
+      font-size: 18px;
+      color: #3ea42c;
+      z-index: 1;
+    }
+  }
+  ion-row:last-child {
+    .vert-line {
+      display: none;
+    }
+  }
+
+  ion-row:last-child {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+
+  ion-row:first-child {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  ion-row:nth-child(odd) {
+    background: var(--ion-color-light);
+  }
+}
+
+// .ticket-card:active {
+//   background: #ececec;
+//   box-shadow: none;
+// }
+.on-progress {
+  color: #ffba19 !important;
+}
+.on-hold {
+  color: #ff3b19 !important;
+}
+
+.more-btn {
+  height: 34px;
+  width: unset;
+  margin-left: 4px;
+  --background: none;
+  --background-activated: none;
+  --box-shadow: none;
+  position: absolute;
+  right: 10px;
+  ion-icon {
+    color: var(--ion-color-primary);
+    font-size: 18px;
+  }
+}
+
+.pointer {
+  // margin-right: 4px;
+  text-align: left;
+  display: block;
+  // color: var(--ion-color-primary);
+}
+
+.photo-preview-modal {
+  // --border-radius: 15px;
+  ion-icon {
+    transform: scale(1.4);
+    margin-right: 10px;
+  }
+  .img-holder {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    margin: auto auto;
+    background: #000 !important;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  img {
+    width: auto;
+    border-radius: 6px;
+    background: #fff;
+  }
+  .img-holder:hover,
+  .img-holder:active {
+    opacity: 1;
+  }
+}
+.list:last-child {
+  border-bottom: none;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px #55555533 solid;
+
+  ion-col {
+    // border: unset;
+    // background: unset;
+    // border-bottom: 1px solid #e1e1e1;
+    border-right: 1px solid #e1e1e1;
+  }
+
+  ion-col:nth-child(odd) {
+    background: var(--ion-color-light);
+  }
+
+  ion-col:first-child {
+    border-right: unset;
+  }
+  ion-col:last-child {
+    border-right: unset;
+  }
+}
+.list:last-child ion-col {
+  border-bottom: unset;
+}

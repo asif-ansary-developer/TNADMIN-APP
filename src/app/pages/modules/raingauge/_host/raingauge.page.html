@@ -1,0 +1,62 @@
+<!---------------------------
+Name: tnsmart
+-----------------------------
+Author: Mohammed Rizwan S
+Date:   23/09/2022
+---------------------------->
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <ion-title>{{"Raingauge" | translate}}</ion-title>
+    <ion-buttons slot="start" class="module-close-btn">
+      <ion-button mode="ios" (click)="back()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+      <!-- <ion-back-button mode="ios" class="back-button" defaultHref="home"></ion-back-button> -->
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="ion-padding-top ion-padding-bottom">
+    <ion-grid>
+
+      <ion-row class="ion-text-center" *ngIf="_role != 'ven' && _role != '94' && _role != '98' && _role != '1' ">
+        <ion-col size="12">
+          <ion-card class="btn-card" (click)="route('raingauge/raingauge-station-entry')">
+            <div>
+              <div>
+                <ion-icon src="assets/home/btn_add_raingauge_ic_l.svg" size="large"></ion-icon>
+                <ion-text class="ion-text-start">Add raingauge station</ion-text>
+              </div>
+              <ion-button size="small" fill="clear" class="nxt-btn">
+                <ion-icon name="caret-forward-outline" size="large"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="ion-text-center">
+        <ion-col size="12">
+          <ion-card class="btn-card" (click)="route('raingauge/view-stations')">
+            <!-- <ion-card class="btn-card" (click)="authService.showToast('The page is under
+                developement')"> -->
+            <div>
+              <div>
+                <ion-icon src="assets/home/btn_view_raingauge_ic_l.svg" size="large"></ion-icon>
+                <ion-text class="ion-text-start">View Raingauge stations</ion-text>
+              </div>
+              <ion-button size="small" fill="clear" class="nxt-btn">
+                <ion-icon name="caret-forward-outline" size="large"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+
+    </ion-grid>
+  </ion-card>
+
+  <div class="footer-text">T N S M A R T</div>
+</ion-content>

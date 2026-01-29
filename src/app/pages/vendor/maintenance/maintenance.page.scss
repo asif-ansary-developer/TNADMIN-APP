@@ -1,0 +1,237 @@
+* {
+  animation: easeIn 250ms;
+}
+
+.header-card {
+  background: var(--ion-color-light);
+  margin-bottom: 22px;
+  border-radius: 12px;
+  padding: 6px 20px;
+  ion-label {
+    display: block;
+    font-weight: var(--ion-font-weight-medium);
+
+    .note {
+      font-size: var(--ion-font-regular);
+      font-weight: var(--ion-font-weight-regular);
+      opacity: 0.4;
+      padding: 4px 4px;
+      /* background: #e8e8e8; */
+      border-radius: 6px;
+      margin: 6px 0 4px -4px;
+      display: block;
+    }
+  }
+}
+ion-card {
+  box-shadow: none;
+  outline: 1.2px #d7d7d7 solid;
+}
+ion-button {
+  margin: 0 auto;
+  width: 50%;
+}
+
+ion-datetime {
+  margin: auto auto;
+  border-radius: 10px;
+}
+ion-input {
+  --background: #f3f3f3 !important;
+  --placeholder-font-weight: 400;
+  --border-radius: 4px !important;
+  --border-color: none !important;
+  --border-width: 1px !important;
+  padding: 16px 2px !important;
+}
+
+ion-select {
+  --background: #f3f3f3;
+  border-radius: 4px;
+  padding: auto 10px;
+  --border-width: 1px !important;
+  padding: 16px 2px !important;
+}
+
+ion-textarea {
+  min-height: 100px !important;
+  --background: #f3f3f3;
+  --border-radius: 4px !important;
+  --border-width: 1px !important;
+  padding: 16px 2px !important;
+}
+
+swiper {
+  margin: 0 -16px 0 -16px;
+  height: fit-content;
+  padding: 0 1px;
+  .slide {
+    padding: 0 16px;
+  }
+}
+
+.slide-indicator-wrapper {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  .line {
+    border: 0.6px solid #555555ba;
+    width: 24px;
+  }
+  .slide-indicator {
+    cursor: pointer;
+    border-radius: 100%;
+    width: 26px;
+    height: 26px;
+    background: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    color: #fff;
+  }
+  .slide-indicator:first-child {
+    margin-left: 0;
+  }
+
+  .slide-indicator-active {
+    outline: 2px solid var(--ion-color-primary);
+    background: var(--ion-color-primary);
+  }
+
+  .slide-indicator-visted {
+    outline: 2px solid var(--ion-color-primary);
+    background: #555;
+  }
+
+  .slide-indicator:active {
+    filter: contrast(158%);
+    background: var(--ion-color-primary);
+  }
+}
+
+.error-txt {
+  transform-origin: left top;
+  transform: translateY(-32%) translateX(14px) scale(0.75);
+  display: block;
+  color: var(--ion-color-danger);
+}
+
+.loc-validated {
+  height: 72px;
+  ion-spinner {
+    color: rgb(169, 216, 0);
+    margin-right: 10px;
+  }
+  ion-icon {
+    margin-right: 10px;
+    font-size: 28px;
+  }
+  ion-label {
+    color: #5a5a5a;
+    font-weight: 400;
+  }
+  padding-bottom: 20px;
+}
+
+.img-holder {
+  background: #efefef;
+  width: fit-content;
+  margin: 10px 0px;
+}
+img {
+  width: 150px;
+  border-radius: 6px;
+}
+
+ion-radio-group {
+  padding: 0;
+  width: 100%;
+  margin-left: -12px;
+}
+
+.radio-item {
+  --background-activated: var(--ion-text-color, #00000000);
+}
+ion-radio {
+  --border-radius: 4px;
+  --inner-border-radius: 4px;
+  color: #ddd;
+  --color-checked: var(--ion-color-primary);
+}
+
+ion-radio.ios::part(container) {
+  width: 20px;
+  height: 20px;
+
+  border: 2px solid #ddd;
+  border-radius: 4px;
+}
+
+.radio-checked.ios::part(container) {
+  border-color: var(--ion-color-primary);
+}
+
+.ion-item-custom {
+  .custom-label {
+    font-weight: var(--ion-font-weight-bold);
+    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff,
+      1px 1px 0 #fff;
+  }
+}
+
+.circular-close-btn {
+  width: unset;
+  position: absolute;
+  margin-left: 128px;
+  z-index: 1;
+  margin-top: -6px;
+  ion-icon {
+    color: var(--ion-color-primary);
+    font-size: 25px;
+  }
+}
+
+.item-wrapper {
+  margin-bottom: -60px;
+  transform-origin: left top;
+  transform: translateY(-32px) scale(0.75);
+  width: calc(100% + 25%);
+  margin-left: 5.2px;
+  padding-bottom: 16px;
+  margin-top: 16px;
+}
+ion-checkbox {
+  margin: 10px 10px 10px 4px;
+  --border-color: #ddd;
+}
+ion-checkbox::part(container) {
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in forwards;
+}
+
+.fade-out {
+  animation: fadeOut 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

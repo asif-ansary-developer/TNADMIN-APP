@@ -1,0 +1,121 @@
+<!---------------------------
+Name: tnalert admin
+-----------------------------
+Author: Mohammed Rizwan S
+Date:   23/02/2024
+---------------------------->
+
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <ion-title>{{"Complaint Submission"}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button mode="ios" defaultHref="/ticket-system"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-grid>
+    <ion-row class="ion-padding-top">
+      <ion-col class="header-card">
+        <ion-label style="
+            font-size: var(--ion-font-regular);
+            color: var(--ion-color-primary);
+            font-weight: var(--ion-font-weight-medium);
+          ">
+          {{"Please fill all the fields to submit your complaint"}}
+        </ion-label>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-card style="padding: 16px 10px 8px 10px; margin-top: 8px">
+    <ion-input label="{{ 'ARG Station' }}" class="ip-cursor" label-placement="stacked" fill="outline"
+      placeholder="Select station" #stationCtrl="ngModel" [(ngModel)]="stationCode" required
+      errorText="*Please select a station" (click)="presentModal()" readonly clickable mode="md">
+      <ion-icon slot="end" name="caret-down-outline" aria-hidden="true"
+        style="width: 14px; color: grey"></ion-icon></ion-input>
+
+    <ion-row>
+      <ion-col>
+        <ion-input label="{{ 'District' }}" label-placement="stacked" fill="outline" placeholder="Enter district"
+          #districtCtrl="ngModel" [(ngModel)]="district" required readonly aria-disabled="true"
+          [hidden]="!districtCtrl.valid" mode="md">
+          <ion-icon slot="end" name="lock-closed" aria-hidden="true" style="
+          width: 10px;  
+          color: grey;
+          position: absolute;
+          right: 0;
+          margin: auto;"></ion-icon></ion-input>
+      </ion-col>
+
+      <ion-col>
+        <ion-input label="{{ 'Taluk' }}" label-placement="stacked" fill="outline" placeholder="Enter taluk"
+          #talukCtrl="ngModel" [(ngModel)]="taluk" required readonly [hidden]="!talukCtrl.valid" mode="md">
+          <ion-icon slot="end" name="lock-closed" aria-hidden="true" style="
+          width: 10px;  
+          color: grey;
+          position: absolute;
+          right: 0;
+          margin: auto;"></ion-icon></ion-input>
+      </ion-col>
+    </ion-row>
+
+    <ion-input label="{{ 'Firka/ward' }}" label-placement="stacked" fill="outline" placeholder="Enter Firka/ward"
+      #villageCtrl="ngModel" [(ngModel)]="village" required readonly [hidden]="!villageCtrl.valid" mode="md">
+      <ion-icon slot="end" name="lock-closed" aria-hidden="true"
+        style="width: 14px; color: grey"></ion-icon></ion-input>
+  </ion-card>
+
+  <ion-card style="padding: 16px 10px 18px 10px; margin-top: 12px">
+    <ion-input #diff label="{{ 'Type of difficulty faced' }}" label-placement="stacked" fill="outline"
+      placeholder="Enter difficulty faced" #difficultyCtrl="ngModel" [(ngModel)]="difficultyFaced" clearInput="true"
+      spellcheck="true" autocapitalize="sentences" minlength="3" maxlength="50" required
+      errorText="*Please enter difficulty faced" mode="md"></ion-input>
+
+    <ion-textarea label="{{ 'Issue in detail' }}" label-placement="stacked" fill="outline" [counter]="true"
+      placeholder="Enter issue in detail" #detailCtrl="ngModel" [(ngModel)]="issueDetail" clearInput="true"
+      spellcheck="true" autocapitalize="sentences" minlength="10" maxlength="200" required
+      errorText="*Please enter issue in detail" mode="md"></ion-textarea>
+
+
+    <ion-input label="{{ 'Attach Image' }} (If
+          available)" class="ip-cursor" label-placement="stacked" fill="outline" class="attach-input" readonly
+      clickable mode="md" [disabled]="imgs?.length==3">
+      <ion-button slot="start" size="small" fill="outline" style="width: 50px; margin-top: 20px" (click)="getPhoto()"
+        [ngStyle]="{'pointer-events': imgs?.length==3 ? 'none':'all' }">
+        <ion-icon name="attach-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-input>
+
+    <ng-container *ngIf="imgs">
+      <div *ngFor="let img of imgs;let i=index">
+        <ion-button *ngIf="img" fill="clear" size="small" (click)="clearAttachment(i)" class="circular-close-btn">
+          <ion-icon name="close-circle" style="background: #fff;border-radius: 100px;"></ion-icon>
+        </ion-button>
+        <ion-card class="support-img-holder">
+          <img src="{{img}}" />
+        </ion-card>
+      </div>
+    </ng-container>
+  </ion-card>
+  <br>
+  <br>
+  <br>
+  <ion-grid style="position: fixed;background: #fff;
+  width: 100%;
+  padding: 16px;
+  padding-bottom: var(--ion-safe-area-bottom);
+  bottom: 0;
+margin-left: -16px;
+  box-shadow: rgb(0 0 0 / 12%) 0px 0px 10px;">
+    <ion-row class="ion-padding-top ion-padding-bottom ion-margin-bottom">
+      <ion-col>
+        <ion-button Expand="block" (click)="reportComplaint()"
+          [disabled]="!stationCtrl.valid || !districtCtrl.valid || !talukCtrl.valid || !difficultyCtrl.valid || !detailCtrl.valid">
+          {{"Submit" }}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

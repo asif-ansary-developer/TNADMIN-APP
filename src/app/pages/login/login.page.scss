@@ -1,0 +1,147 @@
+ion-card {
+  margin: auto auto;
+  top: -90px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: fit-content;
+  position: absolute;
+  box-shadow: none;
+  outline: none;
+
+  ion-card-title {
+    font-weight: 800;
+    font-size: 1.9rem;
+    // color: var(--ion-color-primary);
+    font-family: "Protest Strike", sans-serif !important;
+  }
+  ion-card-subtitle {
+    font-weight: 500;
+    text-transform: none;
+    padding: 5px 0 20px 0;
+  }
+}
+
+.sign-in-btn {
+  margin-top: 50px;
+  --border-radius: 100px;
+  min-height: 67px;
+  font-size: 1.2rem;
+}
+.back-btn {
+  position: absolute;
+  margin: auto auto;
+  top: 54px;
+  left: 26px;
+  ion-icon {
+    transform: scale(1.5);
+  }
+}
+
+ion-input input::placeholder {
+  text-transform: lowercase;
+}
+
+ion-input.ip-select {
+  cursor: pointer;
+}
+
+ion-input.ip {
+  height: 70px;
+  width: 90%;
+  margin: auto;
+  min-width: 220px;
+  border-radius: 15px;
+  background: #f2f3f5;
+  --padding-start: 20px;
+  --padding-end: 20px;
+  display: flex;
+  --border-color: none !important;
+  --highlight-color: none !important;
+  align-items: center;
+
+  ion-label {
+    font-size: 1rem;
+    position: absolute;
+    transition: top 0.15s ease, font-size 0.15s ease;
+    height: 100%;
+    display: flex;
+    left: 20px;
+    top: 0px;
+  }
+
+  ion-icon {
+    position: absolute;
+    right: 16px;
+    color: var(--ion-color-primary);
+  }
+}
+
+ion-input.ip:focus,
+ion-input.ip:active,
+ion-input.ip:focus:hover,
+ion-input.ip:focus:focus,
+ion-input.ip:focus-visible,
+ion-input.ip:focus-within {
+  outline: 1.4px solid var(--ion-color-primary);
+  ion-label {
+    top: -12px;
+    font-size: 0.65rem;
+    height: 100%;
+    color: #555454;
+  }
+}
+
+//a part is available in global css
+ion-input.has-value {
+  ion-label {
+    top: -12px;
+    font-size: 0.65rem;
+    height: 100%;
+    color: #555454;
+  }
+}
+
+img.bg-top {
+  position: absolute;
+  inset: 0;
+  max-height: 30vh;
+  min-width: 100vw;
+}
+
+img.bg-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 28vh;
+  min-width: 100vw;
+}
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  backdrop-filter: blur(30px);
+}
+
+.more-btn {
+  position: fixed;
+  top: 18px;
+  right: 2px;
+  z-index: 1;
+  display: none;
+  ion-icon {
+    transform: scale(1.6);
+    opacity: 0.8;
+  }
+}
+
+ion-popover {
+  ion-button {
+    color: #555;
+  }
+  ion-button:last-child {
+    color: #555;
+    border-top: 1px #55555587 solid;
+  }
+}

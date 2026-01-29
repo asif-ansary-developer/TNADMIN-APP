@@ -1,0 +1,224 @@
+ion-segment {
+  margin: 12px 16px;
+  width: calc(100% - 32px);
+  // height: 40px;
+  --background: var(--ion-color-light);
+  border-radius: 30px;
+
+  ion-segment-button {
+    --indicator-color: var(--ion-color-primary);
+    --border-radius: 30px;
+  }
+  .segement-transition {
+    color: #fff !important;
+    transition: 100ms color linear;
+  }
+}
+
+.ticket-card-label {
+  font-weight: var(--ion-font-weight-medium);
+  font-size: 1.2rem;
+  display: block;
+  font-weight: bold;
+  color: var(--ion-color-primary-shade);
+  text-transform: capitalize;
+  display: block;
+}
+
+.ticket-card-p {
+  font-weight: var(--ion-font-weight-medium);
+  font-size: var(--ion-font-regular);
+  margin: 10px auto;
+}
+
+ion-searchbar {
+  font-size: var(--ion-font-regular);
+}
+
+.ion-padding-card {
+  padding: 15px 15px 5px 15px;
+}
+
+.call-btn {
+  position: absolute;
+  right: 10px;
+  height: 25px;
+  --box-shadow: none;
+  font-weight: var(--ion-font-weight-medium);
+  --background: #0c5300;
+}
+
+.vert-line {
+  // display: block;
+  // position: absolute;
+  // position: absolute;
+  // border-left: 1.6px dotted black;
+  // margin-left: -10px;
+  // margin-top: 32px;
+  // min-height: calc(100% + 28px);
+
+  // margin-top: 68px;
+  // min-height: calc(100% + 42px);
+
+  // margin-left: -21px;
+  // margin-top: 34px;
+  // min-height: calc(100% + 12px);
+
+  left: -10.99px;
+  margin-top: 34px;
+  min-height: calc(100% + 12px);
+  display: block;
+  position: absolute;
+  position: absolute;
+  border-left: 1.6px dotted black;
+  left: -24.8px;
+  margin-top: 20px;
+  min-height: calc(100% + 0px);
+}
+
+.timestamp {
+  color: #b3b3b3;
+  color: hsl(0, 0%, 50%);
+  font-size: 0.56rem;
+  margin-right: -6px;
+  display: block;
+  // padding: 4px 0 4px 0;
+  // text-align: right;
+}
+
+.ticket-card {
+  ion-row {
+    // padding: 8px 4px;
+    display: flex;
+    align-items: flex-start;
+    height: 100%;
+    ion-col {
+      padding: 0;
+      display: flex;
+      height: 100%;
+      align-items: center;
+      ion-label {
+        min-height: 36px;
+        font-size: 0.75rem;
+        width: 100%;
+      }
+    }
+    ion-col:first-child {
+      justify-content: center;
+      max-width: 38px !important;
+      min-width: 38px !important;
+    }
+    ion-icon {
+      padding: 2.2px 10px 17.8px 0;
+      min-width: 12px !important;
+      min-height: 12px !important;
+      max-width: 12px !important;
+      max-height: 12px !important;
+      font-size: 12px;
+      // color: #38b542;
+      color: #ffcc81;
+      z-index: 1;
+      // margin-top: -4.2px;
+    }
+  }
+  ion-row:last-child {
+    .vert-line {
+      display: none;
+    }
+  }
+}
+
+.ticket-card:active {
+  background: #ececec;
+  box-shadow: none;
+}
+.on-progress {
+  color: #ffba19 !important;
+}
+.on-hold {
+  color: #ff7519 !important;
+}
+.closed-row {
+  background: var(--ion-color-success-light);
+  border-radius: 10px;
+  display: flex;
+  align-items: center !important;
+  align-content: center !important;
+  ion-icon {
+    padding: 2.2px 10px 2.2px 0 !important;
+    color: #51ea93 !important;
+    opacity: 0.8;
+  }
+  ion-label {
+    min-height: 30px !important;
+    max-height: 30px !important;
+    padding: 3px 0;
+  }
+}
+.more-btn {
+  height: 34px;
+  width: unset;
+  margin-left: 4px;
+  --background: none;
+  --background-activated: none;
+  --box-shadow: none;
+  position: absolute;
+  right: 10px;
+  ion-icon {
+    color: var(--ion-color-primary);
+    font-size: 18px;
+  }
+}
+
+.btn-card {
+  min-height: 80px;
+  min-width: 70px;
+  padding: 0 10px;
+  margin: 6px 15px;
+  background: var(--ion-color-light);
+  outline: none;
+  cursor: pointer;
+
+  div {
+    display: flex;
+    height: 80px;
+    align-items: center;
+    justify-content: space-between;
+
+    div:first-child {
+      display: flex;
+      height: 80px;
+      align-items: center;
+
+      ion-icon {
+        transform: scale(1.1);
+        margin-left: 10px;
+        margin-right: 20px;
+      }
+    }
+  }
+}
+
+.btn-card:focus,
+.btn-card:active {
+  background: #dfe8f1;
+}
+
+.nxt-btn {
+  margin-right: -10px;
+
+  ion-icon {
+    transform: scale(0.8) !important;
+    margin: auto auto !important;
+    color: var(--ion-color-primary);
+  }
+}
+ion-input {
+  --background: #f3f3f3 !important;
+  --placeholder-font-weight: 400;
+  // --border-color: #ffffff00 !important;
+  // input-fill-outline
+  --border-radius: 4px !important;
+  --border-width: 1px !important;
+  padding: 16px 2px !important;
+}

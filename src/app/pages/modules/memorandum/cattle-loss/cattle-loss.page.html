@@ -1,0 +1,169 @@
+<!---------------------------
+Name: tnsmart
+-----------------------------
+Author: Mohammed Rizwan S
+Data:   10/2/2024
+---------------------------->
+
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <ion-title>{{"Livestock Loss"}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button mode="ios" defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <div class="content-wrapper">
+    <ion-grid>
+      <ion-row class="ion-padding-top">
+        <ion-col class="header-card">
+          <ion-label style="
+            font-size: var(--ion-font-regular);
+            color: var(--ion-color-primary);
+            font-weight: var(--ion-font-weight-medium);
+          ">
+            {{"Please fill out all the fields below" }}
+            <span class="note">Note: {{"Ensure that all details are accurate."}}
+
+            </span>
+          </ion-label>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-card style="padding: 16px 10px 10px 10px; margin-top: 12px">
+      <ion-select label="{{ 'District' }}" (ionChange)="getTaluks()" label-placement="stacked" fill="outline"
+        placeholder="Select District" required errorText="*Please select a District" interface="action-sheet"
+        [(ngModel)]='district_id' #districtCtrl="ngModel" readonly style="pointer-events: none;">
+        <ion-select-option *ngFor="let dis of districts_data" value="{{dis.district_id}}">
+          <span>{{dis.district_name}}</span>
+        </ion-select-option>
+      </ion-select>
+
+      <ion-select label="{{ 'Taluk' }}" (ionChange)="getFirkas()" label-placement="stacked" fill="outline"
+        placeholder="Select taluk" required errorText="*Please select a Taluk" interface="action-sheet"
+        [(ngModel)]='taluk_id' #talukCtrl="ngModel">
+        <ion-select-option *ngFor="let taluk of taluks_data" value="{{taluk.taluk_id}}">
+          <span>{{taluk.taluk_name}}</span>
+        </ion-select-option>
+      </ion-select>
+
+      <ion-select label="{{ 'Firka' }}" (ionChange)="getVillages()" label-placement="stacked" fill="outline"
+        placeholder="Select firka" required errorText="*Please select a Firka" interface="action-sheet"
+        [(ngModel)]='firka_id' #firkaCtrl="ngModel">
+        <ion-select-option *ngFor="let fir of firkas_data" value="{{fir.firka_id}}">
+          <span>{{fir.firka_name}}</span>
+        </ion-select-option>
+      </ion-select>
+
+
+      <ion-select label="{{ 'Village' }}" label-placement="stacked" fill="outline" placeholder="Select village" required
+        errorText="*Please select a Village" interface="action-sheet" [(ngModel)]='village_id' #villageCtrl="ngModel">
+        <ion-select-option *ngFor="let vil of villages_data" value="{{vil.village_id}}">
+          <span>{{vil.village_name}}</span>
+        </ion-select-option>
+      </ion-select>
+
+
+    </ion-card>
+
+
+    <ion-card style="padding: 16px 10px 18px 10px; margin-top: 12px">
+
+
+      <ion-input label="{{ 'Name of the Owner' }}" label-placement="stacked" fill="outline"
+        placeholder="Enter name of owner" errorText="*Please enter owner's name" required mode="md" spellcheck="true"
+        autocapitalize="words" minlength="3" maxlength="50" clearInput="true" [(ngModel)]='owner_name'
+        #ownerCtrl="ngModel">
+      </ion-input>
+
+      <ion-input label="{{ 'Count of Buffalo' }}" label-placement="stacked" fill="outline" [min]="0" type="number"
+        placeholder="Enter buffalo count" errorText="*Please enter buffalo count" required mode="md" spellcheck="true"
+        minlength="1" maxlength="5" clearInput="true" [(ngModel)]='count_of_buffalo' #buffaloCountCtrl="ngModel">
+      </ion-input>
+
+
+      <ion-input label="{{ 'Count of Goat' }}" label-placement="stacked" fill="outline" [min]="0" type="number"
+        placeholder="Enter goat count" errorText="*Please enter goat count" required mode="md" spellcheck="true"
+        minlength="1" maxlength="5" clearInput="true" [(ngModel)]='count_of_goat' #goatCountCtrl="ngModel">
+      </ion-input>
+
+      <ion-input label="{{ 'Count of Calf' }}" label-placement="stacked" fill="outline" [min]="0" type="number"
+        placeholder="Enter calf count" errorText="*Please enter calf count" required mode="md" spellcheck="true"
+        minlength="1" maxlength="5" clearInput="true" [(ngModel)]='count_of_calf' #calfCountCtrl="ngModel">
+      </ion-input>
+
+      <ion-input label="{{ 'Count of Bullock' }}" label-placement="stacked" fill="outline" [min]="0" type="number"
+        placeholder="Enter bullock count" errorText="*Please enter bullock count" required mode="md" spellcheck="true"
+        minlength="1" maxlength="5" clearInput="true" [(ngModel)]='count_of_bullock' #bullockCountCtrl="ngModel">
+      </ion-input>
+
+
+      <ion-input label="{{ 'Count of Poultry' }}" label-placement="stacked" fill="outline" [min]="0" type="number"
+        placeholder="Enter poultry count" errorText="*Please enter poultry count" required mode="md" spellcheck="true"
+        minlength="1" maxlength="5" clearInput="true" [(ngModel)]='count_of_poultry' #poultryCountCtrl="ngModel">
+      </ion-input>
+
+
+      <!-- <ion-input label="{{ 'Cause of death' }}" label-placement="stacked" fill="outline" placeholder="Enter death cause"
+        errorText="*Please enter death cause" required mode="md" spellcheck="true" autocapitalize="sentences"
+        minlength="3" maxlength="50" clearInput="true" [(ngModel)]='cause_of_death' #deathCtrl="ngModel">
+      </ion-input> -->
+
+
+
+      <ion-select label="{{'Cause of death' }}" label-placement="stacked" fill="outline"
+        placeholder="Select death cause" required errorText="*Please enter death cause" interface="action-sheet"
+        #deathCtrl="ngModel" [(ngModel)]='cause_of_death'>
+        <ion-select-option *ngFor="let damage_cause of damage_causes" value="{{damage_cause.option_value_name}}">
+          <span>{{damage_cause.option_value_name}}</span>
+        </ion-select-option>
+      </ion-select>
+
+
+      <ion-input id="date" label="{{ 'Date of death' }}" label-placement="stacked" fill="outline"
+        placeholder="Enter death date" errorText="*Please enter death date" required mode="md" spellcheck="true"
+        autocapitalize="sentences" minlength="5" clearInput="true" value="{{ date_of_death | date: 'dd-MM-yyyy' }}"
+        (ionChange)="dateChangeEvent($event)" [(ngModel)]='date_of_death' #dateCtrl="ngModel">
+      </ion-input>
+
+
+
+      <ion-popover mode="ios" trigger="date" size="cover" style="margin: 0 auto">
+        <ng-template>
+          <ion-datetime min="{{minDate}}" interface="action-sheet" max="{{today}}" presentation="date"
+            (ionChange)="dateChangeEvent($event)" value="{{today}}">
+          </ion-datetime>
+        </ng-template>
+      </ion-popover>
+
+      <!-- 
+      <ion-input label="{{ 'Attach Image' }} (If
+    available)" class="ip-cursor" label-placement="stacked" fill="outline" class="attach-input" readonly clickable
+        mode="md">
+
+        <ion-button slot="start" size="small" fill="outline" style="width: 50px;margin-top: 20px;">
+          <ion-icon name="attach-outline" size="large"></ion-icon>
+        </ion-button>
+      </ion-input> -->
+
+
+    </ion-card>
+
+  </div>
+
+
+
+  <ion-grid class="bottom-submit">
+    <ion-row class="ion-padding-top ion-padding-bottom">
+      <ion-col>
+        <ion-button (click)="submit()" Expand="block"
+          [disabled]="!districtCtrl.valid || !talukCtrl.valid || !firkaCtrl.valid || !villageCtrl.valid ||
+        !ownerCtrl.valid || !buffaloCountCtrl.valid || !goatCountCtrl.valid || !calfCountCtrl.valid || !bullockCountCtrl.valid ||  !poultryCountCtrl.valid  ||!deathCtrl.valid || !dateCtrl.valid">{{"Submit"
+          }}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

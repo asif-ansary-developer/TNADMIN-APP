@@ -1,0 +1,121 @@
+.container {
+  padding: 0 10px;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+ion-searchbar {
+  --background: #f3f3f3;
+  --border-radius: 5px;
+  margin-left: -10px;
+  --inner-padding-start: 0px;
+  --inner-padding-end: 0px;
+  --box-shadow: none;
+  width: calc(100% + 10px);
+  position: fixed;
+  top: 66px;
+  text-transform: uppercase;
+  font-family: 500;
+
+  span {
+    position: absolute;
+    z-index: 1;
+    left: 44px;
+    font-weight: 500;
+  }
+}
+
+ion-input {
+  --background: #f3f3f3;
+  border-radius: 5px;
+  --padding-end: 10px;
+  --inner-padding-start: 0px;
+  font-weight: var(--ion-font-weight-regular) !important;
+  font-size: var(--ion-font-regular) !important;
+}
+
+ion-searchbar::before {
+  content: "";
+}
+ion-searchbar::after {
+  content: "";
+}
+.grey {
+  background-color: #f3f3f3;
+  ion-item {
+    background: #f3f3f3;
+  }
+}
+
+.headers {
+  font-weight: var(--ion-font-weight-medium2);
+  text-transform: capitalize;
+  font-size: var(--ion-font-regular);
+}
+
+ion-item-option {
+  border-radius: 4px;
+  width: 70px;
+  ion-icon {
+    transform: scale(1.3);
+  }
+}
+
+ion-content,
+ion-header {
+  --background: none;
+}
+
+ion-footer {
+  position: absolute;
+  bottom: 0px;
+
+  ion-button {
+    margin: 8px;
+    height: 56px;
+  }
+}
+
+.list-row {
+  position: absolute;
+  height: calc(100vh - 200px);
+  overflow-y: scroll;
+  bottom: 70px;
+  margin: 10px 8px 0px 8px;
+  width: calc(100% - 16px);
+  border-radius: 15px;
+  padding-bottom: 0;
+  padding-top: 0;
+  div {
+    height: calc(100vh - 200px);
+    background: #fff;
+    width: 100%;
+  }
+  ion-list {
+    position: absolute;
+    z-index: 4;
+    width: 100%;
+    padding-bottom: 0;
+    padding-top: 0;
+
+    ion-item {
+      height: 56px;
+      border-bottom: 0.5px solid #e6e6e6;
+      text-transform: none;
+      cursor: pointer;
+      ion-label {
+        letter-spacing: 1.5px;
+        span {
+          letter-spacing: unset;
+        }
+      }
+    }
+    ion-item::part(native) {
+      height: 56px;
+    }
+    ion-item:active::part(native) {
+      background: #ececec;
+    }
+  }
+}

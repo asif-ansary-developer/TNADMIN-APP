@@ -1,0 +1,80 @@
+<!---------------------------
+Name: tnsmart
+-----------------------------
+Author: Mohammed Rizwan S
+Data:   10/2/2024
+---------------------------->
+
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <ion-title>{{"Forecast Model Selector"}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button mode="ios" defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="ion-padding">
+  <ion-grid>
+    <ion-row class="ion-padding-top">
+      <ion-col class="header-card">
+        <ion-label style="
+            font-size: var(--ion-font-regular);
+            color: var(--ion-color-primary);
+            font-weight: var(--ion-font-weight-medium);
+          ">
+          {{"Use the selectors below to change/update current forecast model for each individual module"}}
+          <!-- {{"To change the current weather model for each module, use the selectors provided below" }} -->
+          <!-- <span class="note">Note: {{"Ensure that all details are accurate." }}
+
+          </span> -->
+        </ion-label>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-card style="padding: 16px 10px 10px 10px; margin-top: 12px">
+    <ion-select label="{{ 'Weather'}}" label-placement="stacked" fill="outline" placeholder="Select District"
+      #departmentCtrl="ngModel" required errorText=" *Please select department" interface="action-sheet"
+      [(ngModel)]="heatwave_model">
+      <ion-select-option>
+        <span>{{"IMD-GFS"}}</span>
+      </ion-select-option>
+      <ion-select-option>
+        <span>{{"SAC-WRF"}}</span>
+      </ion-select-option>
+      <ion-select-option>
+        <span>{{"ECMWF-IFS"}}</span>
+      </ion-select-option>
+    </ion-select>
+  </ion-card>
+  <ion-card style="padding: 16px 10px 10px 10px; margin-top: 12px">
+    <ion-select label="{{ 'Heatwave'}}" label-placement="stacked" fill="outline" placeholder="Select District"
+      #departmentCtrl="ngModel" required errorText=" *Please select department" interface="action-sheet"
+      [(ngModel)]="weather_model">
+      <ion-select-option>
+        <span>{{"IMD-GFS"}}</span>
+      </ion-select-option>
+      <ion-select-option>
+        <span>{{"SAC-WRF"}}</span>
+      </ion-select-option>
+      <ion-select-option>
+        <span>{{"ECMWF-IFS"}}</span>
+      </ion-select-option>
+    </ion-select>
+  </ion-card>
+
+
+
+  <ion-grid>
+    <ion-row class="ion-padding-top">
+      <ion-col>
+        <ion-button Expand="block">
+          {{"Submit"}}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

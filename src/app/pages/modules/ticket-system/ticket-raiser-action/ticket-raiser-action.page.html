@@ -1,0 +1,318 @@
+<!---------------------------
+Name: tnsmart
+-----------------------------
+Author: Mohammed Rizwan S
+Data:   11/7/2022
+---------------------------->
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <ion-title>{{"Ticket Action" | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button mode="ios" class="back-button" defaultHref="/ticket-system"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" style="z-index: 10; margin-top: -1%">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-modal #modal [isOpen]="preview_state" [canDismiss]="canDismiss" mode="ios" class="photo-preview-modal"
+    (willDismiss)="handleModalDismiss($event)">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Preview</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="modal.dismiss();preview_state=false"><ion-icon name="close"></ion-icon></ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div *ngIf="preview_img" class="img-holder">
+          <a href="{{preview_img}}" download>
+            <img *ngIf="preview_img" src="{{preview_img}}" /></a>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-note class="ion-padding" [ngClass]="note_open_state? 'ion-note-expand':'ion-note-no-expand'" #note>
+    <div *ngIf="!note_open_state" class="click-div" (click)="openTicDetails()"></div>
+    <ion-grid>
+      <ion-row *ngIf="note_open_state">
+        <ion-label *ngIf="note_open_state" class="headers ion-text-center">
+          Ticket details</ion-label>
+        <ion-button size="small" (click)="closeTicDetails()">
+          <ion-icon name="close"></ion-icon>
+        </ion-button>
+      </ion-row>
+
+      <ion-row>
+        Ticket Id : <b> {{ticket_id}}</b>
+        <ion-icon *ngIf="!note_open_state" name="caret-down-outline"></ion-icon>
+      </ion-row>
+      <ion-row>
+        Raised on : <b *ngIf="ticket">
+
+          <ng-container *ngIf="ticket['threads'][0]?.date && ticket['threads'][0]?.time">
+            {{ _moment(ticket["threads"][0]?.date).format('DD-MM-yyyy')}}
+          </ng-container>
+          <ng-container *ngIf="ticket['threads'][0]?.time">
+            {{ ticket["threads"][0]?.time}}
+          </ng-container>
+        </b>
+      </ion-row>
+      <ion-row>
+        Raiser Id : <b *ngIf="ticket"> {{ticket['ticket_owner']}}</b>
+      </ion-row>
+      <ng-container *ngIf="ticket">
+        <ion-row *ngIf="ticket['raiser_name']">
+          Raiser Name : <b> {{ticket['raiser_name']}}</b>
+        </ion-row>
+      </ng-container>
+
+      <ion-row>
+        Raiser number : <b *ngIf="ticket"> {{ticket['ticket_owner_number']}}</b>
+      </ion-row>
+
+      <ion-row>
+        Difficulty faced : <b *ngIf="ticket"> {{ticket['difficulty']}}</b>
+      </ion-row>
+
+      <ion-row>
+        Station code : <b *ngIf="ticket"> {{ticket['station_code']}}</b>
+      </ion-row>
+
+      <!-- <ion-row>
+        Location : <b *ngIf="ticket"> {{ticket['location_name']}}</b>
+      </ion-row> -->
+      <ion-row>
+        Taluk, District :
+        <b *ngIf="ticket"> {{ticket['taluk']}}, {{ticket['district']}}</b>
+      </ion-row>
+
+      <ion-row> Issue : <b *ngIf="ticket"> {{ticket['issue']}}</b> </ion-row>
+
+
+    </ion-grid>
+  </ion-note>
+
+  <ion-grid class="message-grid" #content>
+
+
+    <ng-container *ngIf="ticket">
+
+      <ion-text style="margin-top: 50px;" class="flat-header-date"
+        *ngIf="_moment(ticket['threads'][0]['date']).diff(_moment(today), 'days') < 0 ? true : false">
+        {{ _moment(ticket["threads"][0]?.date).format('DD-MM-yyyy')}}
+      </ion-text>
+
+      <ion-text style="margin-top: 50px;" class="flat-header-date"
+        *ngIf="!(_moment(ticket['threads'][0]['date']).diff(_moment(today), 'days') < 0 ? true : false)">
+        Today
+      </ion-text>
+    </ng-container>
+
+
+    <ion-row *ngIf="ticket" class="row-right">
+      <ion-card class="message-card">
+        Difficulty faced :<span> {{ticket['difficulty']}}</span><br />
+        Station code : <span>{{ticket['station_code']}}</span><br />
+        District : <span>{{ticket['district']}}</span><br />
+        Taluk : <span>{{ticket['taluk']}}</span><br />
+        <!-- Village : <span>{{ticket['village']}}</span><br /> -->
+        Current resolving entity :
+        <span>{{ticket['resolver_history'][ticket['resolver_history'].length-1]['entity_tag']}}</span><br />
+        Issue : <span>{{ticket['issue']}}</span><br />
+
+        <div class="img-grid" *ngIf="ticket['image']">
+          <ion-img class="thread_img" src="{{ticket['image']}}"
+            (click)="preview_img=preview_img=ticket['image'];preview_state=true"></ion-img>
+        </div>
+
+      </ion-card>
+
+      <ion-text class="msg-timestamp"> {{ ticket["threads"][0]?.time}}</ion-text>
+    </ion-row>
+
+
+    <ng-container *ngIf="ticket">
+      <ng-container *ngFor=" let tic of ticket['threads'];let i=index">
+        <!-- //Acknowledged -->
+        <ng-container *ngIf="tic['status']==3 || tic['status']==50">
+
+          <ion-row [ngClass]="tic['p_role'] == '1'? 'row-right': 'row-left'">
+
+            <!-- data display start -->
+            <ng-container *ngIf="i < ticket['threads'].length - 1">
+              <ion-text class="flat-header-date"
+                *ngIf="_moment(ticket['threads'][i-1]['date']).diff(_moment(ticket['threads'][i]['date']), 'days') < 0 ? true : false">
+                {{tic['date']}}
+              </ion-text>
+            </ng-container>
+
+            <ng-container *ngIf="i == ticket['threads'].length - 1">
+              <ion-text class="flat-header-date"
+                *ngIf="_moment(ticket['threads'][i-1]['date']).diff(_moment(ticket['threads'][i]['date']), 'days') < 0 ?  true : false">
+                {{tic['date']}}
+              </ion-text>
+            </ng-container>
+            <!-- data display end -->
+            <ion-text class="flat-header"> {{tic['text']}} </ion-text>
+            <!-- <ion-text class="flat-header" *ngIf="tic['status']!=50">
+              {{tic['text']}}
+            </ion-text>
+            <ion-text class="flat-header" *ngIf="tic['status']==50">
+              Escalated to {{ticket['resolver_tag']}}
+              {{tic['text']}}
+            </ion-text> -->
+
+            <!-- <ion-card class="message-card" *ngIf="tic['status']!=50">
+              <span><b>#</b>ACK</span>
+            </ion-card> -->
+
+            <ion-text class="msg-timestamp">{{tic["time"]}}</ion-text>
+          </ion-row>
+        </ng-container>
+
+        <!-- //rest -->
+        <ng-container *ngIf="tic['status']!=3 && tic['status']!=2  && tic['status']!=1 && tic['status']!=50">
+          <ion-row [ngClass]="tic['p_role'] == '1' ? 'row-right': 'row-left'">
+
+            <!-- data display start -->
+            <ng-container *ngIf="i < ticket['threads'].length - 1">
+              <ion-text class="flat-header-date"
+                *ngIf="tic['status']==0 && _moment(ticket['threads'][i]['date']).diff(_moment(ticket['threads'][i + 1]['date']), 'days') < 0 ? true : false">
+                {{tic['date']}}
+              </ion-text>
+
+              <ion-text class="flat-header-date"
+                *ngIf="tic['status']!=0 && _moment(ticket['threads'][i-1]['date']).diff(_moment(ticket['threads'][i]['date']), 'days') < 0 ? true : false">
+                {{tic['date']}}
+              </ion-text>
+            </ng-container>
+
+            <ng-container *ngIf="i == ticket['threads'].length - 1">
+              <ion-text class="flat-header-date"
+                *ngIf="_moment(ticket['threads'][i-1]['date']).diff(_moment(ticket['threads'][i]['date']), 'days') < 0 ?  true : false">
+                {{tic['date']}}
+              </ion-text>
+            </ng-container>
+            <!-- data display end -->
+
+            <ion-card class="message-card">
+              <ng-container *ngIf="i!=0 &&ticket['threads'][i-1]['author'] !=tic['author']">
+                <b style="text-transform: capitalize;"
+                  *ngIf="tic['p_role'] == '1' && username != tic['author']">{{tic['author']}}<br /></b>
+              </ng-container>
+
+
+              <!-- <ng-container *ngIf=" i!=0 &&ticket['threads'][i-1]['author'] !=tic['author']">
+                  <b style="text-transform: capitalize;" *ngIf="tic['p_role'] != '1'">{{tic['author']}}<br /></b>
+              </ng-container> -->
+
+              <b style=" text-transform: capitalize;" *ngIf="tic['p_role'] != '1'">
+                {{tic['author']}}<br /></b>
+
+
+              <ng-container *ngIf="tic['imgs']">
+                <div class="img-grid">
+                  <ion-img *ngFor="let img of tic['imgs']?.split(', ')" class="thread_img"
+                    src="https://beta-tnsmart.rimes.int/DATA/ticket_actions/{{img}}"
+                    (click)="preview_img='https://beta-tnsmart.rimes.int/DATA/ticket_actions/'+img;preview_state=true"></ion-img>
+                </div>
+
+
+              </ng-container>
+
+
+              <ion-text *ngIf="tic['r_type']">Resolution by <b>{{tic['r_type']}}</b><br> <br></ion-text>
+
+              <ng-container *ngIf="tic['image_before']">
+                <ion-text><b>Before</b></ion-text>
+                <div class="img-grid">
+                  <ion-img class="thread_img" src="{{tic['image_before']}}"
+                    (click)="preview_img=tic['image_before'];preview_state=true"></ion-img>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="tic['image_after']">
+                <ion-text><b>After</b></ion-text>
+                <div class="img-grid">
+                  <ion-img class="thread_img" src="{{tic['image_after']}}"
+                    (click)="preview_img=tic['image_after'];preview_state=true"></ion-img>
+                </div>
+              </ng-container>
+
+              <ion-text><b *ngIf="tic['author']=='system'">#</b>{{tic['text']}}</ion-text>
+            </ion-card>
+
+            <ion-text class="msg-timestamp">{{tic["time"]}}</ion-text>
+
+            <!-- Reminder card -->
+            <ion-card class="message-card ion-text-center" *ngIf=" tic['status']==2 && ticket['threads'].length==3"
+              style="padding-top: 10px">
+              Gentle Reminder
+              <ion-button Expand="block" (click)="sendReminder()" style="margin-top: 20px">
+                {{"Send reminder" | translate}}
+              </ion-button>
+            </ion-card>
+          </ion-row>
+        </ng-container>
+
+        <ng-container *ngIf=" tic['status']==2">
+          <ion-row class="row-right">
+            <!-- data display start -->
+            <ng-container *ngIf=" i < ticket['threads'].length - 1">
+              <ion-text class="flat-header-date"
+                *ngIf="tic['status']==0 && _moment(ticket['threads'][i]['date']).diff(_moment(ticket['threads'][i + 1]['date']), 'days') < 0 ? true : false">
+                {{tic['date']}}
+              </ion-text>
+
+              <ion-text class="flat-header-date"
+                *ngIf="tic['status']!=0 && _moment(ticket['threads'][i-1]['date']).diff(_moment(ticket['threads'][i]['date']), 'days') < 0 ? true : false">
+                {{tic['date']}}
+              </ion-text>
+            </ng-container>
+
+            <ng-container *ngIf="i == ticket['threads'].length - 1">
+              <ion-text class="flat-header-date"
+                *ngIf="_moment(ticket['threads'][i-1]['date']).diff(_moment(ticket['threads'][i]['date']), 'days') < 0 ?  true : false">
+                {{tic['date']}}
+              </ion-text>
+            </ng-container>
+            <!-- data display end -->
+
+            <!-- Reminder card -->
+            <ion-card class="message-card ion-text-center" *ngIf=" tic['status']==2 && ticket['threads'].length==3"
+              style="padding-top: 10px">
+              Gentle Reminder
+              <ion-button Expand="block" (click)="sendReminder()" style="margin-top: 20px">
+                {{"Send reminder" | translate}}
+              </ion-button>
+            </ion-card>
+          </ion-row>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </ion-grid>
+
+  <ng-container *ngIf="ticket">
+    <ion-footer *ngIf="ticket['ticket_status']==1"
+      [ngClass]="ticket['threads'][ticket['threads']?.length-1]['status']!=88 ? 'full-op': 'reduce-op'">
+      <div class="reply-box-wrapper">
+        <div class="reply-box">
+          <ion-input placeholder="{{'Type here' | translate}}" autocapitalize="sentences" autocomplete="language"
+            #textCtrl="ngModel" [(ngModel)]="reply_text" (keyup.enter)="sendMsgAsRaiser()" required #textbox>
+          </ion-input>
+        </div>
+
+        <div class="reply-box">
+          <ion-button mode="ios" fill="clear" (click)="sendMsgAsRaiser()"><ion-icon name="send"></ion-icon></ion-button>
+        </div>
+      </div>
+    </ion-footer>
+  </ng-container>
+</ion-content>

@@ -1,0 +1,468 @@
+<!---------------------------
+Name: tnsmart
+-----------------------------
+Author: Mohammed Rizwan S
+Data:   11/7/2022
+---------------------------->
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <ion-title>{{"Ticket Action" | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button mode="ios" class="back-button" defaultHref="/ticket-system"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" style="z-index: 10; margin-top: -1%">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-modal #modal [showBackdrop]="true" [isOpen]="preview_state" [canDismiss]="canDismiss" mode="ios"
+    class="photo-preview-modal" (willDismiss)="handleModalDismiss($event)">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Preview</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="modal.dismiss();preview_state=false;preview_img=null"><ion-icon
+                name="close"></ion-icon></ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div *ngIf="preview_img" class="img-holder">
+          <a href="{{preview_img}}" download>
+            <img *ngIf="preview_img" src="{{preview_img}}" /></a>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-note class="ion-padding" [ngClass]="note_open_state? 'ion-note-expand':'ion-note-no-expand'" #note>
+    <div *ngIf="!note_open_state" class="click-div" (click)="openTicDetails()"></div>
+    <ion-grid>
+      <ion-row *ngIf="note_open_state">
+        <ion-label *ngIf="note_open_state" class="headers ion-text-center">
+          Ticket details</ion-label>
+        <ion-button size="small" (click)="closeTicDetails()">
+          <ion-icon name="close"></ion-icon>
+        </ion-button>
+      </ion-row>
+
+
+      <ion-row>
+        Ticket Id : <b> {{ticket_id}}</b>
+        <ion-icon *ngIf="!note_open_state" name="caret-down-outline"></ion-icon>
+      </ion-row>
+
+      <ion-row>
+        Raised on : <b *ngIf="ticket">
+          <ng-container *ngIf="ticket['threads'][0]?.date && ticket['threads'][0]?.time">
+            {{ _moment(ticket["threads"][0]?.date).format('DD-MM-yyyy')}}
+          </ng-container>
+          <ng-container *ngIf="ticket['threads'][0]?.time">
+            {{ ticket["threads"][0]?.time}}
+          </ng-container>
+        </b>
+      </ion-row>
+
+      <!-- 
+      <ion-row>
+        Raised on : <b *ngIf="ticket"> {{ticket["threads"][0]?.date}} {{ticket["threads"][0]?.time}}</b>
+      </ion-row> -->
+
+      <ion-row>
+        Raiser Id : <b *ngIf="ticket"> {{ticket['ticket_owner']}}</b>
+      </ion-row>
+
+      <ng-container *ngIf="ticket">
+        <ion-row *ngIf="ticket['raiser_name']">
+          Raiser Name : <b> {{ticket['raiser_name']}}</b>
+        </ion-row>
+      </ng-container>
+
+      <ion-row>
+        Raiser number : <b *ngIf="ticket"> {{ticket['ticket_owner_number']}}</b>
+      </ion-row>
+
+      <ion-row>
+        Difficulty faced : <b *ngIf="ticket"> {{ticket['difficulty']}}</b>
+      </ion-row>
+
+      <ion-row>
+        Station code : <b *ngIf="ticket"> {{ticket['station_code']}}</b>
+      </ion-row>
+
+
+
+      <!-- <ion-row>
+        Village : <b *ngIf="ticket"> {{ticket['village']}}</b>
+      </ion-row> -->
+
+
+      <ion-row>
+        Taluk, District :
+        <b *ngIf="ticket"> {{ticket['taluk']}}, {{ticket['district']}}</b>
+      </ion-row>
+
+      <ion-row> Issue : <b *ngIf="ticket"> {{ticket['issue']}}</b> </ion-row>
+
+      <!-- <ng-container *ngIf="ticket">
+        <ion-row *ngIf="ticket['entry_approval']?.status == 1">
+          Entry approval status: <b
+            style="outline: 2px solid rgb(18, 231, 18);border-radius: 4px;padding: 4px;">Approved</b>
+        </ion-row>
+      </ng-container> -->
+      <ng-container *ngIf="ticket_actions">
+        <ion-row *ngFor="let action of ticket_actions" style="text-transform: capitalize;">
+          {{action['type']}} : <b style="color:#fff;padding:2px 6px;border-radius: 10px;font-size: 0.7rem;" [ngStyle]=" {'background': action['approval_status']=='Approved' ? ' var(--ion-color-success) '
+            : 'var(--ion-color-warning)' }">{{action['approval_status']}}</b>
+        </ion-row>
+      </ng-container>
+      <ion-row *ngIf="(role == '98' || role == '96' || role == '94' || role == '1' || role=='ven') && ticket "
+        class="close-btn-wrapper">
+        <ion-button class="close-tic-btn" size="small" *ngIf="edit_per && role!='ven'"
+          [ngClass]="ticket['threads'].length >3 && ticket['ticket_status']!='0'? 'full-op': 'reduce-op'"
+          (click)="closeTicket()">Close Ticket</ion-button>
+        <ion-button class="close-tic-btn" size="small" *ngIf="edit_per && role=='ven'"
+          [ngClass]="ticket['threads'].length >3 && ticket['ticket_status']!='0' && ticket['threads'][ticket['threads']?.length-1]['status']!=88 ? 'full-op': 'reduce-op'"
+          (click)="markResolved()">Mark Resolved</ion-button>
+      </ion-row>
+    </ion-grid>
+  </ion-note>
+
+  <ion-grid class="message-grid" #content>
+
+
+    <ng-container *ngIf="ticket">
+
+      <ion-text style="margin-top: 50px;" class="flat-header-date"
+        *ngIf="_moment(ticket['threads'][0]['date']).diff(_moment(today), 'days') < 0 ? true : false">
+
+        {{ _moment(ticket["threads"][0]?.date).format('DD-MM-yyyy')}}
+
+      </ion-text>
+      <ion-text style="margin-top: 50px;" class="flat-header-date"
+        *ngIf="!(_moment(ticket['threads'][0]['date']).diff(_moment(today), 'days') < 0 ? true : false)">
+
+        Today
+
+      </ion-text>
+    </ng-container>
+
+
+    <ion-row *ngIf="ticket" class="row-left">
+      <ion-card class="message-card">
+        Station code : <span>{{ticket['station_code']}}</span><br />
+        District : <span>{{ticket['district']}}</span><br />
+        Taluk : <span>{{ticket['taluk']}}</span><br />
+        Raised on : <span *ngIf="ticket"> {{ticket["threads"][0]?.date}}
+          {{ticket["threads"][0]?.time}}</span><br />
+        <!-- Village : <span>{{ticket['village']}}</span><br /> -->
+        <!-- Current Resolving entity :
+        <span>{{ticket['resolver_history'][ticket['resolver_history'].length-1]['entity_tag']}}</span><br /> -->
+        Difficulty faced :<span> {{ticket['difficulty']}}</span><br />
+        Issue : <span>{{ticket['issue']}}</span><br />
+
+        <div class="img-grid" *ngIf="ticket['image']">
+          <ion-img class="thread_img" src="{{ticket['image']}}"
+            (click)="preview_img=preview_img=ticket['image'];preview_state=true"></ion-img>
+        </div>
+      </ion-card>
+
+      <ion-text class="msg-timestamp"> {{ ticket["threads"][0]?.time}}</ion-text>
+
+    </ion-row>
+
+    <ng-container *ngIf="ticket">
+      <ng-container *ngFor="let tic of ticket['threads'];let i=index">
+        <!-- //Acknowledged -->
+        <ng-container *ngIf="tic['status']==3  || tic['status']==50">
+          <ion-row [ngClass]=" tic['p_role'] == '0' ? 'row-right': 'row-left'">
+            <!-- data display start -->
+            <ng-container *ngIf="i < ticket['threads'].length - 1">
+              <ion-text class="flat-header-date"
+                *ngIf="tic['status']==0 && _moment(ticket['threads'][i]['date']).diff(_moment(ticket['threads'][i + 1]['date']), 'days') < 0 ? true : false">
+                {{tic['date']}}
+              </ion-text>
+
+              <ion-text class="flat-header-date"
+                *ngIf="tic['status']!=0 && _moment(ticket['threads'][i-1]['date']).diff(_moment(ticket['threads'][i]['date']), 'days') < 0 ? true : false">
+                {{tic['date']}}
+              </ion-text>
+            </ng-container>
+
+            <ng-container *ngIf="i == ticket['threads'].length - 1">
+              <ion-text class="flat-header-date"
+                *ngIf="_moment(ticket['threads'][i-1]['date']).diff(_moment(ticket['threads'][i]['date']), 'days') < 0 ?  true : false">
+                {{tic['date']}}
+              </ion-text>
+            </ng-container>
+            <!-- data display end -->
+
+            <ion-text class="flat-header"> {{tic['text']}} </ion-text>
+
+            <ion-text class="msg-timestamp">{{tic["time"]}}</ion-text>
+          </ion-row>
+
+          <ion-row class="row-right"
+            *ngIf="ticket['ticket_owner']!=username && ticket['resolver']=='1_unassigned' && ticket['threads'].length>3 && (tic['status']==2 || tic['status']==50 )">
+            <ion-card class="message-card ion-text-center" style="padding-top: 10px">
+              Please assign to proceed
+              <ion-button Expand="block" (click)="assignTicket()" style="margin-top: 20px">
+                {{"Assign to me" | translate}}
+              </ion-button>
+            </ion-card>
+          </ion-row>
+        </ng-container>
+
+        <!-- //rest -->
+        <ng-container *ngIf="tic['status']!=1  && tic['status']!=3 && tic['status']!=50">
+          <ion-row [ngClass]="tic['p_role'] == '0' ? 'row-right': 'row-left'">
+            <!-- data display start -->
+            <ng-container *ngIf="i < ticket['threads'].length - 1">
+              <ion-text class="flat-header-date"
+                *ngIf="tic['status']==0 && _moment(ticket['threads'][i]['date']).diff(_moment(ticket['threads'][i + 1]['date']), 'days') < 0 ? true : false">
+                {{tic['date']}}
+              </ion-text>
+
+              <ion-text class="flat-header-date"
+                *ngIf="tic['status']!=0 && _moment(ticket['threads'][i-1]['date']).diff(_moment(ticket['threads'][i]['date']), 'days') < 0 ? true : false">
+                {{tic['date']}}
+              </ion-text>
+            </ng-container>
+
+            <ng-container *ngIf="i == ticket['threads'].length - 1">
+              <ion-text class="flat-header-date"
+                *ngIf="_moment(ticket['threads'][i-1]['date']).diff(_moment(ticket['threads'][i]['date']), 'days') < 0 ?  true : false">
+                {{tic['date']}}
+              </ion-text>
+            </ng-container>
+            <!-- data display end -->
+
+            <ion-card class="message-card" *ngIf="tic['status']!=2">
+
+
+
+              <ng-container *ngIf="i!=0 &&ticket['threads'][i-1]['author'] !=tic['author']">
+                <b style="text-transform: capitalize;"
+                  *ngIf="tic['p_role'] == '0' && username != tic['author']">{{tic['author']}}<br /></b>
+              </ng-container>
+
+              <b style=" text-transform: capitalize;" *ngIf="tic['p_role'] != '0'">
+                {{tic['author']}}<br /></b>
+
+              <ng-container *ngIf="tic['imgs']">
+                <div class="img-grid">
+                  <ion-img *ngFor="let img of tic['imgs']?.split(', ')" class="thread_img"
+                    src="https://beta-tnsmart.rimes.int/DATA/ticket_actions/{{img}}"
+                    (click)="preview_img='https://beta-tnsmart.rimes.int/DATA/ticket_actions/'+img;preview_state=true"></ion-img>
+                </div>
+              </ng-container>
+
+
+              <ion-text *ngIf=" tic['r_type']">Resolution by <b>{{tic['r_type']}}</b><br> <br></ion-text>
+
+
+              <ng-container *ngIf="tic['image_before']">
+                <ion-text><b>Before</b></ion-text>
+                <div class="img-grid">
+                  <ion-img class="thread_img" src="{{tic['image_before']}}"
+                    (click)="preview_img=tic['image_before'];preview_state=true"></ion-img>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="tic['image_after']">
+                <ion-text><b>After</b></ion-text>
+                <div class="img-grid">
+                  <ion-img class="thread_img" src="{{tic['image_after']}}"
+                    (click)="preview_img=tic['image_after'];preview_state=true"></ion-img>
+                </div>
+              </ng-container>
+
+              <ion-text><b *ngIf="tic['author']=='system'">#</b>{{tic['text']}}</ion-text>
+
+
+
+
+            </ion-card>
+
+            <ion-text class="msg-timestamp" *ngIf="tic['status']!=2">{{tic["time"]}}</ion-text>
+
+            <!-- Reminder card -->
+            <ion-card class="message-card ion-text-center"
+              *ngIf=" tic['status']==2 && ticket['threads'].length==3 && this.edit_per" style="padding-top: 10px">
+              Please Acknowledge to proceed
+              <ion-button Expand="block" (click)="ackTicket()" style="margin-top: 20px">
+                {{"Acknowledge" | translate}}
+              </ion-button>
+            </ion-card>
+          </ion-row>
+
+          <ion-row class="row-right"
+            *ngIf="ticket['resolver']=='1_unassigned' && ticket['threads'].length==3 && tic['status']==2">
+            <ion-card class="message-card ion-text-center" style="padding-top: 10px">
+              Please assign to proceed
+              <ion-button Expand="block" (click)="assignTicket()" style="margin-top: 20px">
+                {{"Assign" | translate}}
+              </ion-button>
+            </ion-card>
+          </ion-row>
+        </ng-container>
+
+
+
+      </ng-container>
+    </ng-container>
+  </ion-grid>
+
+  <ng-container *ngIf="ticket">
+    <ion-footer *ngIf="edit_per"
+      [ngClass]="this.ticket['threads'].length >3 && this.ticket['ticket_status']!='0' && ticket['threads'][ticket['threads']?.length-1]['status']!=88 ? 'full-op': 'reduce-op'"
+      [ngStyle]="action ? {'border-top-right-radius':'0'}: {}">
+      <div *ngIf="action=='reply'" class="reply-box-wrapper">
+        <ion-button mode="ios" class="floating-btn" (click)="action=null"><ion-icon
+            name="close"></ion-icon></ion-button>
+
+        <div class="reply-box">
+          <ion-input placeholder="{{'Type here' | translate}}" #textCtrl="ngModel" [(ngModel)]="reply_text" required
+            #textbox autocapitalize="sentences" id="textbox">
+          </ion-input>
+        </div>
+        <div class="reply-box">
+          <ion-button mode="ios" fill="clear" (click)="sendMsgAsResolver()"><ion-icon
+              name="send"></ion-icon></ion-button>
+        </div>
+      </div>
+
+      <div *ngIf="action=='escalate'" class="escalate-box">
+        <ion-button mode="ios" class="floating-btn" (click)="action=null"><ion-icon
+            name="close"></ion-icon></ion-button>
+
+        <ion-select interface="action-sheet" placeholder="{{'Select a department to Escalate/Reassign' | translate}}"
+          [(ngModel)]="escalate_dept" required (ionChange)="escalate()">
+          <ion-select-option *ngIf="role != '96'" value="96">DM Tahsildar</ion-select-option>
+          <ion-select-option *ngIf="role != '94'" value="94">DRO</ion-select-option>
+          <ion-select-option *ngIf="role != '98'" value="98">Collector</ion-select-option>
+          <ion-select-option *ngIf="role != '1'" value="1">HQ</ion-select-option>
+          <ion-select-option *ngIf="['96', '94', '98', '1'].includes(role) && !ticket['ticket_owner'].startsWith('ven')"
+            value="ven">Vendor</ion-select-option>
+        </ion-select>
+
+      </div>
+
+
+      <!-- <div *ngIf="action=='int_act_from_ven'" class="escalate-box">
+        <ion-button mode="ios" class="floating-btn" (click)="action=null"><ion-icon
+            name="close"></ion-icon></ion-button>
+
+        <ion-select interface="popover" placeholder="{{'Select a department to Escalate/Reassign lol' | translate}}"
+          [(ngModel)]="escalate_dept" required (ionChange)="escalate()">
+          <ion-select-option *ngIf="role != '96'" value="96">DM Tahsildar</ion-select-option>
+          <ion-select-option *ngIf="role != '94'" value="94">DRO</ion-select-option>
+          <ion-select-option *ngIf="role != '98'" value="98">Collector</ion-select-option>
+          <ion-select-option *ngIf="role != '1'" value="1">HQ</ion-select-option>
+          <ion-select-option *ngIf="['96', '94', '98', '1'].includes(role) && !ticket['ticket_owner'].startsWith('ven')"
+            value="ven">Vendor</ion-select-option>
+        </ion-select>
+      </div> -->
+
+
+      <div class="btn-box" *ngIf="!action">
+        <ion-button expand="block" mode="ios" (click)="this.action='reply'"
+          style="outline: 1px solid #fff; border-radius: 10px">Reply</ion-button>
+      </div>
+
+
+      <div class="btn-box" *ngIf="!action && role == 'ven'">
+        <ion-button id="more-actions-trigger" expand="block" mode="ios" style="--background: red">More</ion-button>
+
+        <ion-popover trigger="more-actions-trigger" triggerAction="click">
+          <ng-template>
+            <div style="height: fit-content; width: auto;">
+              <ion-button style="margin: 12px;" expand="block" (click)="ionpopover.dismiss();entryRequest()">Field entry
+                request</ion-button>
+              <ion-button style="margin: 12px;--background: red" expand="block"
+                (click)="ionpopover.dismiss();this.intermediate_action=true;">Intermediate
+                Action request</ion-button>
+            </div>
+
+          </ng-template>
+        </ion-popover>
+      </div>
+
+      <div class="btn-box" *ngIf="!action && role != 'ven'" style="pointer-events: none;">
+        <ion-button expand="block" mode="ios" style="--background: red" (click)="this.action='escalate'"
+          [ngStyle]="">Escalate/Reassign</ion-button>
+      </div>
+    </ion-footer>
+  </ng-container>
+
+
+
+
+
+  <ion-modal #modal [showBackdrop]="true" [isOpen]="intermediate_action" [canDismiss]="canDismiss" mode="ios"
+    (willDismiss)="handleModalDismiss($event)">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Intermediate Action Request</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="modal.dismiss();intermediate_action=false"><ion-icon name="close"
+                style="font-size: 20px;"></ion-icon></ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div class="container">
+          <ion-card style="padding: 16px 10px 8px 10px; margin:22px 0 0 0px;    outline: 1.2px #d7d7d7 solid;">
+
+            <ion-textarea label="{{ 'Reason' | translate}}" label-placement="stacked" fill="outline" [counter]="true"
+              placeholder="Enter reason for intermediate action" #reasonCtrl="ngModel" [(ngModel)]="reason"
+              clearInput="true" spellcheck="true" autocapitalize="sentences" minlength="5" maxlength="200" required
+              errorText="*Please enter reason in detail" mode="md"></ion-textarea>
+
+
+            <ion-input label="{{ 'Attach Image' | translate}}" class="ip-cursor" label-placement="stacked"
+              fill="outline" class="attach-input" readonly clickable mode="md">
+              <ion-button [disabled]="support_imgs.length>=2" slot="start" size="small" fill="outline"
+                style="width: 50px; margin-top: 20px" (click)="getPhoto()">
+                <ion-icon name="attach-outline" size="large"></ion-icon>
+              </ion-button>
+            </ion-input>
+            <span style="font-size: 0.8rem;display: block;padding: 0 16px;"> (Attach two image clearly that illustrate
+              your action request)</span>
+
+            <ng-container *ngIf="support_imgs">
+              <div *ngFor="let img of support_imgs;let i=index">
+                <ion-button *ngIf="img" fill="clear" size="small" (click)="clearAttachment(i)"
+                  class="circular-close-btn">
+                  <ion-icon name="close-circle" style="background: #fff;border-radius: 100px;"></ion-icon>
+                </ion-button>
+                <ion-card class="support-img-holder">
+                  <img src="{{img}}" />
+                </ion-card>
+              </div>
+            </ng-container>
+          </ion-card>
+
+
+          <ion-grid>
+            <ion-row class="ion-padding-top ion-padding-bottom ion-margin-bottom">
+              <ion-col>
+                <ion-button Expand="block" (click)="actionRequest()"
+                  [disabled]="!reasonCtrl.valid || support_imgs.length==0" style="width: 50%;margin:0 auto">
+                  {{"Request" | translate}}
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

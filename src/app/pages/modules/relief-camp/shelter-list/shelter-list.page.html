@@ -1,0 +1,54 @@
+<!---------------------------
+Name: tnalert admin
+-----------------------------
+Author: Mohammed Rizwan S
+Date:   23/02/2024
+---------------------------->
+<ion-content class="container">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-searchbar
+          inputmode="numeric"
+          class="searchbar"
+          mode="ios"
+          placeholder="{{'Search Shelter name' | translate}}"
+          [(ngModel)]="searchTerm"
+          (ionInput)="filterItems($event)"
+        >
+          <!-- <span>ARG</span> -->
+        </ion-searchbar>
+      </ion-col>
+    </ion-row>
+    <ion-row class="list-row">
+      <div>
+        <ion-list>
+          <ion-item
+            lines="none"
+            *ngFor=" let item of filtered_list"
+            name="list_data"
+            class="ion-text-center"
+            (click)="getSelectedShelter(item)"
+          >
+            <ion-label> {{item.rc_name}} </ion-label>
+          </ion-item>
+
+          <ng-container *ngIf="filtered_list">
+            <ion-item
+              lines="none"
+              *ngIf="filtered_list.length==0"
+              name="list_data"
+              class="ion-text-center"
+            >
+              <ion-label> {{ "Not found" | translate}} </ion-label>
+            </ion-item>
+          </ng-container>
+        </ion-list>
+      </div>
+    </ion-row>
+  </ion-grid>
+
+  <ion-footer>
+    <ion-button size="block" (click)="closeModal()"> Cancel </ion-button>
+  </ion-footer>
+</ion-content>

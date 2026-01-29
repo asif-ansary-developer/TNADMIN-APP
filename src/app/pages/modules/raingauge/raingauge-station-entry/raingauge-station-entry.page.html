@@ -1,0 +1,220 @@
+<!---------------------------
+Name: tnsmart
+-----------------------------
+Author: Mohammed Rizwan S
+Data:   10/2/2024
+---------------------------->
+
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <ion-title>{{"Add Raingauge Entry"| translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button mode="ios" defaultHref="/raingauge"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-grid>
+    <ion-row class="ion-padding-top">
+      <ion-col class="header-card">
+        <ion-label style="
+            font-size: var(--ion-font-regular);
+            color: var(--ion-color-primary);
+            font-weight: var(--ion-font-weight-medium);
+          ">
+          {{"Please fill all the fields" | translate}}
+        </ion-label>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-card style="padding: 16px 10px 10px 10px; margin-top: 12px">
+    <ion-input label="{{ 'Survey No' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Enter survey number" #surveyCtrl="ngModel" [(ngModel)]="surveyy" errorText=" *Please survey number"
+      required mode="md" spellcheck="false" #survey autocapitalize="sentences" minlength="3" maxlength="50"
+      clearInput="true">
+    </ion-input>
+  </ion-card>
+
+
+
+  <ion-card style="padding: 16px 10px 18px 10px; margin-top: 12px">
+
+    <ion-item lines="none" class="ion-item-custom" mode="ios" style="
+                  margin-bottom: -60px;
+                  transform-origin: left top;
+                  transform: translateY(-32%) scale(0.75);
+                  margin-top: 20px;
+                  margin-left: 6px;
+                ">
+      <ion-label class="headers custom-label" position="stacked" style="">{{"Nodal Officer" | translate}}</ion-label>
+    </ion-item>
+
+
+
+    <ion-input label="{{ 'Name' | translate}}" label-placement="stacked" fill="outline" placeholder="Enter name"
+      #nodalNameCtrl="ngModel" [(ngModel)]="nodal_name" errorText=" *Please nodal Officer name" required mode="md"
+      spellcheck="false" #nodalName autocapitalize="sentences" minlength="3" maxlength="50" clearInput="true">
+    </ion-input>
+
+
+    <ion-input label="{{ 'Designation' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Enter designation" #nodalDesignationCtrl="ngModel" [(ngModel)]="nodal_designation"
+      errorText=" *Please nodal Officer designation" required mode="md" spellcheck="true" #nodalDesignation
+      autocapitalize="sentences" minlength="3" maxlength="50" clearInput="true">
+    </ion-input>
+
+
+    <ion-input label="{{ 'Contact No' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Enter contact number" #nodalContactCtrl="ngModel" [(ngModel)]="nodal_contact"
+      errorText=" *Please nodal contact number" required mode="md" spellcheck="true" #nodalContact minlength="10"
+      maxlength="10" clearInput="true" type="tel">
+    </ion-input>
+
+
+
+    <ion-input label="{{ 'Attach Image' | translate}}" class="ip-cursor" label-placement="stacked" fill="outline"
+      class="attach-input" readonly clickable mode="md">
+      <ion-button slot="start" size="small" fill="outline" style="width: 50px; margin-top: 20px" (click)="getPhoto()">
+        <ion-icon name="attach-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-input>
+    <ion-button *ngIf="img" fill="clear" size="small" (click)="clearAttachment()" class="circular-close-btn">
+      <ion-icon name="close-circle"></ion-icon>
+    </ion-button>
+    <ion-card *ngIf="img" class="img-holder">
+      <img src="{{this.img}}" />
+    </ion-card>
+
+  </ion-card>
+
+  <!-- <div *ngIf="surveyy && nodal_contact &&  nodal_designation && nodal_name && img" -->
+  <div
+    [hidden]="!surveyCtrl.valid || !nodalContactCtrl.valid|| !nodalDesignationCtrl.valid || !nodalNameCtrl.valid || !img">
+
+
+    <ion-card style="padding: 16px 10px 16px 10px; margin-top: 8px">
+      <ion-input label="{{ 'ARG Station' | translate}}" class="ip-cursor" label-placement="stacked" fill="outline"
+        placeholder="Select station" #stationCtrl="ngModel" [(ngModel)]="stationCode" required
+        errorText="*Please select a station" (click)="presentModal()" readonly clickable mode="md">
+        <ion-icon slot="end" name="caret-down-outline" aria-hidden="true"
+          style="width: 14px; color: grey"></ion-icon></ion-input>
+    </ion-card>
+
+    <ion-card style="padding: 16px 10px 18px 10px; margin-top: 12px">
+      <ion-select label="{{ 'District' | translate}}" label-placement="stacked" fill="outline"
+        placeholder="Select district" #districtCtrl="ngModel" [(ngModel)]="district_id" (ionChange)="getTaluks()"
+        required errorText=" *Please select district" interface="action-sheet">
+        <ion-select-option *ngFor="let dis of districts_data" value="{{dis.district_id}}">
+          <span *ngIf="lang=='en'">{{dis.district_name}}</span>
+          <span *ngIf="lang=='ta'">{{dis.t_district_name}}</span>
+        </ion-select-option>
+      </ion-select>
+
+      <ion-select label="{{ 'Taluk' | translate}}" label-placement="stacked" fill="outline" placeholder="Select taluk"
+        #talukCtrl="ngModel" [(ngModel)]="taluk_id" (ionChange)="getFirkas()" required errorText=" *Please select taluk"
+        interface="action-sheet">
+        <ion-select-option *ngFor="let tal of taluks_data" value="{{tal.taluk_id}}">
+          <span *ngIf="lang=='en'">{{tal.taluk_name}}</span>
+          <span *ngIf="lang=='ta'">{{tal.ta_taluk_name}}</span>
+        </ion-select-option>
+      </ion-select>
+
+      <ion-select label="{{ 'Firka' | translate}}" label-placement="stacked" fill="outline" placeholder="Select firka"
+        #firkaCtrl="ngModel" [(ngModel)]="firka_id" (ionChange)="getVillages()" required
+        errorText=" *Please select firka" interface="action-sheet">
+        <ion-select-option *ngFor="let fir of firkas_data" value="{{fir.firka_id}}">
+          <span *ngIf="lang=='en'">{{fir.firka_name}}</span>
+          <span *ngIf="lang=='ta'">{{fir.firka_name_ta}}</span>
+        </ion-select-option>
+      </ion-select>
+
+      <ion-select label="{{ 'Village' | translate}}" label-placement="stacked" fill="outline"
+        placeholder="Select village" #villageCtrl="ngModel" [(ngModel)]="village_id" required
+        errorText=" *Please select village" interface="action-sheet">
+        <ion-select-option *ngFor="let vil of villages_data" value="{{vil.village_id}}">
+          <span *ngIf="lang=='en'">{{vil.village_name}}</span>
+          <span *ngIf="lang=='ta'">{{vil.village_name_ta}}</span>
+        </ion-select-option>
+      </ion-select>
+    </ion-card>
+
+    <ion-card style="padding: 16px 10px 18px 10px; margin-top: 12px">
+      <ion-input label="{{ 'Ownership' | translate}}" label-placement="stacked" fill="outline"
+        placeholder="Enter Ownership" #ownershipCtrl="ngModel" [(ngModel)]="ownership"
+        errorText=" *Please enter ownership" required mode="md" spellcheck="true" #ownerShip autocapitalize="sentences"
+        minlength="3" maxlength="50" clearInput="true">
+      </ion-input>
+
+      <ion-select label="{{ 'Installation Method' | translate}}" label-placement="stacked" fill="outline"
+        placeholder="Select installation method" #installationCtrl="ngModel" [(ngModel)]="installation" required
+        errorText=" *Please select installation method" interface="action-sheet">
+        <ion-select-option value="Ground">Ground</ion-select-option>
+        <ion-select-option value="Building Top">Building Top</ion-select-option>
+      </ion-select>
+
+      <ion-input type="date" label="{{ 'Date' | translate}}" class="ip-cursor" [max]="maxDate" label-placement="stacked"
+        fill="outline" placeholder="{{'Select Date' | translate}}" errorText="*Please select a date" #dateCtrl="ngModel"
+        [(ngModel)]="date" required mode="md">
+      </ion-input>
+
+      <ion-input label="{{ 'Coordinate' | translate}}" class="ip-cursor" label-placement="stacked" fill="outline"
+        placeholder="Fetch coordinate" #coordinateCtrl="ngModel" [(ngModel)]="coordinate" required
+        (click)="requestPermission()" readonly clickable mode="md">
+        <ion-button slot="end" fill="clear" style="width: 50px; margin-right: -18px">
+          <ion-icon name="refresh" aria-hidden="true" style="width: 16px; color: grey"></ion-icon>
+        </ion-button></ion-input>
+
+      <ion-item lines="none" class="ion-item-custom" mode="ios" style="
+        margin-bottom: -60px;
+        transform-origin: left top;
+        transform: translateY(-32%) scale(0.75);
+        margin-top: 32px;
+        margin-left: 6px;
+      ">
+        <ion-label class="headers custom-label" position="stacked" style="">{{"Sensor details" | translate}}</ion-label>
+      </ion-item>
+
+      <ion-item *ngFor="let sensor of sensors" lines="none" class="ion-item-custom sensor-details" mode="ios">
+        <ion-checkbox slot="start" [ngModel]="sensor.checked"
+          (ngModelChange)="updateSensor(sensor, $event)"></ion-checkbox>
+        <ion-label>{{ sensor.label }}</ion-label>
+      </ion-item>
+      <br />
+      <!-- 
+      <ion-input label="{{ 'Attach Image' | translate}} (If
+              available)" class="ip-cursor" label-placement="stacked" fill="outline" class="attach-input" readonly
+        clickable mode="md">
+        <ion-button slot="start" size="small" fill="outline" style="width: 50px; margin-top: 20px" (click)="getPhoto()">
+          <ion-icon name="attach-outline" size="large"></ion-icon>
+        </ion-button>
+      </ion-input>
+      <ion-button *ngIf="img" fill="clear" size="small" (click)="clearAttachment()" class="circular-close-btn">
+        <ion-icon name="close-circle"></ion-icon>
+      </ion-button>
+      <ion-card *ngIf="img" class="img-holder">
+        <img src="{{this.img}}" />
+      </ion-card> -->
+    </ion-card>
+
+
+
+
+
+
+
+    <ion-grid>
+      <ion-row class="ion-padding-top">
+        <ion-col>
+          <ion-button Expand="block"
+            [disabled]=" !img || !surveyCtrl.valid || !nodalNameCtrl.valid || !nodalContactCtrl.valid || !nodalDesignationCtrl.valid || !stationCtrl.valid || !districtCtrl.valid || !talukCtrl.valid ||  !firkaCtrl.valid || !villageCtrl.valid || !ownershipCtrl.valid || !installationCtrl.valid || !dateCtrl.valid|| !coordinateCtrl.valid || !hasCheckedSensors()"
+            (click)="addRaingauge()">
+            {{"Add raingauge" | translate}}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+
+  </div>
+</ion-content>

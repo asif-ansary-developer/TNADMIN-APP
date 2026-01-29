@@ -1,0 +1,127 @@
+<!---------------------------
+Name: tnsmart
+-----------------------------
+Author: Mohammed Rizwan S
+Data:   10/2/2024
+---------------------------->
+
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <ion-title>{{"Relief Camp"}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button mode="ios" defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-grid>
+    <ion-row class="ion-padding-top">
+      <ion-col class="header-card">
+        <ion-label style="
+            font-size: var(--ion-font-regular);
+            color: var(--ion-color-primary);
+            font-weight: var(--ion-font-weight-medium);
+          ">
+          {{"Please fill out all the fields below" }}
+          <span class="note">Note: {{"Ensure that all details are accurate."}}
+
+          </span>
+        </ion-label>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-card style="padding: 16px 10px 10px 10px; margin-top: 12px">
+    <ion-select label="{{ 'District' }}" label-placement="stacked" fill="outline" placeholder="Select District" required
+      errorText=" *" interface="action-sheet">
+      <ion-select-option *ngFor="let dept of department_data" value="{{dept.dept_id}}">
+        <span>{{dept.dept_name}}</span>
+      </ion-select-option>
+    </ion-select>
+
+    <ion-select label="{{ 'Taluk' }}" label-placement="stacked" fill="outline" placeholder="Select taluk" required
+      errorText=" *" interface="action-sheet">
+      <ion-select-option *ngFor="let source of source_data" value="{{source.source_code}}">
+        <span>{{source.source_name}}</span>
+      </ion-select-option>
+    </ion-select>
+
+    <ion-select label="{{ 'Firka' }}" label-placement="stacked" fill="outline" placeholder="Select firka" required
+      errorText=" *" interface="action-sheet">
+      <ion-select-option *ngFor="let source of source_data" value="{{source.source_code}}">
+        <span>{{source.source_name}}</span>
+      </ion-select-option>
+    </ion-select>
+
+
+    <ion-select label="{{ 'Village' }}" label-placement="stacked" fill="outline" placeholder="Select village" required
+      errorText=" *" interface="action-sheet">
+      <ion-select-option *ngFor="let source of source_data" value="{{source.source_code}}">
+        <span>{{source.source_name}}</span>
+      </ion-select-option>
+    </ion-select>
+
+
+  </ion-card>
+
+  <ion-card style="padding: 16px 10px 18px 10px; margin-top: 12px">
+
+    <ion-input label="{{ 'No of days active' }}" label-placement="stacked" fill="outline"
+      placeholder="Enter no of days active" errorText=" *" required mode="md" spellcheck="true" autocapitalize="words"
+      minlength="1" maxlength="50" clearInput="true">
+    </ion-input>
+
+
+
+    <ion-input label="{{ 'No of people placed' }}" label-placement="stacked" fill="outline"
+      placeholder="Enter no of people placed" errorText=" *" required mode="md" spellcheck="true" autocapitalize="words"
+      minlength="1" maxlength="50" clearInput="true">
+    </ion-input>
+
+
+    <ion-input label="{{ 'Cost of Food' }}" label-placement="stacked" fill="outline" placeholder="Enter cost of food"
+      errorText=" *" required mode="md" spellcheck="true" autocapitalize="words" minlength="1" maxlength="50"
+      clearInput="true">
+      <label slot="end">₹</label>
+    </ion-input>
+    <ion-input label="{{ 'Cost of Clothes' }}" label-placement="stacked" fill="outline"
+      placeholder="Enter cost of Clothes" errorText=" *" required mode="md" spellcheck="true" autocapitalize="words"
+      minlength="1" maxlength="50" clearInput="true">
+      <label slot="end">₹</label>
+    </ion-input>
+    <ion-input label="{{ 'Cost of medical care' }}" label-placement="stacked" fill="outline"
+      placeholder="Enter cost of medical care" errorText=" *" required mode="md" spellcheck="true"
+      autocapitalize="words" minlength="1" maxlength="50" clearInput="true">
+      <label slot="end">₹</label>
+    </ion-input>
+
+    <ion-input label="{{ 'Cost of other essential items' }}" label-placement="stacked" fill="outline"
+      placeholder="Enter cost of other essentials" errorText=" *" required mode="md" spellcheck="true"
+      autocapitalize="words" minlength="1" maxlength="50" clearInput="true">
+      <label slot="end">₹</label>
+    </ion-input>
+
+
+    <ion-input label="{{ 'Department Name' }}" label-placement="stacked" fill="outline"
+      placeholder="Enter department name" errorText=" *" required mode="md" spellcheck="true" autocapitalize="words"
+      minlength="3" maxlength="50" clearInput="true">
+    </ion-input>
+
+
+
+  </ion-card>
+
+
+
+
+
+  <ion-grid>
+    <ion-row class="ion-padding-top">
+      <ion-col>
+        <ion-button Expand="block">
+          {{"Submit" }}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

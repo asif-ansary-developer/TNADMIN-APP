@@ -1,0 +1,508 @@
+<!---------------------------
+Name: tnalert admin
+-----------------------------
+Author: Mohammed Rizwan S
+Date:   23/02/2024
+---------------------------->
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <ion-title>{{"Relief Camp - Data Entry"| translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button mode="ios" defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-grid>
+    <ion-row class="ion-padding-top">
+      <ion-col class="header-card">
+        <ion-label
+          style="
+            font-size: var(--ion-font-regular);
+            color: var(--ion-color-primary);
+            font-weight: var(--ion-font-weight-medium);
+          "
+        >
+          {{"Please fill all the fields for accurate data entry" | translate}}
+        </ion-label>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-card style="padding: 16px 10px 8px 10px; margin-top: 8px">
+    <ion-input
+      class="clear-btn-hide"
+      label="{{ 'Select Shelter' | translate}}"
+      class="ip-cursor"
+      label-placement="stacked"
+      fill="outline"
+      placeholder="Select station"
+      #shelterCtrl="ngModel"
+      [(ngModel)]="shelter"
+      required
+      errorText="*Please select a shelter"
+      (click)="presentModal()"
+      readonly
+      clickable
+      mode="md"
+    >
+      <ion-icon
+        slot="end"
+        name="caret-down-outline"
+        aria-hidden="true"
+        style="width: 14px; color: grey"
+      ></ion-icon
+    ></ion-input>
+
+    <div>
+      <ion-row>
+        <ion-col>
+          <span>District</span>
+        </ion-col>
+        <ion-col>
+          <ion-text style="margin-left: 20px"> {{district}} </ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col> <span>Taluk</span></ion-col>
+        <ion-col>
+          <ion-text style="margin-left: 20px"> {{taluk}} </ion-text></ion-col
+        >
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <span>Village</span>
+        </ion-col>
+        <ion-col>
+          <ion-text style="margin-left: 20px"> {{village}} </ion-text></ion-col
+        >
+      </ion-row>
+    </div>
+
+    <ion-input
+      class="clear-btn-hide"
+      label="{{ 'District' | translate}}"
+      fill="outline"
+      placeholder="Enter district"
+      #districtCtrl="ngModel"
+      [(ngModel)]="district"
+      required
+      readonly
+      [hidden]="!districtCtrl.valid"
+      mode="md"
+    >
+      <ion-icon
+        slot="end"
+        name="lock-closed"
+        aria-hidden="true"
+        style="width: 14px; color: grey"
+      ></ion-icon
+    ></ion-input>
+
+    <ion-input
+      class="clear-btn-hide"
+      label="{{ 'Taluk' | translate}}"
+      fill="outline"
+      placeholder="Enter taluk"
+      #talukCtrl="ngModel"
+      [(ngModel)]="taluk"
+      required
+      readonly
+      [hidden]="!talukCtrl.valid"
+      mode="md"
+    >
+      <ion-icon
+        slot="end"
+        name="lock-closed"
+        aria-hidden="true"
+        style="width: 14px; color: grey"
+      ></ion-icon
+    ></ion-input>
+
+    <ion-input
+      class="clear-btn-hide"
+      label="{{ 'Village' | translate}}"
+      label-placement="stacked"
+      fill="outline"
+      placeholder="Enter village"
+      #villageCtrl="ngModel"
+      [(ngModel)]="village"
+      required
+      readonly
+      [hidden]="!villageCtrl.valid"
+      mode="md"
+    >
+      <ion-icon
+        slot="end"
+        name="lock-closed"
+        aria-hidden="true"
+        style="width: 14px; color: grey"
+      ></ion-icon
+    ></ion-input>
+  </ion-card>
+
+  <ion-card style="padding: 16px 10px 18px 10px; margin-top: 12px">
+    <ion-select
+      label="{{ 'Time of day' | translate}}"
+      class="ip-cursor"
+      label-placement="stacked"
+      fill="outline"
+      placeholder="Select time of day"
+      #durationCtrl="ngModel"
+      [(ngModel)]="duration"
+      required
+      errorText="*Please select time of day"
+      interface="popover"
+    >
+      <ion-select-option value="morning">Morning</ion-select-option>
+      <ion-select-option value="noon">Noon</ion-select-option>
+      <ion-select-option value="evening">Evening</ion-select-option>
+    </ion-select>
+
+    <ion-row class="ion-no-padding">
+      <ion-col class="ion-no-padding" size="9.4">
+        <ion-input
+          class="clear-btn-hide"
+          label="{{ 'Total No. of Families' | translate}}"
+          label-placement="stacked"
+          fill="outline"
+          inputmode="numeric"
+          placeholder="Enter total no. of families"
+          #totalFamCtrl="ngModel"
+          [(ngModel)]="totalFamilies"
+          (ionFocus)="totalFamilies==0?totalFamilies='':null"
+          (ionChange)="onModelChange('totalFamilies')"
+          clearInput="true"
+          min="1"
+          required
+          errorText="*Please enter total no.
+          of families"
+          mode="md"
+        ></ion-input>
+      </ion-col>
+      <ion-col class="ion-no-padding counter-col" size="2.6">
+        <ion-button
+          size="small"
+          fill="clear"
+          (click)="increment('totalFamilies')"
+        >
+          <ion-icon name="add-circle"></ion-icon
+        ></ion-button>
+        <ion-button
+          size="small"
+          fill="clear"
+          (click)="decrement('totalFamilies')"
+        >
+          <ion-icon name="remove-circle"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-no-padding">
+      <ion-col class="ion-no-padding" size="9.4">
+        <ion-input
+          class="clear-btn-hide"
+          label="{{ 'Total No. of Male' | translate}}"
+          label-placement="stacked"
+          fill="outline"
+          inputmode="numeric"
+          placeholder="Enter total no. of male"
+          #totalMaleCtrl="ngModel"
+          [(ngModel)]="totalMale"
+          (ionFocus)="totalMale==0?totalMale='':null"
+          (ionChange)="onModelChange('totalMale')"
+          clearInput="true"
+          min="1"
+          required
+          errorText="*Please enter total no. of male"
+          mode="md"
+        ></ion-input>
+      </ion-col>
+
+      <ion-col class="ion-no-padding counter-col" size="2.6">
+        <ion-button size="small" fill="clear" (click)="increment('totalMale')">
+          <ion-icon name="add-circle"></ion-icon
+        ></ion-button>
+        <ion-button size="small" fill="clear" (click)="decrement('totalMale')">
+          <ion-icon name="remove-circle"></ion-icon>
+        </ion-button> </ion-col
+    ></ion-row>
+
+    <ion-row class="ion-no-padding">
+      <ion-col class="ion-no-padding" size="9.4">
+        <ion-input
+          class="clear-btn-hide"
+          label="{{ 'Total No. of Female' | translate}}"
+          label-placement="stacked"
+          fill="outline"
+          inputmode="numeric"
+          placeholder="Enter total no. of female"
+          #totalFemaleCtrl="ngModel"
+          [(ngModel)]="totalFemale"
+          (ionFocus)="totalFemale==0?totalFemale='':null"
+          (ionChange)="onModelChange('totalFemale')"
+          clearInput="true"
+          min="1"
+          required
+          errorText="*Please enter total no. of female"
+          mode="md"
+        ></ion-input>
+      </ion-col>
+
+      <ion-col class="ion-no-padding counter-col" size="2.6">
+        <ion-button
+          size="small"
+          fill="clear"
+          (click)="increment('totalFemale')"
+        >
+          <ion-icon name="add-circle"></ion-icon
+        ></ion-button>
+        <ion-button
+          size="small"
+          fill="clear"
+          (click)="decrement('totalFemale')"
+        >
+          <ion-icon name="remove-circle"></ion-icon>
+        </ion-button> </ion-col
+    ></ion-row>
+
+    <ion-row class="ion-no-padding">
+      <ion-col class="ion-no-padding" size="9.4">
+        <ion-input
+          class="clear-btn-hide"
+          label="{{ 'Total No. of Transgender' | translate}}"
+          label-placement="stacked"
+          fill="outline"
+          inputmode="numeric"
+          placeholder="Enter total no. of transgender"
+          #totalOthersCtrl="ngModel"
+          [(ngModel)]="totalOthers"
+          (ionFocus)="totalOthers==0?totalOthers='':null"
+          (ionChange)="onModelChange('totalOthers')"
+          clearInput="true"
+          min="1"
+          required
+          errorText="*Please enter total no. of transgender"
+          mode="md"
+        ></ion-input>
+      </ion-col>
+
+      <ion-col class="ion-no-padding counter-col" size="2.6">
+        <ion-button
+          size="small"
+          fill="clear"
+          (click)="increment('totalOthers')"
+        >
+          <ion-icon name="add-circle"></ion-icon
+        ></ion-button>
+        <ion-button
+          size="small"
+          fill="clear"
+          (click)="decrement('totalOthers')"
+        >
+          <ion-icon name="remove-circle"></ion-icon>
+        </ion-button> </ion-col
+    ></ion-row>
+
+    <ion-row class="ion-no-padding">
+      <ion-col class="ion-no-padding" size="9.4">
+        <ion-input
+          class="clear-btn-hide"
+          label="{{ 'Total No. of Children' | translate}}"
+          label-placement="stacked"
+          fill="outline"
+          inputmode="numeric"
+          placeholder="Enter total no. of children"
+          #totalChildrenCtrl="ngModel"
+          [(ngModel)]="totalChildren"
+          (ionFocus)="totalChildren==0?totalChildren='':null"
+          (ionChange)="onModelChange('totalChildren')"
+          clearInput="true"
+          min="1"
+          required
+          errorText="*Please enter total no. of children"
+          mode="md"
+        ></ion-input>
+      </ion-col>
+
+      <ion-col class="ion-no-padding counter-col" size="2.6">
+        <ion-button
+          size="small"
+          fill="clear"
+          (click)="increment('totalChildren')"
+        >
+          <ion-icon name="add-circle"></ion-icon
+        ></ion-button>
+        <ion-button
+          size="small"
+          fill="clear"
+          (click)="decrement('totalChildren')"
+        >
+          <ion-icon name="remove-circle"></ion-icon>
+        </ion-button> </ion-col
+    ></ion-row>
+
+    <ion-row class="ion-no-padding">
+      <ion-col class="ion-no-padding" size="12">
+        <ion-input
+          class="clear-btn-hide"
+          label="{{ 'Total No. of Evacuees' | translate}}"
+          label-placement="stacked"
+          fill="outline"
+          inputmode="numeric"
+          placeholder="Enter total no. of evacuees"
+          #totalEvacueesCtrl="ngModel"
+          [(ngModel)]="totalEvacuees"
+          clearInput="false"
+          readonly
+          min="1"
+          required
+          errorText="*Please enter total no. of evacuees"
+          mode="md"
+        ></ion-input>
+      </ion-col>
+
+      <!-- <ion-col
+        class="ion-no-padding"
+        size="2.6"
+        style="display: flex; align-items: center; justify-content: center"
+      >
+        <ion-icon
+          name="add-circle"
+          style="
+            width: 40px;
+            color: var(--ion-color-primary);
+            transform: scale(2.2);
+          "
+        ></ion-icon>
+        <ion-icon
+          name="remove-circle"
+          style="
+            width: 40px;
+            color: var(--ion-color-primary);
+            transform: scale(2.2);
+          "
+        ></ion-icon> </ion-col
+    > -->
+    </ion-row>
+  </ion-card>
+
+  <ion-card style="padding: 16px 10px 8px 10px; margin-top: 8px">
+    <ion-row class="ion-no-padding">
+      <ion-col class="ion-no-padding" size="9.4">
+        <ion-input
+          class="clear-btn-hide"
+          label="{{ 'Total No. of Food Packets distributed' | translate}}"
+          label-placement="stacked"
+          fill="outline"
+          inputmode="numeric"
+          placeholder="Enter food packet distributed count"
+          #totalFoodCtrl="ngModel"
+          [(ngModel)]="totalFood"
+          (ionFocus)="totalFood==0?totalFood='':null"
+          (ionChange)="onModelChange('totalFood')"
+          clearInput="true"
+          min="1"
+          required
+          errorText="*Please enter food packet distribution count"
+          mode="md"
+        ></ion-input>
+      </ion-col>
+
+      <ion-col class="ion-no-padding counter-col" size="2.6">
+        <ion-button size="small" fill="clear" (click)="increment('totalFood')">
+          <ion-icon name="add-circle"></ion-icon
+        ></ion-button>
+        <ion-button size="small" fill="clear" (click)="decrement('totalFood')">
+          <ion-icon name="remove-circle"></ion-icon>
+        </ion-button> </ion-col
+    ></ion-row>
+
+    <ion-row class="ion-no-padding">
+      <ion-col class="ion-no-padding" size="9.4">
+        <ion-input
+          class="clear-btn-hide"
+          label="{{ 'Total No. of Evacuees returned Home' | translate}}"
+          label-placement="stacked"
+          fill="outline"
+          placeholder="Enter no of evacuees returned home"
+          #totalFoodCtrl="ngModel"
+          [(ngModel)]="totalEvacueesReturned"
+          (ionFocus)="totalEvacueesReturned==0?totalEvacueesReturned='':null"
+          (ionChange)="onModelChange('totalEvacueesReturned')"
+          clearInput="true"
+          min="1"
+          required
+          errorText="*Please no of evacuees returned home"
+          mode="md"
+        ></ion-input>
+      </ion-col>
+
+      <ion-col class="ion-no-padding counter-col" size="2.6">
+        <ion-button
+          size="small"
+          fill="clear"
+          (click)="increment('totalEvacueesReturned')"
+        >
+          <ion-icon name="add-circle"></ion-icon
+        ></ion-button>
+        <ion-button
+          size="small"
+          fill="clear"
+          (click)="decrement('totalEvacueesReturned')"
+        >
+          <ion-icon name="remove-circle"></ion-icon>
+        </ion-button> </ion-col
+    ></ion-row>
+  </ion-card>
+  <!-- <ion-input class="clear-btn-hide"
+      label="{{ 'Attach Image' | translate}} (If
+          available)"
+      class="ip-cursor"
+      label-placement="stacked"
+      fill="outline"
+      class="attach-input"
+      readonly
+      clickable
+      mode="md"
+    >
+      <ion-button
+        slot="start"
+        size="small"
+        fill="outline"
+        style="width: 50px; margin-top: 20px"
+        (click)="getPhoto()"
+      >
+        <ion-icon name="attach-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-input>
+    <ion-button
+      *ngIf="img"
+      fill="clear"
+      size="small"
+      (click)="clearAttachment()"
+      class="circular-close-btn"
+    >
+      <ion-icon name="close-circle"></ion-icon>
+    </ion-button>
+    <ion-card *ngIf="img" class="img-holder">
+      <img src="{{this.img}}" />
+    </ion-card>
+  </ion-card> -->
+  <!-- [disabled]="!stationCtrl.valid || !districtCtrl.valid || !talukCtrl.valid || !villageCtrl.valid || !difficultyCtrl.valid || !detailCtrl.valid || !entityCtrl.valid" -->
+
+  <ion-grid>
+    <ion-row class="ion-padding-top ion-padding-bottom ion-margin-bottom">
+      <ion-col>
+        <ion-button
+          Expand="block"
+          (click)="submitEntry()"
+          [disabled]=" !districtCtrl.valid || !talukCtrl.valid || !villageCtrl.valid || !shelterCtrl.valid || !totalFamCtrl.valid || !totalEvacueesCtrl.valid || !totalMaleCtrl.valid || !totalFemaleCtrl.valid || !totalOthersCtrl.valid || !totalChildrenCtrl.valid  || !durationCtrl.valid"
+        >
+          {{"Submit Entry" | translate}}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

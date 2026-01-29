@@ -1,0 +1,7 @@
+{
+  "name": "tnalert_7_admin",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

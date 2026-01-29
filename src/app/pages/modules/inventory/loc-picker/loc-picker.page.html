@@ -1,0 +1,26 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <ion-title>Location Picker</ion-title>
+    <ion-buttons slot="start" class="modal-close-btn">
+      <ion-button mode="ios" (click)="closeModal()">
+        <!-- <ion-icon name="back" style="color: #000;"></ion-icon>-->
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div id="map"></div>
+
+  <ion-grid>
+    <ion-row class="ion-padding-top ion-padding-bottom">
+      <ion-col>
+        <ion-button Expand="block" (click)="closeModalWithData()">
+          Confirm Location
+          <!-- <ion-icon name="arrow-forward" style="font-size: 18px;color: #fff;"></ion-icon> -->
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

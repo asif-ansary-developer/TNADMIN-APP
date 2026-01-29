@@ -1,0 +1,303 @@
+<!---------------------------
+Name: tnsmart
+-----------------------------
+Author: Mohammed Rizwan S
+Data:   10/2/2024
+---------------------------->
+
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <ion-title>Action</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button
+        mode="ios"
+        defaultHref="/emergency-call-reg"
+      ></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <!-- <div style="position: sticky; z-index: 2">
+    <ion-note
+      class="ion-padding"
+      [ngClass]="note_open_state? 'ion-note-expand':'ion-note-no-expand'"
+      (click)="openAction()"
+      #note
+    >
+      <div
+        *ngIf="!note_open_state"
+        class="click-div"
+        (click)="openAction()"
+      ></div>
+      <ion-grid>
+        <ion-row *ngIf="note_open_state">
+          <ion-label *ngIf="note_open_state" class="headers ion-text-center">
+            Ticket details</ion-label
+          >
+          <ion-button size="small">
+            <ion-icon name="close"></ion-icon>
+          </ion-button>
+        </ion-row>
+        <ion-row>
+          Ticket Id : <b> </b>
+          <ion-icon
+            *ngIf="!note_open_state"
+            name="caret-down-outline"
+          ></ion-icon>
+        </ion-row>
+      </ion-grid>
+    </ion-note>
+  </div> -->
+
+  <div class="container">
+    <!-- <ion-select
+      label="{{ 'District' | translate}}"
+      label-placement="stacked"
+      fill="outline"
+      placeholder="Select district"
+      [(ngModel)]="district_id"
+      (ionChange)="getStations()"
+      interface="action-sheet"
+    >
+      <ion-select-option
+        *ngFor="let dis of districts_data"
+        value="{{dis.district_id}}"
+      >
+        <span *ngIf="lang=='en'">{{dis.district_name}}</span>
+        <span *ngIf="lang=='ta'">{{dis.t_district_name}}</span>
+      </ion-select-option>
+    </ion-select> -->
+
+    <div *ngIf="loading" class="skeleton-container" style="margin: 22px 0 0 0">
+      <div
+        class="skeleton skeleton-card"
+        style="height: 300px; margin-bottom: 22px"
+      ></div>
+      <div
+        class="skeleton skeleton-card"
+        style="height: 300px; margin-bottom: 22px"
+      ></div>
+      <div
+        class="skeleton skeleton-card"
+        style="height: 300px; margin-bottom: 22px"
+      ></div>
+    </div>
+
+    <ion-card
+      class="ion-padding ion-text-center"
+      *ngIf=" emergency_call_data.length==0 && !loading"
+      >No emergency calls</ion-card
+    >
+
+    <ion-card
+      class="ion-padding ticket-card"
+      *ngFor="let call of emergency_call_data"
+    >
+      <ion-grid>
+        <ion-row>
+          <ion-col size="3"> <ion-label>{{"Caller"}} :</ion-label></ion-col>
+          <ion-col>
+            <ion-label>{{call['caller_name'] | translate}}</ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="3">
+            <ion-label>{{"Caller Category"}} :</ion-label></ion-col
+          >
+          <ion-col>
+            <ion-label
+              ><span
+                [ngStyle]="{
+                'outline': '1px solid var(--ion-color-primary)',
+                'padding': '1px 4px',
+                'margin-left': '2px',
+                'border-radius':'4px'}"
+              >
+                {{call['caller_category'] | translate}}</span
+              ></ion-label
+            >
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="3"> <ion-label>{{"Entry"}} :</ion-label></ion-col>
+          <ion-col>
+            <ion-label>{{call['date_time_entry'] | translate}}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="3">
+            <ion-label>{{"Last Update"}} :</ion-label></ion-col
+          >
+          <ion-col>
+            <ion-label>{{call['reply_updated_on'] | translate}}</ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="3"> <ion-label>{{"Status"}} :</ion-label></ion-col>
+          <ion-col>
+            <ion-label style="text-transform: capitalize"
+              ><span
+                [ngStyle]="{
+                'background': call['status'].toLowerCase().trim().startsWith('call forwar') ? '#ffd506' :
+                              call['status'].toLowerCase().trim().startsWith('assigned to concern') ? '#ff984f' :
+                              call['status'].toLowerCase().trim().startsWith('action taken') ? '#01b783' :
+                              call['status'].toLowerCase().trim().startsWith('rejected') ? '#ff4f4f' : 'none',
+                'color': call['status'].toLowerCase().trim().startsWith('call forwar') ? '#2d2d2d' : '#fff' ,
+                'padding': '2px 4px',
+                'border-radius':'4px',
+                'margin-right':'2px'
+              }"
+                >{{ call['status'] }}
+              </span>
+              - {{ call['staff_details'] }}</ion-label
+            >
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="3"> <ion-label>{{"Phone"}} :</ion-label></ion-col>
+          <ion-col>
+            <ion-label>{{call['Phone_Number'] | translate}}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="3"> <ion-label>{{"Address"}} :</ion-label></ion-col>
+          <ion-col>
+            <ion-label>{{call['address'] | translate}}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="3"> <ion-label>{{"Category"}} :</ion-label></ion-col>
+          <ion-col>
+            <ion-label>{{call['category'] | translate}}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="3">
+            <ion-label>{{"Sub Category"}} :</ion-label></ion-col
+          >
+          <ion-col>
+            <ion-label>{{call['sub_category'] | translate}}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="3"> <ion-label>{{"Msg"}} :</ion-label></ion-col>
+          <ion-col>
+            <ion-label>{{call['message'] | translate}}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="3"> <ion-label>{{"District"}} :</ion-label></ion-col>
+          <ion-col>
+            <ion-label *ngIf="call['district_name']"
+              >{{call['district_name'] | translate}}</ion-label
+            >
+            <ion-label *ngIf="!call['district_name']">-</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="3"> <ion-label>{{"Taluk"}} :</ion-label></ion-col>
+          <ion-col>
+            <ion-label *ngIf="call['taluk_name']"
+              >{{call['taluk_name'] | translate}}</ion-label
+            >
+            <ion-label *ngIf="!call['taluk_name']">-</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="3"> <ion-label>{{"Village"}} :</ion-label></ion-col>
+          <ion-col>
+            <ion-label *ngIf="call['village_name']"
+              >{{call['village_name'] | translate}}</ion-label
+            >
+            <ion-label *ngIf="!call['village_name']">-</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="3"> <ion-label>{{"Image"}} :</ion-label></ion-col>
+          <ion-col>
+            <ion-button size="small" fill="clear">
+              <ion-icon
+                name="image-outline"
+                style="transform: scale(1.2)"
+              ></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+        <!-- <ion-row *ngIf="call['photo']">
+          <ion-col> <ion-label>{{"Attached Photo"}} :</ion-label></ion-col>
+          <ion-col>
+            <ion-button size="small" fill="clear" (click)="preview(station['photo'])">
+              <ion-icon name="image-outline" style="transform: scale(1.2); margin-top: 22px;"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row> -->
+      </ion-grid>
+    </ion-card>
+
+    <ion-select
+      label="{{ 'Select Action' | translate}}"
+      label-placement="stacked"
+      fill="outline"
+      placeholder="Select Action"
+      interface="action-sheet"
+    >
+      <ion-select-option>
+        <span>Resolved</span>
+      </ion-select-option>
+      <ion-select-option>
+        <span>Call Forward</span>
+      </ion-select-option>
+      <ion-select-option>
+        <span>Reject</span>
+      </ion-select-option>
+    </ion-select>
+
+    <div class="btn-box">
+      <ion-button
+        expand="block"
+        mode="ios"
+        style="--background: red"
+        (click)="this.action='escalate'"
+        [ngStyle]=""
+        >Submit</ion-button
+      >
+    </div>
+  </div>
+
+  <!-- <ion-modal
+    #modal
+    [isOpen]="preview_state"
+    [canDismiss]="canDismiss"
+    mode="ios"
+    class="photo-preview-modal"
+  >
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Preview</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="modal.dismiss();preview_state=false;img=null;"
+              ><ion-icon name="close"></ion-icon
+            ></ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div *ngIf="img" class="img-holder">
+          <a href="{{img}}" download> <img *ngIf="img" src="{{img}}" /></a>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal> -->
+</ion-content>

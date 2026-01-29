@@ -1,0 +1,63 @@
+<ion-content class="ion-padding ion-margin">
+  <ion-button [ngStyle]="{'display': new_request && phone_number.length == 10 ? 'block' :'none'}" id="info-trigger"
+    class="more-btn" fill="clear">
+    <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+  </ion-button>
+
+  <ion-popover trigger="info-trigger" triggerAction="click">
+    <ng-template>
+      <ion-content class="ion-no-padding">
+        <ion-button style="margin: 0" expand="full" fill="clear" (click)="resetAccessRequest()">Request Access
+          Reset</ion-button>
+        <ion-button *ngIf="resetAccessRequested" style="margin: 0" expand="full" fill="clear" (click)="copyCode()">Copy
+          code</ion-button>
+
+      </ion-content>
+    </ng-template>
+  </ion-popover>
+
+  <img class="bg-top" src="../../../../assets/login/BG.svg" />
+  <img class="bg-bottom" src="../../../../assets/login/BG2.svg" />
+
+  <ion-card class="ion-padding glass-effect">
+    <ion-card-header class="ion-text-center">
+      <ion-card-title>T N S M A R T • A D M I N</ion-card-title>
+      <ion-card-subtitle *ngIf="current_card=='card1'">Sign in to Continue</ion-card-subtitle>
+      <ion-card-subtitle *ngIf="current_card=='card2'">Select a role to proceed</ion-card-subtitle>
+      <ion-button *ngIf="current_card=='card2'" size="small" fill="clear" class="back-btn" (click)="resetCards()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-card-header>
+
+    <ng-container *ngIf="current_card=='card1'">
+      <form #loginForm="ngForm" (ngSubmit)="signInClick()">
+        <ion-input name="phone" mode="md" class="ip" [ngClass]="has_value ? 'ion-input-has-value':''"
+          placeholder="Enter CUG Number" type="tel" minlength="10" maxlength="10" (click)="ipFocus()"
+          [(ngModel)]="phone_number" ngModel #ipCtrl="ngModel" #ip (ionChange)="checkHasValue()"
+          (ionBlur)="checkHasValue()">
+          <ion-label class="ion-align-items-center">Phone number</ion-label>
+          <ion-icon name="phone-portrait-outline" size="large"></ion-icon>
+        </ion-input>
+
+        <ion-button *ngIf="!sign_request" type="submit" class="ion-margin sign-in-btn" style="" shape="round"
+          size="large" expand="block">Sign
+          In</ion-button>
+
+        <ion-button *ngIf="sign_request" class="ion-margin sign-in-btn" style="" shape="round" size="large"
+          (click)="cancelRequest()" expand="block">Cancel Request</ion-button>
+      </form>
+    </ng-container>
+
+    <ng-container *ngIf="current_card=='card2'">
+      <ion-input mode="ios" class="ip ip-select" (click)="showRoleModal()"
+        [ngClass]="selected_role ? 'ion-input-has-value':''" readonly placeholder="Select Role" type="tel"
+        minlength="10" maxlength="10" [(ngModel)]="role" ngModel #ipSelectCtrl="ngModel" #ipSelect>
+        <ion-label class="ion-align-items-center">Role</ion-label>
+        <!-- <ion-icon name="phone-portrait-outline" size="large"></ion-icon> -->
+        <ion-icon name="caret-down-outline"></ion-icon>
+      </ion-input>
+      <ion-button (click)="proceedClick()" class="ion-margin sign-in-btn" style="" shape="round" size="large"
+        expand="block">Proceed</ion-button>
+    </ng-container>
+  </ion-card>
+</ion-content>

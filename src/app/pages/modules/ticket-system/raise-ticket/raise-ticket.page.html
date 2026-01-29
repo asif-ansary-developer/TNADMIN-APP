@@ -1,0 +1,139 @@
+<!---------------------------
+Name: tnalert admin
+-----------------------------
+Author: Mohammed Rizwan S
+Date:   23/02/2024
+---------------------------->
+
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <!-- <ion-title>{{"Report Civil Work Issue"| translate}}</ion-title> -->
+    <ion-title>{{"Report Issue"| translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button mode="ios" defaultHref="/ticket-system"></ion-back-button>
+    </ion-buttons> 
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-grid>
+    <ion-row class="ion-padding-top">
+      <ion-col class="header-card">
+        <ion-label style="
+            font-size: var(--ion-font-regular);
+            color: var(--ion-color-primary);
+            font-weight: var(--ion-font-weight-medium);
+          ">
+          {{"Please fill all the fields to report any difficulty faced" |
+          translate}}
+        </ion-label>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-card style="padding: 16px 10px 8px 10px; margin-top: 8px">
+    <ion-input label="{{ 'ARG Station' | translate}}" class="ip-cursor" label-placement="stacked" fill="outline"
+      placeholder="Select station" #stationCtrl="ngModel" [(ngModel)]="stationCode" required
+      errorText="*Please select a station" (click)="presentModal()" readonly clickable mode="md">
+      <ion-icon slot="end" name="caret-down-outline" aria-hidden="true"
+        style="width: 14px; color: grey"></ion-icon></ion-input>
+
+    <ion-row>
+      <ion-col>
+        <ion-input label="{{ 'District' | translate}}" label-placement="stacked" fill="outline"
+          placeholder="Enter district" #districtCtrl="ngModel" [(ngModel)]="district" required readonly
+          aria-disabled="true" [hidden]="!districtCtrl.valid" mode="md">
+          <ion-icon slot="end" name="lock-closed" aria-hidden="true" style="
+          width: 10px;  
+          color: grey;
+          position: absolute;
+          right: 0;
+          margin: auto;"></ion-icon></ion-input>
+      </ion-col>
+
+      <ion-col>
+        <ion-input label="{{ 'Taluk' | translate}}" label-placement="stacked" fill="outline" placeholder="Enter taluk"
+          #talukCtrl="ngModel" [(ngModel)]="taluk" required readonly [hidden]="!talukCtrl.valid" mode="md">
+          <ion-icon slot="end" name="lock-closed" aria-hidden="true" style="
+          width: 10px;  
+          color: grey;
+          position: absolute;
+          right: 0;
+          margin: auto;"></ion-icon></ion-input>
+      </ion-col>
+    </ion-row>
+
+    <ion-input label="{{ 'Firka/ward' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Enter Firka/ward" #villageCtrl="ngModel" [(ngModel)]="village" required readonly
+      [hidden]="!villageCtrl.valid" mode="md">
+      <ion-icon slot="end" name="lock-closed" aria-hidden="true"
+        style="width: 14px; color: grey"></ion-icon></ion-input>
+  </ion-card>
+
+  <ion-card style="padding: 16px 10px 18px 10px; margin-top: 12px">
+    <ion-input #diff label="{{ 'Type of difficulty faced' | translate}}" label-placement="stacked" fill="outline"
+      placeholder="Enter difficulty faced" #difficultyCtrl="ngModel" [(ngModel)]="difficultyFaced" clearInput="true"
+      spellcheck="true" autocapitalize="sentences" minlength="3" maxlength="50" required
+      errorText="*Please enter difficulty faced" mode="md"></ion-input>
+
+    <ion-textarea label="{{ 'Issue in detail' | translate}}" label-placement="stacked" fill="outline" [counter]="true"
+      placeholder="Enter issue in detail" #detailCtrl="ngModel" [(ngModel)]="issueDetail" clearInput="true"
+      spellcheck="true" autocapitalize="sentences" minlength="10" maxlength="200" required
+      errorText="*Please enter issue in detail" mode="md"></ion-textarea>
+
+    <ion-select label="{{ 'Resolving Entity' | translate}}" class="ip-cursor" label-placement="stacked" fill="outline"
+      placeholder="Select Department" #entityCtrl="ngModel" [(ngModel)]="resolvingEntity" required
+      errorText="*Please select a resolving entity" interface="popover">
+      <!-- <ion-select-option value="96">DM Tahsildar</ion-select-option>
+      <ion-select-option value="94">DRO</ion-select-option>
+      <ion-select-option value="98">Collector</ion-select-option> -->
+      <ion-select-option *ngIf="role=='ven'" value="1">HQ</ion-select-option>
+      <ion-select-option *ngIf="role=='1'" value="ven">Vendor</ion-select-option>
+      <!-- <ion-select-option *ngIf="role=='96'||role=='94'||role=='98'||role=='1'" value="ven">Vendor</ion-select-option> -->
+    </ion-select>
+
+    <ion-select label="{{ 'Payment Involved' | translate}}" class="ip-cursor" label-placement="stacked" fill="outline"
+      placeholder="Yes/no" #paymentCtrl="ngModel" [(ngModel)]="paymentInvolved" required
+      errorText="*Please select an option" interface="popover"
+      [ngStyle]="{'display':  resolvingEntity=='ven' && role=='1' ? 'block':'none'}"
+      [ngClass]="{'fade-in': entityCtrl.valid, 'fade-out': !entityCtrl.valid}">
+      <ion-select-option value="1">Yes</ion-select-option>
+      <ion-select-option value="0">No</ion-select-option>
+    </ion-select>
+
+
+
+    <ion-input [ngStyle]="{'display': role=='1' ? 'block':'none'}" label="{{ 'Raiser Name' | translate}}"
+      label-placement="stacked" fill="outline" placeholder="Enter name of the raiser" #raiserCtrl="ngModel"
+      [(ngModel)]="raiserName" clearInput="true" spellcheck="true" autocapitalize="words" minlength="2" maxlength="50"
+      required errorText="*Please enter raiser name" mode="md"></ion-input>
+
+
+
+    <ion-input label="{{ 'Attach Image' | translate}} (If
+          available)" class="ip-cursor" label-placement="stacked" fill="outline" class="attach-input" readonly
+      clickable mode="md">
+      <ion-button slot="start" size="small" fill="outline" style="width: 50px; margin-top: 20px" (click)="getPhoto()">
+        <ion-icon name="attach-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-input>
+    <ion-button *ngIf="img" fill="clear" size="small" (click)="clearAttachment()" class="circular-close-btn">
+      <ion-icon name="close-circle"></ion-icon>
+    </ion-button>
+    <ion-card *ngIf="img" class="img-holder">
+      <img src="{{this.img}}" />
+    </ion-card>
+  </ion-card>
+  <!-- [disabled]="!stationCtrl.valid || !districtCtrl.valid || !talukCtrl.valid || !villageCtrl.valid || !difficultyCtrl.valid || !detailCtrl.valid || !entityCtrl.valid" -->
+
+  <ion-grid>
+    <ion-row class="ion-padding-top ion-padding-bottom ion-margin-bottom">
+      <ion-col>
+        <ion-button Expand="block" (click)="raiseTicket()"
+          [disabled]="!stationCtrl.valid || !districtCtrl.valid || !talukCtrl.valid || !difficultyCtrl.valid || !detailCtrl.valid || !entityCtrl.valid || (role==1 && resolvingEntity=='ven'? !paymentCtrl.valid: false ) ||  (role==1 ? !raiserCtrl.valid: false)">
+          {{"Raise Ticket" | translate}}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

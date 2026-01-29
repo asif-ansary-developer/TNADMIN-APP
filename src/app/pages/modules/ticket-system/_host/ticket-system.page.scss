@@ -1,0 +1,109 @@
+.ios {
+  ion-button {
+    --background-activated: rgba(20, 20, 20, 0.096);
+  }
+}
+
+.md {
+  ion-button {
+    box-shadow: none;
+  }
+}
+
+ion-card {
+  margin: 22px 16px;
+}
+
+.button-text {
+  text-transform: capitalize;
+  font-size: var(--ion-font-13);
+  color: #000;
+  line-height: 15px;
+  margin: 0;
+}
+
+ion-back-button {
+  --background-hover: #ffffff00;
+}
+
+ion-header {
+  box-shadow: none;
+}
+
+@media screen and (max-width: 320px) {
+  .button-text {
+    font-size: 0.75rem;
+    margin-left: -2px;
+    margin-right: -2px;
+  }
+}
+
+.btn-bg {
+  background: var(--bg);
+}
+
+.btn-card {
+  min-height: 80px;
+  min-width: 70px;
+  padding: 0 10px;
+  margin: 6px 15px;
+  background: var(--ion-color-light);
+  outline: none;
+  cursor: pointer;
+
+  div {
+    display: flex;
+    height: 80px;
+    align-items: center;
+    justify-content: space-between;
+
+    div:first-child {
+      display: flex;
+      height: 80px;
+      align-items: center;
+
+      ion-icon {
+        transform: scale(1.1);
+        margin-left: 10px;
+        margin-right: 20px;
+      }
+    }
+  }
+}
+
+.btn-card:focus,
+.btn-card:active {
+  background: #dfe8f1;
+}
+
+.nxt-btn {
+  margin-right: -10px;
+
+  ion-icon {
+    transform: scale(0.8) !important;
+    margin: auto auto !important;
+    color: var(--ion-color-primary);
+  }
+}
+
+.icon-band-wrapper {
+  position: absolute;
+  height: 8px !important;
+  width: 50px;
+  margin-left: -1px;
+  transform: rotate(-20deg);
+  background: #3a3a3a;
+}
+.icon-band {
+  font-size: 0.44rem;
+  font-weight: 900;
+  font-family: Inter !important;
+  height: 100%;
+  width: 50px;
+}
+
+ion-badge {
+  background: #f2c84d;
+  font-weight: 600;
+  box-shadow: rgba(0, 0, 0, 0.14) 0px 0px 3px;
+}

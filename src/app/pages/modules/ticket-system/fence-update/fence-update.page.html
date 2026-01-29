@@ -1,0 +1,104 @@
+<!---------------------------
+Name: tnsmart
+-----------------------------
+Author: Mohammed Rizwan S
+Data:   10/2/2024
+---------------------------->
+
+
+
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <ion-title>{{"Fence Update"| translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button mode="ios" defaultHref="/ticket-system"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-grid>
+    <ion-row class="ion-padding-top ">
+      <ion-col class="header-card">
+        <ion-label
+          style="font-size: var(--ion-font-regular);color:var(--ion-color-primary);font-weight:  var( --ion-font-weight-medium)">
+          {{"Please update the fence status" |
+          translate}}
+        </ion-label>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+
+  <ion-card style="padding: 16px 10px 16px 10px; margin-top: 8px;">
+
+    <ion-input label="{{ 'ARG Station' | translate}}" class="ip-cursor" label-placement="stacked" fill="outline"
+      placeholder="Select station" #stationCtrl="ngModel" [(ngModel)]="stationCode" required
+      errorText="*Please select a station" (click)="presentModal()" readonly clickable mode="md">
+      <ion-icon slot="end" name="caret-down-outline" aria-hidden="true"
+        style="width: 14px;color: grey;"></ion-icon></ion-input>
+
+  </ion-card>
+
+  <ion-card style="padding: 16px 10px 18px 10px; margin-top: 12px;">
+
+    <!-- <ion-item lines="none" class="ion-item-custom" mode="ios">
+      <ion-label class="headers" position="stacked">{{"Is the fence work done?" | translate}}</ion-label>
+
+
+
+      <ion-radio-group value="fence_status" mode="ios" class="ion-padding-start" #radioCtrl="ngModel"
+        [(ngModel)]="fence_status" required>
+        <ion-item lines="none" class="ion-no-margin">
+          <ion-label>Yes</ion-label>
+          <ion-radio slot="start" value="yes"></ion-radio>
+        </ion-item>
+
+        <ion-item lines="none" class="ion-no-margin">
+          <ion-label> No </ion-label>
+          <ion-radio slot="start" value="no">
+          </ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-item> -->
+
+
+    <ion-input type="date" label="{{ 'Date' | translate}}" class="ip-cursor" [max]="maxDate" label-placement="stacked"
+      fill="outline" placeholder="Select date" errorText="*Please select a date" #dateCtrl="ngModel" [(ngModel)]="date"
+      required clickable mode="md">
+    </ion-input>
+
+
+
+    <ion-input label="{{ 'Attach Image' | translate}} (If
+              available)" class="ip-cursor" label-placement="stacked" fill="outline" class="attach-input" readonly
+      clickable mode="md">
+
+      <ion-button slot="start" size="small" fill="outline" style="width: 50px;margin-top: 20px;" (click)="getPhoto()">
+        <ion-icon name="attach-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-input>
+
+  </ion-card>
+
+
+  <ion-grid>
+
+
+
+    <ion-row class="ion-padding-top">
+      <ion-col>
+        <!-- <ion-button Expand="block" [disabled]="!stationCtrl.valid || !radioCtrl.valid ||!dateCtrl.valid "
+          (click)=" updateFenceWork()">
+          {{"Update" | translate}}
+        </ion-button> -->
+        <ion-button Expand="block" [disabled]="!stationCtrl.valid  ||!dateCtrl.valid " (click)=" updateFenceWork()">
+          {{"Update" | translate}}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

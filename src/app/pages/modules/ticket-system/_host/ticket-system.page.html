@@ -1,0 +1,376 @@
+<!---------------------------
+Name: tnsmart
+-----------------------------
+Author: Mohammed Rizwan S
+Date:   23/09/2022
+---------------------------->
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <ion-title>{{"ARG/AWS Ticket" | translate}}</ion-title>
+    <ion-buttons slot="start" class="module-close-btn">
+      <ion-button mode="ios" (click)="back()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+      <!-- <ion-back-button mode="ios" class="back-button" defaultHref="home"></ion-back-button> -->
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+
+
+  <ion-card *ngIf="_role=='1'" class="ion-padding-top ion-padding-bottom">
+    <ion-grid>
+      <ion-card-header *ngIf="_role == '1' ">Payment Involved</ion-card-header>
+
+      <ion-row class="ion-text-center">
+        <ion-col size="12">
+          <ion-card class="btn-card" (click)="route('ticket-system/view-status-admin-2?tab=vendor_payment_tickets')">
+            <div>
+              <div>
+                <ion-icon src="assets/home/ticket-system/btn_tic_ic_l.svg" size="large"
+                  style="color: #06E1FF;"></ion-icon>
+                <div class="icon-band-wrapper">
+                  <span class="icon-band" style="color: #00ffff;">₹ INVOLVED</span>
+                </div>
+                <ion-text class=" ion-text-start"><b>₹</b> Raised
+                  Tickets</ion-text>
+              </div>
+              <ion-button size="small" fill="clear" class="nxt-btn">
+                <ion-icon name="caret-forward-outline" size="large"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="12">
+          <ion-card class="btn-card" (click)="route('ticket-system/raise-ticket')">
+            <div>
+              <div>
+                <ion-icon src="assets/home/btn_report_issue_ic_l.svg" size="large"></ion-icon>
+                <ion-text class="ion-text-start">Report Issue</ion-text>
+              </div>
+              <ion-button size="small" fill="clear" class="nxt-btn">
+                <ion-icon name="caret-forward-outline" size="large"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="12">
+          <ion-card class="btn-card" (click)="route('ticket-system/view-closures')">
+            <div>
+              <div>
+                <ion-icon src="../../../../../assets/home/ticket-system/btn_issue_closure_ic_l.svg"
+                  size="large"></ion-icon>
+                <ion-text class="ion-text-start">Ticket Closure Requests</ion-text>
+              </div>
+              <ion-button size="small" fill="clear" class="nxt-btn">
+                <ion-icon name="caret-forward-outline" size="large"></ion-icon>
+                <ng-container *ngIf="closure_count">
+                  <ion-badge *ngIf="closure_count['closure_requests']!=0"
+                    slot="start">{{closure_count['closure_requests']}}</ion-badge>
+                </ng-container>
+
+              </ion-button>
+            </div>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="12">
+          <ion-card class="btn-card" (click)="route('ticket-system/view-complaints')">
+            <div>
+              <div>
+                <ion-icon src="../../../../../assets/home/btn_report_complaint_ic_l.svg" size="large"></ion-icon>
+                <ion-text class="ion-text-start">Complaint Registry</ion-text>
+              </div>
+              <ion-button size="small" fill="clear" class="nxt-btn">
+                <ion-icon name="caret-forward-outline" size="large"></ion-icon>
+                <ng-container *ngIf="pending_complaints">
+                  <ion-badge *ngIf="pending_complaints['count']!=0"
+                    slot="start">{{pending_complaints['count']}}</ion-badge>
+                </ng-container>
+
+              </ion-button>
+            </div>
+          </ion-card>
+        </ion-col>
+
+      </ion-row>
+
+
+    </ion-grid>
+  </ion-card>
+
+
+  <ion-card *ngIf="_role=='1'" class="ion-padding-top ion-padding-bottom">
+    <ion-grid>
+      <ion-card-header *ngIf="_role == '1' ">Non-Payment Involved</ion-card-header>
+
+      <ion-row class="ion-text-center">
+        <ion-col size="12">
+          <ion-card class="btn-card" (click)="route('ticket-system/view-status-admin-2?tab=assigned_tickets')">
+            <div>
+              <div>
+                <ion-icon src="assets/home/ticket-system/btn_tic_ic_l.svg" size="large"
+                  style="color: #90EE90;"></ion-icon>
+                <div class="icon-band-wrapper">
+                  <span class="icon-band" style="color: #90EE90;">ASSIGNED</span>
+                </div>
+                <ion-text class=" ion-text-start"> Assigned
+                  Tickets</ion-text>
+              </div>
+              <ion-button size="small" fill="clear" class="nxt-btn">
+                <ion-icon name="caret-forward-outline" size="large"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+
+      <ion-row class="ion-text-center" *ngIf="_role == '1'">
+        <ion-col size="12">
+          <ion-card class="btn-card" (click)="route('ticket-system/view-status-admin-2?tab=unassigned_tickets')">
+            <div>
+              <div>
+                <ion-icon src="assets/home/ticket-system/btn_tic_ic_l.svg" size="large"
+                  style="color: #FFAE64;"></ion-icon>
+                <div class="icon-band-wrapper">
+                  <span class="icon-band" style="color: #FFAE64;">UNASSIGNED</span>
+                </div>
+                <ion-text class=" ion-text-start">Unassigned
+                  Tickets</ion-text>
+              </div>
+
+
+              <ion-button size="small" fill="clear" class="nxt-btn">
+                <ion-icon name="caret-forward-outline" size="large"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+
+      <ion-row class="ion-text-center">
+        <ion-col size="12">
+          <ion-card class="btn-card" (click)="route('ticket-system/view-status-admin-2?tab=raised_tickets')">
+            <div>
+              <div>
+                <ion-icon src="assets/home/ticket-system/btn_tic_ic_l.svg" size="large"
+                  style="color: #F2C84D;"></ion-icon>
+                <div class="icon-band-wrapper">
+                  <span class="icon-band" style="color: #F2C84D;">RAISED</span>
+                </div>
+                <ion-text class="ion-text-start">Raised Tickets</ion-text>
+              </div>
+              <ion-button size="small" fill="clear" class="nxt-btn">
+                <ion-icon name="caret-forward-outline" size="large"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card>
+
+
+  <ion-card class="ion-padding-top ion-padding-bottom">
+
+    <ion-grid>
+
+
+      <ng-container *ngIf="_role=='ven'">
+
+
+        <!-- ven assigned tickets -->
+        <ion-row class="ion-text-center">
+          <ion-col size="12">
+            <ion-card class="btn-card" (click)="route('ticket-system/view-status-vendor?tab=assigned_tickets')">
+
+              <div>
+                <div>
+                  <ion-icon src="assets/home/ticket-system/btn_tic_ic_l.svg" size="large"
+                    style="color: #90EE90;"></ion-icon>
+                  <div class="icon-band-wrapper">
+                    <span class="icon-band" style="color: #90EE90;">ASSIGNED</span>
+                  </div>
+                  <ion-text class=" ion-text-start"> Assigned
+                    Tickets</ion-text>
+                </div>
+                <ion-button size="small" fill="clear" class="nxt-btn">
+                  <ion-icon name="caret-forward-outline" size="large"></ion-icon>
+                </ion-button>
+              </div>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+
+
+        <ion-col size="12">
+          <ion-card class="btn-card" (click)="route('ticket-system/raise-ticket')">
+            <div>
+              <div>
+                <ion-icon src="assets/home/btn_report_issue_ic_l.svg" size="large"></ion-icon>
+                <ion-text class="ion-text-start">Report Issue</ion-text>
+              </div>
+              <ion-button size="small" fill="clear" class="nxt-btn">
+                <ion-icon name="caret-forward-outline" size="large"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card>
+        </ion-col>
+
+
+
+
+        <!-- ven raised tickets -->
+        <ion-row class="ion-text-center">
+          <ion-col size="12">
+            <ion-card class="btn-card" (click)="route('ticket-system/view-status-vendor?tab=raised_tickets')">
+              <div>
+                <div>
+                  <ion-icon src="assets/home/ticket-system/btn_tic_ic_l.svg" size="large"
+                    style="color: #F2C84D;"></ion-icon>
+                  <div class="icon-band-wrapper">
+                    <span class="icon-band" style="color: #F2C84D;">RAISED</span>
+                  </div>
+                  <ion-text class="ion-text-start">Raised Tickets</ion-text>
+                </div>
+                <ion-button size="small" fill="clear" class="nxt-btn">
+                  <ion-icon name="caret-forward-outline" size="large"></ion-icon>
+                </ion-button>
+              </div>
+
+            </ion-card>
+          </ion-col>
+        </ion-row>
+
+
+      </ng-container>
+
+
+
+
+      <ng-container *ngIf="_role == '1'">
+        <ion-row class=" ion-text-center">
+          <ion-col size="12">
+            <ion-card class="btn-card" (click)="route('ticket-system/view-actions-hq')">
+              <div>
+                <div>
+                  <ion-icon src="assets/home/ticket-system/btn_tic_ic_l.svg" size="large"
+                    style="color: #ff5d5d;"></ion-icon>
+                  <div class="icon-band-wrapper">
+                    <span class="icon-band" style="color: #ff5d5d;">ACTIONS</span>
+                  </div>
+                  <ion-text class=" ion-text-start"> District-wise Action Requests</ion-text>
+                </div>
+                <ion-button size="small" fill="clear" class="nxt-btn">
+                  <ion-icon name="caret-forward-outline" size="large"></ion-icon>
+                </ion-button>
+              </div>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+
+
+        <ion-row class="ion-text-center" *ngIf="_role == '1'">
+          <ion-col size="12">
+            <ion-card class="btn-card"
+              (click)="route('ticket-system/view-status-admin-2?tab=others_admin&tab2=district')">
+              <div>
+                <div>
+                  <ion-icon src="../../../../../assets/home/btn_view_status_ic_l.svg" size="large"></ion-icon>
+                  <ion-text class="ion-text-start">View All Tickets</ion-text>
+                </div>
+                <ion-button size="small" fill="clear" class="nxt-btn">
+                  <ion-icon name="caret-forward-outline" size="large"></ion-icon>
+                </ion-button>
+              </div>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+
+      </ng-container>
+
+
+
+      <ion-row class="ion-text-center" *ngIf="_role == '96'">
+
+
+        <ion-col size="12">
+          <ion-card class="btn-card" (click)="route('ticket-system/visit-list')">
+            <div>
+              <div>
+                <ion-icon src="assets/home/btn_view_status_ic_l.svg" size="large"></ion-icon>
+                <ion-text class="ion-text-start">View Action Requests</ion-text>
+              </div>
+              <ion-button size="small" fill="clear" class="nxt-btn">
+                <ion-icon name="caret-forward-outline" size="large"></ion-icon>
+                <ng-container *ngIf="action_pending_count">
+                  <ion-badge *ngIf="action_pending_count['count']!=0"
+                    slot="start">{{action_pending_count['count']}}</ion-badge>
+                </ng-container>
+              </ion-button>
+            </div>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="12">
+          <ion-card class="btn-card" (click)="route('ticket-system/view-status-admin?tab=others')">
+            <div>
+              <div>
+                <ion-icon src="assets/home/ticket-system/btn_tic_ic_l.svg" size="large"
+                  style="color: #06E1FF;"></ion-icon>
+                <div class="icon-band-wrapper">
+                  <span class="icon-band" style="color: #00ffff;">District</span>
+                </div>
+                <ion-text class=" ion-text-start"> District Tickets</ion-text>
+              </div>
+              <ion-button size="small" fill="clear" class="nxt-btn">
+                <ion-icon name="caret-forward-outline" size="large"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="12">
+          <ion-card class="btn-card" (click)="route('ticket-system/arg-complaints')">
+            <div>
+              <div>
+                <ion-icon src="assets/home/btn_report_issue_ic_l.svg" size="large"></ion-icon>
+                <ion-text class="ion-text-start">Report Complaints</ion-text>
+              </div>
+              <ion-button size="small" fill="clear" class="nxt-btn">
+                <ion-icon name="caret-forward-outline" size="large"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+
+
+      <ion-row class="ion-text-center">
+        <ion-col size="12">
+          <ion-card class="btn-card" (click)="route('ticket-system/fence-status')">
+            <div>
+              <div>
+                <ion-icon src="../../../../../assets/home/ticket-system/btn_station_info_ic_l.svg"
+                  size="large"></ion-icon>
+                <ion-text class="ion-text-start">View Station Info</ion-text>
+              </div>
+              <ion-button size="small" fill="clear" class="nxt-btn">
+                <ion-icon name="caret-forward-outline" size="large"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card>
+
+  <div class="footer-text" style="position: relative;">T N S M A R T</div>
+</ion-content>

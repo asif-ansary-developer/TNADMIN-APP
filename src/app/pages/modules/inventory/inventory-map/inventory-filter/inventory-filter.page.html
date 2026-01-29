@@ -1,0 +1,54 @@
+<ion-header [translucent]="true">
+  <ion-toolbar mode="ios">
+    <ion-title>Filter by</ion-title>
+
+    <ion-buttons slot="start" class="module-close-btn">
+      <ion-button mode="ios" (click)="back()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end" class="modal-right-btn">
+      <ion-button mode="ios" (click)="ResetFilters()">
+        Reset
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list>
+    <ion-list-header>
+      Source
+    </ion-list-header>
+
+    <!-- <div style="display: flex;flex-wrap: wrap;">
+      <div lines="none" *ngFor="let source of filterService?.inventory_source"
+        [ngStyle]="{'background': source.selected ? 'var(--ion-color-primary)':'#fff'}">
+        <ion-checkbox class="checkbox-multi-select" labelPlacement="start"
+          [(ngModel)]="source.selected">{{source['source_name']}}</ion-checkbox>
+      </div>
+
+    </div> -->
+
+    <ion-item lines="none" *ngFor="let source of filterService?.inventory_source">
+      <ion-checkbox labelPlacement="start" [(ngModel)]="source.selected">{{source['source_name']}}</ion-checkbox>
+    </ion-item>
+
+    <hr>
+    <ion-list-header>
+      Equipments
+    </ion-list-header>
+
+    <ion-item lines="none" *ngFor="let equipment of filterService?.equipment_data">
+      <ion-checkbox labelPlacement="start" [(ngModel)]="equipment.selected">{{equipment['item_name']}}</ion-checkbox>
+    </ion-item>
+
+  </ion-list>
+
+
+  <div class="bottom-fixed-div">
+    <ion-button Expand="block" (click)="applyFilters()">Apply</ion-button>
+  </div>
+
+
+</ion-content>

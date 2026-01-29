@@ -1,0 +1,395 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="ios">
+    <ion-title>{{"View Tickets Status" | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button *ngIf="role =='ven_master'" mode="ios" defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" style="z-index: 10; margin-top: -1%">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+
+  <div class="container" style="position: fixed; width: calc(100% - 0px);z-index: 2;margin: 0;padding: 0 16px;background: #fff;box-shadow: rgb(0 0 0 / 12%) 0px 0px 10px;  outline: 1.2px #d7d7d7 solid;
+  ">
+    <ion-segment [(ngModel)]="tab" mode="ios" (ionChange)="cdrRefresh();tabHandler()">
+      <ion-segment-button value="all">
+        <ion-label [ngClass]="tab=='all'? 'segement-transition':''">All</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="district">
+        <ion-label [ngClass]="tab=='district'? 'segement-transition':''">District</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="search">
+        <ion-label [ngClass]="tab=='search'? 'segement-transition':''">Search</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <ion-card *ngIf="tab!='all'" style="padding: 16px 10px 16px 10px;">
+
+      <ion-searchbar [ngStyle]="{
+        'display':  tab =='search'? 'flex':'none'}" id="search-bar" mode="ios" (ionInput)="filterItems($event)"
+        (ionBlur)="filtereditems? '':''" (ionClear)="resetSearch()" [(ngModel)]="searchTerm" clearText="true"
+        placeholder="{{'Search Ticket Id' | translate}}" debounce="250" type="number" #searchbar #distCtrl="ngModel"
+        style="padding: 0;margin-left: -6.8px;width: calc(100% + 6.8px);--border-radius:100px;--background: #f3f3f3;">
+        <span style="background: #f3f3f3;
+      min-height: 36px;
+      display: flex;
+      margin-left: 10px;
+      align-items: center;
+      border-radius:4px ;
+      font-weight: 500;
+      padding: 0 14px;">CWT</span>&nbsp;&nbsp;&nbsp;
+      </ion-searchbar>
+
+      <ion-input *ngIf="tab=='district'" style="padding-bottom: 4px  !important;" label=" {{ 'District' | translate}}"
+        class="ip-cursor" label-placement="stacked" fill="outline" placeholder="Select district" #stationCtrl="ngModel"
+        [(ngModel)]="districtName" required errorText="*Please select a district" readonly clickable mode="md"
+        (click)="presentDistrictSelector()">
+        <ion-icon slot="end" name="caret-down-outline" aria-hidden="true"
+          style="width: 14px;color: grey;"></ion-icon></ion-input>
+    </ion-card>
+  </div>
+
+
+
+  <div *ngIf="tab=='search'" class="container"
+    style="position:absolute;margin-top:  180px;width: calc(100% - 32px);z-index: 1;">
+    <div *ngIf="loading_search_tickets">
+      <div class="skeleton-container" style="margin: 40px 0 0 0 ;">
+        <div class="skeleton skeleton-card" style="height: 300px; margin-top: -15px;margin-bottom:22px;"></div>
+        <div class="skeleton skeleton-card" style="margin-top: 16px;height: 300px;padding: 0;"></div>
+        <div class="skeleton skeleton-card" style="margin-top: 16px;height: 300px;padding: 0;"></div>
+      </div>
+    </div>
+
+
+    <ion-card class="ion-padding  ion-text-center" *ngIf="search_tickets.length==0">No
+      tickets</ion-card>
+
+    <ion-card class="ion-padding ticket-card" *ngFor="let ticket of search_tickets"
+      (click)="openTicketResolverAction(ticket['t_id'])">
+      <ion-label class="ticket-card-label" style="font-family: monospace !important;"> {{ticket['t_id']}}</ion-label>
+
+
+      <ion-label class="ticket-card-label" style="
+      margin-top: 8px;
+      font-size: 1.0rem;"> {{ticket['difficulty']}}</ion-label>
+
+      <ion-button size="small" (click)="openTicketResolverAction(ticket['t_id'])" class="more-btn">
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </ion-button>
+
+      <p class="ticket-card-p" style="margin-top: 6px  auto">Raiser : {{ticket['ticket_owner'] | translate}}</p>
+      <p class="ticket-card-p" style="margin-top: 6px auto">Station : {{ticket['station_code'] | translate}} <span
+          style="text-transform: capitalize;"> ({{ticket['district']}})</span></p>
+
+
+
+      <ng-container *ngIf="ticket['threads'][ticket['threads']?.length-1]['status']==100">
+        <ion-row class="closed-row">
+          <ion-col> <ion-icon name="ellipse"></ion-icon> </ion-col>
+          <ion-col>
+            <ion-label>{{ticket['threads'][ticket['threads']?.length-1]['text']}}
+              <span class="timestamp">
+                {{_moment(ticket['threads'][ticket['threads']?.length-1]['date']).format('DD-MM-yyyy')}}
+                {{ticket['threads'][ticket['threads']?.length-1]['time']}}</span>
+            </ion-label>
+          </ion-col>
+        </ion-row>
+      </ng-container>
+
+      <ng-container *ngIf="ticket['threads'][ticket['threads']?.length-1]['status']!=100">
+
+        <ng-container *ngFor="let tic of ticket['threads']">
+          <ng-container
+            *ngIf=" tic['status']==0 || tic['status']==1 || tic['status']==3 || tic['status']==50 || tic['status']==48 ||tic['status']==49 || tic['status']==88 ">
+            <ion-row>
+              <ion-col> <ion-icon name="ellipse" [ngClass]="tic['status']==2?'on-progress':''"></ion-icon> </ion-col>
+              <ion-col>
+                <ion-label *ngIf="tic['status']==0">Ticket raised
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==1">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==3">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==48">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==49">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==50">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==88">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==100">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <div class="vert-line"></div>
+              </ion-col>
+            </ion-row>
+          </ng-container>
+
+          <ng-container *ngIf="tic['status']==2 && ticket['threads'].length == 3">
+            <ion-row>
+              <ion-col> <ion-icon name="ellipse" [ngClass]="tic['status']==2?'on-progress':''"></ion-icon> </ion-col>
+              <ion-col>
+                <ion-label *ngIf="tic['status']==2">Yet to be Addressed
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <div class="vert-line"></div>
+              </ion-col>
+            </ion-row>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </ion-card>
+  </div>
+
+
+  <div *ngIf="tab=='district'" class="container"
+    style="position:absolute;margin-top:  202px;width: calc(100% - 32px);z-index: 1;">
+    <div *ngIf="loading_overall_tickets">
+      <div class="skeleton-container" style="margin: 40px 0 0 0 ;">
+        <div class="skeleton skeleton-card" style="height: 300px; margin-top: -15px;margin-bottom:22px;"></div>
+        <div class="skeleton skeleton-card" style="margin-top: 16px;height: 300px;padding: 0;"></div>
+        <div class="skeleton skeleton-card" style="margin-top: 16px;height: 300px;padding: 0;"></div>
+      </div>
+    </div>
+
+
+    <ion-card class="ion-padding  ion-text-center" *ngIf="overall_tickets.length==0">No
+      tickets</ion-card>
+
+    <ion-card class="ion-padding ticket-card" *ngFor="let ticket of overall_tickets"
+      (click)="openTicketResolverAction(ticket['t_id'])">
+      <ion-label class="ticket-card-label" style="font-family: monospace !important;"> {{ticket['t_id']}}</ion-label>
+
+
+      <ion-label class="ticket-card-label" style="
+    margin-top: 8px;
+    font-size: 1.0rem;"> {{ticket['difficulty']}}</ion-label>
+
+      <ion-button size="small" (click)="openTicketResolverAction(ticket['t_id'])" class="more-btn">
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </ion-button>
+
+      <p class="ticket-card-p" style="margin-top: 6px  auto">Raiser : {{ticket['ticket_owner'] | translate}}</p>
+      <p class="ticket-card-p" style="margin-top: 6px auto">Station : {{ticket['station_code'] | translate}}
+
+      </p>
+
+
+
+      <ng-container *ngIf="ticket['threads'][ticket['threads']?.length-1]['status']==100">
+        <ion-row class="closed-row">
+          <ion-col> <ion-icon name="ellipse"></ion-icon> </ion-col>
+          <ion-col>
+            <ion-label>{{ticket['threads'][ticket['threads']?.length-1]['text']}}
+              <span class="timestamp">
+                {{_moment(ticket['threads'][ticket['threads']?.length-1]['date']).format('DD-MM-yyyy')}}
+                {{ticket['threads'][ticket['threads']?.length-1]['time']}}</span>
+            </ion-label>
+          </ion-col>
+        </ion-row>
+      </ng-container>
+
+      <ng-container *ngIf="ticket['threads'][ticket['threads']?.length-1]['status']!=100">
+
+        <ng-container *ngFor="let tic of ticket['threads']">
+          <ng-container
+            *ngIf=" tic['status']==0 || tic['status']==1 || tic['status']==3 || tic['status']==50 || tic['status']==48 ||tic['status']==49 || tic['status']==88 ">
+            <ion-row>
+              <ion-col> <ion-icon name="ellipse" [ngClass]="tic['status']==2?'on-progress':''"></ion-icon> </ion-col>
+              <ion-col>
+                <ion-label *ngIf="tic['status']==0">Ticket raised
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==1">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==3">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==48">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==49">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==50">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==88">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==100">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <div class="vert-line"></div>
+              </ion-col>
+            </ion-row>
+          </ng-container>
+
+          <ng-container *ngIf="tic['status']==2 && ticket['threads'].length == 3">
+            <ion-row>
+              <ion-col> <ion-icon name="ellipse" [ngClass]="tic['status']==2?'on-progress':''"></ion-icon> </ion-col>
+              <ion-col>
+                <ion-label *ngIf="tic['status']==2">Yet to be Addressed
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <div class="vert-line"></div>
+              </ion-col>
+            </ion-row>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </ion-card>
+  </div>
+
+
+  <div *ngIf="tab=='all'" class="container"
+    style="position:absolute;margin-top: 56px;width: calc(100% - 32px);z-index: 1;">
+
+    <ion-fab>
+      <ion-fab-button size="small" style="text-transform: capitalize;" (click)="filterFabActive=!filterFabActive">
+        <ion-icon name="filter" style="height: 20px;transform: scale(1.5);"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-list side="bottom">
+
+        <ion-fab-button (click)="allTicketsFilterClick('all')"
+          [ngStyle]="{'border-width': all_tickets_filter=='all'? '8px':'0' }">
+          All
+        </ion-fab-button>
+        <ion-fab-button (click)="allTicketsFilterClick('open')"
+          [ngStyle]="{'border-width': all_tickets_filter=='open'? '8px':'0' }">
+          Open
+        </ion-fab-button>
+        <ion-fab-button (click)="allTicketsFilterClick('closed')"
+          [ngStyle]="{'border-width': all_tickets_filter=='closed'? '8px':'0' }">
+          Closed
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
+
+    <div *ngIf="loading_all_tickets">
+
+      <div class="skeleton-container" style="margin: 40px 0 0 0 ;">
+        <div class="skeleton skeleton-card" style="height: 300px; margin-top: -15px;margin-bottom:22px;"></div>
+        <div class="skeleton skeleton-card" style="margin-top: 16px;height: 300px;padding: 0;"></div>
+        <div class="skeleton skeleton-card" style="margin-top: 16px;height: 300px;padding: 0;"></div>
+      </div>
+    </div>
+
+
+    <ion-card class="ion-padding  ion-text-center" *ngIf="all_tickets.length==0">No
+      tickets</ion-card>
+
+    <ion-card class="ion-padding ticket-card" *ngFor="let ticket of all_tickets"
+      (click)="openTicketResolverAction(ticket['t_id'])">
+      <ion-label class="ticket-card-label" style="font-family: monospace !important;"> {{ticket['t_id']}}</ion-label>
+
+
+      <ion-label class="ticket-card-label" style="
+  margin-top: 8px;
+  font-size: 1.0rem;"> {{ticket['difficulty']}}</ion-label>
+
+      <ion-button size="small" (click)="openTicketResolverAction(ticket['t_id'])" class="more-btn">
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </ion-button>
+
+      <p class="ticket-card-p" style="margin-top: 6px  auto">Raiser : {{ticket['ticket_owner'] | translate}}</p>
+      <p class="ticket-card-p" style="margin-top: 6px auto">Station : {{ticket['station_code'] | translate}}
+        <span style="text-transform: capitalize;"> ({{ticket['district']}})</span>
+      </p>
+
+
+
+      <ng-container *ngIf="ticket['threads'][ticket['threads']?.length-1]['status']==100">
+        <ion-row class="closed-row">
+          <ion-col> <ion-icon name="ellipse"></ion-icon> </ion-col>
+          <ion-col>
+            <ion-label>{{ticket['threads'][ticket['threads']?.length-1]['text']}}
+              <span class="timestamp">
+                {{_moment(ticket['threads'][ticket['threads']?.length-1]['date']).format('DD-MM-yyyy')}}
+                {{ticket['threads'][ticket['threads']?.length-1]['time']}}</span>
+            </ion-label>
+          </ion-col>
+        </ion-row>
+      </ng-container>
+
+      <ng-container *ngIf="ticket['threads'][ticket['threads']?.length-1]['status']!=100">
+
+        <ng-container *ngFor="let tic of ticket['threads']">
+          <ng-container
+            *ngIf=" tic['status']==0 || tic['status']==1 || tic['status']==3 || tic['status']==50 || tic['status']==48 ||tic['status']==49 || tic['status']==88 ">
+            <ion-row>
+              <ion-col> <ion-icon name="ellipse" [ngClass]="tic['status']==2?'on-progress':''"></ion-icon> </ion-col>
+              <ion-col>
+                <ion-label *ngIf="tic['status']==0">Ticket raised
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==1">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==3">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==48">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==49">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==50">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==88">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <ion-label *ngIf="tic['status']==100">{{tic['text']}}
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <div class="vert-line"></div>
+              </ion-col>
+            </ion-row>
+          </ng-container>
+
+          <ng-container *ngIf="tic['status']==2 && ticket['threads'].length == 3">
+            <ion-row>
+              <ion-col> <ion-icon name="ellipse" [ngClass]="tic['status']==2?'on-progress':''"></ion-icon> </ion-col>
+              <ion-col>
+                <ion-label *ngIf="tic['status']==2">Yet to be Addressed
+                  <span class="timestamp"> {{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                </ion-label>
+                <div class="vert-line"></div>
+              </ion-col>
+            </ion-row>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </ion-card>
+    <ion-backdrop [ngStyle]="{'display': filterFabActive? 'block':'none'}"></ion-backdrop>
+
+  </div>
+
+
+
+
+
+  <ion-infinite-scroll (ionInfinite)="loadMore($event);clearEvent($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+</ion-content>

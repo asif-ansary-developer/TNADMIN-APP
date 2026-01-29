@@ -1,0 +1,112 @@
+<!---------------------------
+Name: tnsmart
+-----------------------------
+Author: Mohammed Rizwan S
+Data:   10/2/2024
+---------------------------->
+
+
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <ion-title>{{"Civil Work Update"| translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button mode="ios" defaultHref="/ticket-system"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+
+  <ion-card style="padding: 16px 10px 16px 10px; margin-top: 8px;">
+
+    <ion-input label="{{ 'ARG Station' | translate}}" class="ip-cursor" label-placement="stacked" fill="outline"
+      placeholder="Select station" #stationCtrl="ngModel" [(ngModel)]="stationCode" required
+      errorText="*Please select a station" (click)="presentModal()" readonly clickable mode="md">
+      <ion-icon slot="end" name="caret-down-outline" aria-hidden="true"
+        style="width: 14px;color: grey;"></ion-icon></ion-input>
+
+    <!-- <ion-item lines="none" class="ion-item-custom" mode="ios">
+      <ion-label class="headers" position="stacked">{{"ARG Station" | translate}}</ion-label>
+      <ion-input spellcheck="true" placeholder="{{'Select Station' | translate}}" #stationCtrl="ngModel"
+        [(ngModel)]="stationCode" (click)="presentModal()" required readonly>
+
+        <ion-icon name="caret-down-outline" style="position: absolute; right: 10px; opacity: 0.4"></ion-icon>
+      </ion-input>
+      <ion-note slot="error">*Please select a station</ion-note>
+    </ion-item> -->
+
+
+  </ion-card>
+  <ion-card style="padding: 16px 10px 18px 10px; margin-top: 12px;">
+
+    <!-- <ion-item lines="none" class="ion-item-custom" mode="ios">
+      <ion-label class="headers" position="stacked">{{"Is the civil work done?" | translate}}</ion-label>
+
+
+      <ion-radio-group value="civil_work" mode="ios" class="ion-padding-start" #radioCtrl="ngModel"
+        [(ngModel)]="civil_work" required>
+        <ion-item lines="none" class="ion-no-margin">
+          <ion-label>Yes</ion-label>
+          <ion-radio slot="start" value="yes"></ion-radio>
+        </ion-item>
+
+        <ion-item lines="none" class="ion-no-margin">
+          <ion-label> No </ion-label>
+          <ion-radio slot="start" value="no">
+          </ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-item> -->
+
+    <ion-input label="{{ 'Coordinate' | translate}}" class="ip-cursor" label-placement="stacked" fill="outline"
+      placeholder="Fetch coordinate" #coordinateCtrl="ngModel" [(ngModel)]="coordinate" required
+      (click)="requestPermission()" readonly clickable mode="md">
+      <ion-button slot="end" fill="clear" style="width: 50px;margin-right: -18px;">
+        <ion-icon name="refresh" aria-hidden="true" style="width: 16px;color: grey;"></ion-icon>
+      </ion-button></ion-input>
+
+
+    <ion-input type="date" label="{{ 'Date' | translate}}" class="ip-cursor" [max]="maxDate" label-placement="stacked"
+      fill="outline" placeholder="Select date" errorText="*Please select a date" #dateCtrl="ngModel" [(ngModel)]="date"
+      required clickable mode="md">
+    </ion-input>
+
+
+
+    <ion-input label="{{ 'Attach Image' | translate}} (If
+          available)" class="ip-cursor" label-placement="stacked" fill="outline" class="attach-input" readonly
+      clickable mode="md">
+
+      <ion-button slot="start" size="small" fill="outline" style="width: 50px;margin-top: 20px;" (click)="getPhoto()">
+        <ion-icon name="attach-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-input>
+    <ion-button *ngIf="img" fill="clear" size="small" (click)="clearAttachment()" class="circular-close-btn">
+      <ion-icon name="close-circle"></ion-icon>
+    </ion-button>
+    <ion-card *ngIf="img" class="img-holder">
+      <img src="{{this.img}}" />
+    </ion-card>
+
+
+  </ion-card>
+
+
+  <ion-grid>
+    <ion-row class="ion-padding-top">
+      <ion-col>
+        <!-- <ion-button Expand="block"
+          [disabled]="!stationCtrl.valid || !radioCtrl.valid  || !dateCtrl.valid || !coordinateCtrl.valid"
+          (click)=" updateCivilWork()">
+          {{"Update" | translate}}
+        </ion-button> -->
+        <ion-button Expand="block" [disabled]="!stationCtrl.valid || !dateCtrl.valid || !coordinateCtrl.valid"
+          (click)=" updateCivilWork()">
+          {{"Update" | translate}}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

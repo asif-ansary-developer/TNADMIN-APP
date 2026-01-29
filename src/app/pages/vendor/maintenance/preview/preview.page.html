@@ -1,0 +1,220 @@
+<!---------------------------
+Name: tnsmart
+-----------------------------
+Author: Mohammed Rizwan S
+Data:   10/2/2024
+---------------------------->
+
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <ion-title>{{"Verify Entry"}}</ion-title>
+    <ion-buttons slot="start" class="modal-close-btn">
+      <ion-button mode="ios" (click)="closeModal()">
+        <!-- <ion-icon name="back" style="color: #000;"></ion-icon>-->
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="container">
+    <ion-card class="ion-padding ion-text-center" *ngIf="!preview_data">No preview</ion-card>
+
+    <ion-card class="ion-padding ticket-card" *ngIf="preview_data">
+      <ion-label class="ticket-card-label"></ion-label>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col size="4.6"> <ion-label>District :</ion-label></ion-col>
+          <ion-col size="7.4">
+            <ion-label>{{preview_data['district_name']}}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="4.6"> <ion-label>Taluk :</ion-label></ion-col>
+          <ion-col size="7.4">
+            <ion-label>{{preview_data['taluk']}}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="4.6"> <ion-label>Station Code :</ion-label></ion-col>
+          <ion-col size="7.4">
+            <ion-label>{{preview_data['station_code']}}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="4.6">
+            <ion-label>Station name :</ion-label></ion-col>
+          <ion-col size="7.4">
+            <ion-label>{{preview_data['station_name']}}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="4.6"> <ion-label>Date of visit :</ion-label></ion-col>
+          <ion-col size="7.4">
+            <ion-label>{{preview_data['visit_date']}}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="4.6"> <ion-label>Purpose :</ion-label></ion-col>
+          <ion-col size="7.4">
+            <ion-label>{{preview_data['purpose']}}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="4.6"> <ion-label>Maintenance type :</ion-label></ion-col>
+          <ion-col size="7.4">
+            <ion-label>{{preview_data['maintenance_type']}}</ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="preview_data['issue_detail']">
+          <ion-col size="4.6"> <ion-label>Issue in detail :</ion-label></ion-col>
+          <ion-col size="7.4">
+            <ion-label>{{preview_data['issue_detail']}}</ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="preview_data['replacement_detail']">
+          <ion-col size="4.6"> <ion-label>Replacement detail :</ion-label></ion-col>
+          <ion-col size="7.4">
+            <ion-label>{{preview_data['replacement_detail']}}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="4.6"><ion-label>Before Maintenance :</ion-label></ion-col>
+          <ion-col size="7.4">
+            <ion-img src="{{preview_data['before_img'] }}"></ion-img>
+          </ion-col>
+        </ion-row>
+
+        <ion-row *ngIf="preview_data['during_img']">
+          <ion-col size="4.6"><ion-label>During Maintenance :</ion-label></ion-col>
+          <ion-col size="7.4">
+            <ion-img src="{{preview_data['during_img'] }}"></ion-img>
+
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="4.6"> <ion-label>After Maintenance :</ion-label></ion-col>
+          <ion-col size="7.4">
+
+            <ion-img src="{{preview_data['after_img'] }}"></ion-img>
+
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="4.6"><ion-label>Remarks :</ion-label></ion-col>
+          <ion-col size="7.4">
+            <ion-label>{{preview_data['remarks']}}</ion-label>
+          </ion-col>
+        </ion-row>
+
+      </ion-grid>
+    </ion-card>
+
+    <ion-grid>
+      <ion-row class="ion-padding-top ion-padding-bottom">
+        <ion-col>
+          <ion-button Expand="block" (click)="submit()">
+            {{"Submit"}}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <!-- <ion-card class="ion-padding  ion-text-center" *ngIf="preview_data">
+      <ion-grid>
+
+        <ion-row class="first-card ion-text-center">
+          <ion-col class="ion-text-center"> <ion-label>{{"Inventory List"}}</ion-label></ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="4.6" class="ion-text-left"> <ion-label>{{"Department"}} :</ion-label></ion-col>
+          <ion-col size="7.4" class="ion-text-left">
+            <ion-label>{{preview_data['department_name'] }}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="4.6" class="ion-text-left"> <ion-label>{{"Source"}} :</ion-label></ion-col>
+          <ion-col size="7.4" class="ion-text-left">
+            <ion-label>{{preview_data['source_name'] }}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="4.6" class="ion-text-left"> <ion-label>{{"Company/ Individual"}} :</ion-label></ion-col>
+          <ion-col size="7.4" class="ion-text-left">
+            <ion-label>{{preview_data['entity'] }}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="4.6" class="ion-text-left"> <ion-label>{{"Incharge"}} :</ion-label></ion-col>
+          <ion-col size="7.4" class="ion-text-left">
+            <ion-label>{{preview_data['incharge'] }}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="4.6" class="ion-text-left"><ion-label>{{"Incharge No"}} :</ion-label></ion-col>
+          <ion-col size="7.4" class="ion-text-left">
+            <ion-label>{{preview_data['incharge_no'] }}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="4.6" class="ion-text-left"><ion-label>{{"Alternate No"}} :</ion-label></ion-col>
+          <ion-col size="7.4" class="ion-text-left">
+            <ion-label>{{preview_data['alternate_no'] }}</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="4.6" class="ion-text-left"> <ion-label>{{"Landline"}} :</ion-label></ion-col>
+          <ion-col size="7.4" class="ion-text-left">
+            <ion-label>{{preview_data['landline'] }}</ion-label>
+          </ion-col>
+        </ion-row>
+
+
+        <ion-row style="height: max-content;">
+          <ion-col size="4.6" class="ion-text-left" style="height: unset;"> <ion-label>{{"Equipments" }}
+              :</ion-label></ion-col>
+          <ion-col size="7.4" style="display: block;" class="ion-no-padding">
+            <ion-row class="ion-text-left list" *ngFor="let eqp of preview_data['equipment_list'];let i=index">
+              <ion-col size="2" style="padding-left: 0;padding-right: 0;">
+                <span class="pointer">{{i+1}}</span>
+              </ion-col>
+              <ion-col size="8" style="padding-left: 2px;padding-right: 0;">
+                <ion-label>{{eqp.name}}</ion-label>
+              </ion-col>
+              <ion-col size="2" style="padding-left: 0;padding-right: 0;">
+                <span class="pointer"><b>{{eqp.nos}}</b></span>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+
+
+        <ion-row>
+          <ion-col size="4.6" class="ion-text-left"> <ion-label>{{"Functional"}} :</ion-label></ion-col>
+          <ion-col size="7.4" class="ion-text-left">
+            <ion-label>{{preview_data['Functional_status']}}</ion-label>
+          </ion-col>
+        </ion-row>
+
+      </ion-grid>
+    </ion-card> -->
+  </div>
+</ion-content>

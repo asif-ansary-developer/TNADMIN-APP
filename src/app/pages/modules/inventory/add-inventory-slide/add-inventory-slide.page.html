@@ -1,0 +1,936 @@
+<!---------------------------
+Name: tnsmart
+-----------------------------
+Author: Mohammed Rizwan S
+Data:   10/2/2024
+---------------------------->
+
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <ion-title>{{"Inventory"| translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button mode="ios" defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" #content>
+  <ion-grid>
+    <ion-row class="ion-padding-top">
+      <ion-col class="header-card">
+        <ion-label
+          style="
+            font-size: var(--ion-font-regular);
+            color: var(--ion-color-primary);
+            font-weight: var(--ion-font-weight-medium);
+          "
+        >
+          {{"Please fill out all the fields below to add/update the inventory" |
+          translate}}
+          <span class="note"
+            >Note: {{"Ensure that all details are accurate." | translate}}
+          </span>
+        </ion-label>
+
+        <div class="slide-indicator-wrapper">
+          <div
+            class="slide-indicator"
+            (click)="goToSlide(0)"
+            [ngClass]="activeSlide==0  ? 'slide-indicator-active':''"
+            [ngClass]="activeSlide==0 && form_4.valid ? 'slide-indicator-active':'' "
+            [ngStyle]="{'background': form_1.invalid && form_1.touched && activeSlide!=0  ? 'var(--ion-color-danger)' :
+                        (form_1.valid && form_1.touched ? '#6ab200' : '')}"
+          >
+            1
+          </div>
+          <div class="line"></div>
+          <div
+            class="slide-indicator"
+            (click)="goToSlide(1)"
+            [ngClass]="activeSlide==1 ? 'slide-indicator-active':''"
+            [ngStyle]="{'background': form_2.invalid && form_2.touched && activeSlide!=1  ? 'var(--ion-color-danger)' :
+                        (form_2.valid && form_2.touched ? '#6ab200' : '')}"
+          >
+            2
+          </div>
+          <div class="line"></div>
+          <div
+            class="slide-indicator"
+            (click)="goToSlide(2)"
+            [ngClass]="activeSlide==2 ? 'slide-indicator-active':''"
+            [ngStyle]="{'background': form_3.invalid && form_3.touched && activeSlide!=2  ? 'var(--ion-color-danger)' :
+                        (form_3.valid && form_3.touched ? '#6ab200' : '')}"
+          >
+            3
+          </div>
+          <div class="line"></div>
+
+          <div
+            class="slide-indicator"
+            (click)="goToSlide(3)"
+            [ngClass]="activeSlide==3 ? 'slide-indicator-active':''"
+            [ngStyle]="{'background': form_3a.invalid && form_3a.touched && activeSlide!=3 && !this.latitude && !this.longitude? 'var(--ion-color-danger)' :
+                                      (form_3a.valid && form_3a.touched && this.latitude && this.longitude  ? '#6ab200' : '')}"
+          >
+            4
+          </div>
+          <div class="line"></div>
+
+          <div
+            class="slide-indicator"
+            (click)="goToSlide(4)"
+            [ngClass]="activeSlide==4 ? 'slide-indicator-active' :''"
+            [ngStyle]="{'background': form_4.invalid && form_4.touched && activeSlide!=4  ? 'var(--ion-color-danger)' :
+                        (form_4.valid && equipment_list.length !=0  ? '#6ab200' : '')}"
+          >
+            5
+          </div>
+          <div class="line"></div>
+
+          <div
+            class="slide-indicator"
+            (click)="goToSlide(5)"
+            [ngClass]="activeSlide==5 ? 'slide-indicator-active' :''"
+            [ngStyle]="{'background':  form_5.invalid && form_5.touched && activeSlide!=5 ? 'var(--ion-color-danger)' :
+                                            (form_5.valid? '#6ab200' : '')}"
+          >
+            6
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <swiper
+    [config]=" config"
+    (swiper)="onSwiper($event)"
+    (slideChange)="onSlideChange()"
+    #swiper_inventory
+  >
+    <!-- <ng-template swiperSlide>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            Department
+          </ion-col>
+
+          <ion-col>
+            {{getDepartmentName()}}
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+    </ng-template> -->
+
+    <ng-template swiperSlide>
+      <div class="slide">
+        <ion-card style="padding: 16px 10px 10px 10px; margin-top: 12px">
+          <form [formGroup]="form_1">
+            <!-- 
+            <ion-select formControlName="department" label="{{ 'Department' | translate}}" label-placement="stacked"
+              fill="outline" [(ngModel)]="department" placeholder="Select department"
+              errorText="*Please select department" interface="action-sheet">
+              <ion-select-option *ngFor="let dept of department_data" value="{{dept.dept_id}}">
+                <span>{{dept.dept_name}}</span>
+              </ion-select-option>
+            </ion-select> -->
+
+            <ion-input
+              formControlName="department"
+              label="{{ 'Department' | translate}}"
+              class="ip-cursor"
+              label-placement="stacked"
+              fill="outline"
+              placeholder="Select department"
+              [(ngModel)]="department_name"
+              (click)="presentModal('department')"
+              readonly
+              mode="md"
+            >
+              <ion-icon
+                slot="end"
+                name="caret-down-outline"
+                aria-hidden="true"
+                style="width: 14px; color: grey"
+              ></ion-icon
+            ></ion-input>
+            <span
+              class="error-txt"
+              *ngIf="!form_1.get('department').valid && form_1.get('department').touched"
+            >
+              *Please select department</span
+            >
+
+            <!-- <ion-select formControlName="source" label="{{ 'Source' | translate}}" label-placement="stacked"
+              fill="outline" [(ngModel)]="source" placeholder="Select source" errorText=" *Please select source"
+              interface="action-sheet">
+              <ion-select-option *ngFor="let source of source_data" value="{{source.source_code}}">
+                <span>{{source.source_name}}</span>
+              </ion-select-option>
+            </ion-select> -->
+
+            <ion-input
+              formControlName="source"
+              label="{{ 'Source' | translate}}"
+              class="ip-cursor"
+              label-placement="stacked"
+              fill="outline"
+              placeholder="Select source"
+              [(ngModel)]="source_name"
+              (click)="presentModal('source')"
+              readonly
+              mode="md"
+            >
+              <ion-icon
+                slot="end"
+                name="caret-down-outline"
+                aria-hidden="true"
+                style="width: 14px; color: grey"
+              ></ion-icon
+            ></ion-input>
+            <span
+              class="error-txt"
+              *ngIf="!form_1.get('source').valid && form_1.get('source').touched"
+            >
+              *Please select source</span
+            >
+          </form>
+        </ion-card>
+
+        <ion-grid>
+          <ion-row class="ion-padding-top ion-padding-bottom">
+            <!-- <ion-col> -->
+            <!-- <ion-button Expand="block" (click)="prevSlide()">
+                <ion-icon name="arrow-back" style="font-size: 18px;color: #fff;"></ion-icon>
+              </ion-button> -->
+            <!-- </ion-col> -->
+            <ion-col>
+              <ion-button
+                Expand="block"
+                style="width: fit-content"
+                (click)="nextSlide()"
+              >
+                <!-- {{"Next" | translate}} -->
+                <ion-icon
+                  name="arrow-forward"
+                  style="font-size: 18px; color: #fff"
+                ></ion-icon>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ng-template>
+
+    <ng-template swiperSlide>
+      <div class="slide">
+        <ion-card style="padding: 16px 10px 10px 10px; margin-top: 12px">
+          <form [formGroup]="form_2">
+            <ion-input
+              formControlName="entity"
+              label="{{ 'Company / Individual name' | translate}}"
+              label-placement="stacked"
+              fill="outline"
+              placeholder="Enter company / individual name"
+              [(ngModel)]="entity"
+              mode="md"
+              spellcheck="true"
+              autocapitalize="words"
+              clearInput="true"
+            >
+            </ion-input>
+            <span
+              class="error-txt"
+              *ngIf="!form_2.get('entity').valid && form_2.get('entity').touched"
+            >
+              *Please select company / individual name</span
+            >
+
+            <ion-input
+              formControlName="incharge"
+              label="{{ 'Incharge name' | translate}}"
+              label-placement="stacked"
+              fill="outline"
+              placeholder="Enter incharge name"
+              [(ngModel)]="incharge"
+              mode="md"
+              autocapitalize="words"
+              minlength="3"
+              maxlength="50"
+              clearInput="true"
+            >
+            </ion-input>
+            <span
+              class="error-txt"
+              *ngIf="!form_2.get('incharge').valid && form_2.get('incharge').touched"
+            >
+              *Please enter incharge name</span
+            >
+
+            <ion-input
+              formControlName="inchargeNumber"
+              label="{{ 'Incharge Number' | translate}}"
+              label-placement="stacked"
+              fill="outline"
+              placeholder="Enter incharge number"
+              [(ngModel)]="incharge_number"
+              mode="md"
+              autocapitalize="words"
+              clearInput="true"
+              type="tel"
+            >
+            </ion-input>
+            <span
+              class="error-txt"
+              *ngIf="!form_2.get('inchargeNumber').valid && form_2.get('inchargeNumber').touched"
+            >
+              *Please enter incharge number</span
+            >
+
+            <ion-input
+              formControlName="alternateNumber"
+              label="{{ 'Alternate no' | translate}}"
+              label-placement="stacked"
+              fill="outline"
+              placeholder="Enter alternate mobile number"
+              [(ngModel)]="alternate_number"
+              mode="md"
+              minlength="10"
+              maxlength="10"
+              clearInput="true"
+              type="tel"
+            >
+            </ion-input>
+            <span
+              class="error-txt"
+              *ngIf="!form_2.get('alternateNumber').valid && form_2.get('alternateNumber').touched"
+            >
+              *Please enter alternate number</span
+            >
+
+            <ion-input
+              formControlName="landline"
+              label="{{ 'Landline number' | translate}}"
+              label-placement="stacked"
+              fill="outline"
+              placeholder="Enter landline number"
+              [(ngModel)]="landline_number"
+              mode="md"
+              clearInput="true"
+              type="tel"
+            >
+            </ion-input>
+            <span
+              class="error-txt"
+              *ngIf="!form_2.get('landline').valid && form_2.get('landline').touched"
+            >
+              *Please enter landline number</span
+            >
+          </form>
+        </ion-card>
+
+        <ion-grid>
+          <ion-row class="ion-padding-top ion-padding-bottom">
+            <ion-col>
+              <ion-button
+                Expand="block"
+                style="width: fit-content"
+                (click)="prevSlide()"
+              >
+                <!-- {{"Next" | translate}} -->
+                <ion-icon
+                  name="arrow-back"
+                  style="font-size: 18px; color: #fff"
+                ></ion-icon>
+              </ion-button>
+            </ion-col>
+            <ion-col>
+              <ion-button
+                Expand="block"
+                style="width: fit-content"
+                (click)="nextSlide()"
+              >
+                <!-- {{"Next" | translate}} -->
+                <ion-icon
+                  name="arrow-forward"
+                  style="font-size: 18px; color: #fff"
+                ></ion-icon>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ng-template>
+
+    <ng-template swiperSlide>
+      <div class="slide">
+        <form [formGroup]="form_3">
+          <ion-card style="padding: 16px 10px 10px 10px; margin-top: 12px">
+            <ion-item
+              lines="none"
+              class="ion-item-custom"
+              mode="ios"
+              style="
+                margin-bottom: -60px;
+                transform-origin: left top;
+                transform: translateY(-32%) scale(0.75);
+                margin-top: 20px;
+                margin-left: 6px;
+              "
+            >
+              <ion-label class="headers custom-label" position="stacked" style
+                >{{"Address" | translate}}</ion-label
+              >
+            </ion-item>
+
+            <ion-select
+              formControlName="district"
+              label="{{ 'District' | translate}}"
+              label-placement="stacked"
+              fill="outline"
+              placeholder="Select district"
+              [(ngModel)]="district_id"
+              (ionChange)="getTaluks()"
+              interface="action-sheet"
+            >
+              <ion-select-option
+                *ngFor="let dis of districts_data"
+                value="{{dis.district_id}}"
+                (click)="updateName('dis',dis.district_name)"
+              >
+                <span *ngIf="lang=='en'">{{dis.district_name}}</span>
+                <span *ngIf="lang=='ta'">{{dis.t_district_name}}</span>
+              </ion-select-option>
+            </ion-select>
+            <span
+              class="error-txt"
+              *ngIf="!form_3.get('district').valid && form_3.get('district').touched"
+            >
+              *Please select district</span
+            >
+
+            <ion-select
+              formControlName="taluk"
+              label="{{ 'Taluk' | translate}}"
+              label-placement="stacked"
+              fill="outline"
+              placeholder="Select taluk"
+              [(ngModel)]="taluk_id"
+              (ionChange)="getFirkas()"
+              interface="action-sheet"
+            >
+              <ion-select-option
+                *ngFor="let tal of taluks_data"
+                value="{{tal.taluk_id}}"
+                (click)="updateName('tal',tal.taluk_name)"
+              >
+                <span *ngIf="lang=='en'">{{tal.taluk_name}}</span>
+                <span *ngIf="lang=='ta'">{{tal.ta_taluk_name}}</span>
+              </ion-select-option>
+            </ion-select>
+            <span
+              class="error-txt"
+              *ngIf="!form_3.get('taluk').valid && form_3.get('taluk').touched"
+            >
+              *Please select taluk</span
+            >
+
+            <ion-select
+              formControlName="firka"
+              label="{{ 'Firka' | translate}}"
+              label-placement="stacked"
+              fill="outline"
+              placeholder="Select firka"
+              [(ngModel)]="firka_id"
+              (ionChange)="getVillages()"
+              interface="action-sheet"
+            >
+              <ion-select-option
+                *ngFor="let fir of firkas_data"
+                value="{{fir.firka_id}}"
+              >
+                <span
+                  *ngIf="lang=='en'"
+                  (click)="updateName('fir',fir.firka_name)"
+                  >{{fir.firka_name}}</span
+                >
+                <span *ngIf="lang=='ta'">{{fir.firka_name_ta}}</span>
+              </ion-select-option>
+            </ion-select>
+            <span
+              class="error-txt"
+              *ngIf="!form_3.get('firka').valid && form_3.get('firka').touched"
+            >
+              *Please select firka</span
+            >
+
+            <ion-select
+              formControlName="village"
+              label="{{ 'Village' | translate}}"
+              label-placement="stacked"
+              fill="outline"
+              placeholder="Select village"
+              [(ngModel)]="village_id"
+              interface="action-sheet"
+              (ionChange)="villageOnChange()"
+            >
+              <ion-select-option
+                *ngFor="let vil of villages_data"
+                value="{{vil.village_id}}"
+                (click)="updateName('vil',vil.village_name)"
+              >
+                <span *ngIf="lang=='en'">{{vil.village_name}}</span>
+                <span *ngIf="lang=='ta'">{{vil.village_name_ta}}</span>
+              </ion-select-option>
+            </ion-select>
+            <span
+              class="error-txt"
+              *ngIf="!form_3.get('village').valid && form_3.get('village').touched"
+            >
+              *Please select village</span
+            >
+          </ion-card>
+        </form>
+
+        <ion-grid>
+          <ion-row class="ion-padding-top ion-padding-bottom">
+            <ion-col>
+              <ion-button
+                Expand="block"
+                style="width: fit-content"
+                (click)="prevSlide()"
+              >
+                <!-- {{"Next" | translate}} -->
+                <ion-icon
+                  name="arrow-back"
+                  style="font-size: 18px; color: #fff"
+                ></ion-icon>
+              </ion-button>
+            </ion-col>
+            <ion-col>
+              <ion-button
+                Expand="block"
+                style="width: fit-content"
+                (click)="nextSlide()"
+              >
+                <!-- {{"Next" | translate}} -->
+                <ion-icon
+                  name="arrow-forward"
+                  style="font-size: 18px; color: #fff"
+                ></ion-icon>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ng-template>
+
+    <ng-template swiperSlide>
+      <div class="slide">
+        <form [formGroup]="form_3a">
+          <ion-card style="padding: 16px 10px 10px 10px; margin-top: 12px">
+            <ion-item
+              lines="none"
+              class="ion-item-custom"
+              mode="ios"
+              style="
+                margin-bottom: -60px;
+                transform-origin: left top;
+                transform: translateY(-32%) scale(0.75);
+                margin-top: 20px;
+                margin-left: 6px;
+              "
+            >
+              <ion-label class="headers custom-label" position="stacked" style
+                >{{"Address" | translate}}</ion-label
+              >
+            </ion-item>
+
+            <ion-input
+              formControlName="plotNo"
+              label="{{ 'Door no' | translate}}"
+              label-placement="stacked"
+              fill="outline"
+              placeholder="Enter plot no"
+              [(ngModel)]="plot_no"
+              mode="md"
+              spellcheck="true"
+              autocapitalize="words"
+              clearInput="true"
+              (ionChange)="invalidateAddress()"
+            >
+            </ion-input>
+            <span
+              class="error-txt"
+              *ngIf="!form_3a.get('plotNo').valid && form_3a.get('plotNo').touched"
+            >
+              *Please enter plot no</span
+            >
+
+            <ion-input
+              formControlName="street"
+              label="{{ 'Street' | translate}}"
+              label-placement="stacked"
+              fill="outline"
+              placeholder="Enter street"
+              [(ngModel)]="street"
+              mode="md"
+              spellcheck="true"
+              autocapitalize="words"
+              clearInput="true"
+              (ionChange)="invalidateAddress()"
+            >
+            </ion-input>
+            <span
+              class="error-txt"
+              *ngIf="!form_3a.get('street').valid && form_3a.get('street').touched"
+            >
+              *Please enter street</span
+            >
+
+            <ion-input
+              formControlName="city"
+              label="{{ 'Locality/City' | translate}}"
+              label-placement="stacked"
+              fill="outline"
+              placeholder="Enter locality/city"
+              [(ngModel)]="city"
+              mode="md"
+              spellcheck="true"
+              autocapitalize="words"
+              clearInput="true"
+              (ionChange)="invalidateAddress()"
+            >
+            </ion-input>
+            <span
+              class="error-txt"
+              *ngIf="!form_3a.get('city').valid && form_3a.get('city').touched"
+            >
+              *Please enter locality/city</span
+            >
+
+            <ion-input
+              formControlName="landmark"
+              label="{{ 'Landmark' | translate}}"
+              label-placement="stacked"
+              fill="outline"
+              placeholder="Enter landmark"
+              [(ngModel)]="landmark"
+              (ionChange)="invalidateAddress()"
+              mode="md"
+              spellcheck="true"
+              autocapitalize="words"
+              clearInput="true"
+            >
+            </ion-input>
+            <span
+              class="error-txt"
+              *ngIf="!form_3a.get('landmark').valid && form_3a.get('landmark').touched"
+            >
+              *Please enter landmark</span
+            >
+
+            <!-- <ion-input formControlName="state" label="{{ 'State' | translate}}" label-placement="stacked" fill="outline"
+                  placeholder="Enter state" [(ngModel)]="state" mode="md" spellcheck="true" autocapitalize="words"
+                  clearInput="true" readonly>
+                </ion-input>
+                <span class="error-txt" *ngIf="!form_3a.get('state').valid && form_3a.get('state').touched">
+                  *Please enter state</span> -->
+
+            <ion-input
+              formControlName="postalCode"
+              label="{{ 'Postal Code' | translate}}"
+              label-placement="stacked"
+              fill="outline"
+              placeholder="Enter postal code"
+              [(ngModel)]="postal_code"
+              mode="md"
+              type="number"
+              (ionChange)="invalidateAddress()"
+              clearInput="true"
+            >
+            </ion-input>
+            <span
+              class="error-txt"
+              *ngIf="!form_3a.get('postalCode').valid && form_3a.get('postalCode').touched"
+            >
+              *Please enter postal code</span
+            >
+
+            <ion-item
+              class="loc-validated"
+              lines="none"
+              *ngIf="this.latitude && this.longitude && this.form_3a.valid"
+            >
+              <ion-icon
+                slot="start"
+                name="checkmark-circle"
+                style="color: yellowgreen"
+              ></ion-icon>
+              <ion-label>{{"Location Validated" | translate}}</ion-label>
+            </ion-item>
+
+            <!-- <ion-button Expand="block" *ngIf="form_3a.get('plotNo').valid && form_3a.get('street').valid  && form_3a.get('city').valid && form_3a.get('postalCode').valid" style="width: fit-content;" (click)="validateAddress()"> -->
+            <ion-button
+              Expand="block"
+              style="width: fit-content; margin-top: 20px; margin-bottom: 20px"
+              (click)="validateAddress()"
+              *ngIf="!this.longitude && !this.latitude"
+              [disabled]="form_3a.get('plotNo').invalid || form_3a.get('street').invalid || form_3a.get('city').invalid || form_3a.get('postalCode').invalid || form_3a.get('landmark').invalid"
+            >
+              {{"Validate" | translate}}
+
+              <!-- <ion-icon name="arrow-back" style="font-size: 18px;color: #fff;"></ion-icon> -->
+            </ion-button>
+            <span
+              class="error-txt"
+              *ngIf="form_3a.valid && !this.latitude && !this.longitude"
+            >
+              *Please click validate</span
+            >
+          </ion-card>
+        </form>
+
+        <ion-grid>
+          <ion-row class="ion-padding-top ion-padding-bottom">
+            <ion-col>
+              <ion-button
+                Expand="block"
+                style="width: fit-content"
+                (click)="prevSlide()"
+              >
+                <!-- {{"Next" | translate}} -->
+                <ion-icon
+                  name="arrow-back"
+                  style="font-size: 18px; color: #fff"
+                ></ion-icon>
+              </ion-button>
+            </ion-col>
+            <ion-col>
+              <ion-button
+                Expand="block"
+                style="width: fit-content"
+                (click)="nextSlide()"
+              >
+                <!-- {{"Next" | translate}} -->
+                <ion-icon
+                  name="arrow-forward"
+                  style="font-size: 18px; color: #fff"
+                ></ion-icon>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ng-template>
+
+    <ng-template swiperSlide>
+      <div class="slide">
+        <ion-card style="padding: 16px 10px 18px 10px; margin-top: 12px">
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            "
+          >
+            <ion-label
+              class="headers custom-label"
+              style="
+                margin: 0;
+                font-weight: var(--ion-font-weight-bold);
+                transform: scale(0.75);
+              "
+              >{{"Equipments list" | translate}}</ion-label
+            >
+            <ion-label
+              class="headers custom-label"
+              style="
+                margin: 0;
+                font-weight: var(--ion-font-weight-bold);
+                transform: scale(0.75);
+              "
+              >Entries : {{equipmentList.length}}
+            </ion-label>
+            <ion-button
+              size="small"
+              class="add-btn"
+              (click)="presentModal('equipment')"
+            >
+              <ion-icon name="add"></ion-icon>
+            </ion-button>
+          </div>
+
+          <form [formGroup]="form_4">
+            <div formArrayName="equipmentList">
+              <div
+                *ngFor="let equipment of equipmentList.controls; let i = index"
+                [formGroupName]="i"
+                class="list"
+              >
+                <div class="list-row">
+                  <div>
+                    <ion-input
+                      label-placement="stacked"
+                      fill="outline"
+                      placeholder="Enter equipment name"
+                      formControlName="name"
+                      type="text"
+                      readonly
+                      (ionChange)="patchEquipmentList(i)"
+                      mode="md"
+                    >
+                    </ion-input>
+                    <span
+                      class="error-txt"
+                      *ngIf="!equipment.get('name').valid && equipment.get('name').touched"
+                      >*Please enter valid name</span
+                    >
+                  </div>
+
+                  <div>
+                    <ion-input
+                      label-placement="stacked"
+                      fill="outline"
+                      placeholder="0"
+                      formControlName="nos"
+                      type="number"
+                      (ionChange)="patchEquipmentList(i)"
+                      mode="md"
+                    >
+                    </ion-input>
+                    <span
+                      class="error-txt"
+                      *ngIf="!equipment.get('nos').valid && equipment.get('nos').touched"
+                      >*nos</span
+                    >
+                  </div>
+
+                  <ion-button
+                    size="small"
+                    class="delete-btn"
+                    fill="clear"
+                    (click)="removeEquipment(i)"
+                  >
+                    <ion-icon name="close"></ion-icon>
+                  </ion-button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </ion-card>
+
+        <ion-grid>
+          <ion-row class="ion-padding-top ion-padding-bottom">
+            <ion-col>
+              <ion-button
+                Expand="block"
+                style="width: fit-content"
+                (click)="prevSlide()"
+              >
+                <!-- {{"Next" | translate}} -->
+                <ion-icon
+                  name="arrow-back"
+                  style="font-size: 18px; color: #fff"
+                ></ion-icon>
+              </ion-button>
+            </ion-col>
+            <ion-col>
+              <ion-button
+                Expand="block"
+                style="width: fit-content"
+                (click)="nextSlide()"
+              >
+                <!-- {{"Next" | translate}} -->
+                <ion-icon
+                  name="arrow-forward"
+                  style="font-size: 18px; color: #fff"
+                ></ion-icon>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ng-template>
+
+    <ng-template swiperSlide>
+      <div class="slide">
+        <ion-card style="padding: 16px 10px 18px 10px; margin-top: 12px">
+          <ion-item
+            lines="none"
+            class="ion-item-custom"
+            mode="ios"
+            style="
+              margin-bottom: -60px;
+              transform-origin: left top;
+              transform: translateY(-32%) scale(0.75);
+              margin-top: 20px;
+              margin-left: 6px;
+            "
+          >
+            <ion-label class="headers custom-label" position="stacked" style
+              >{{"Functional status" | translate}}</ion-label
+            >
+          </ion-item>
+
+          <form [formGroup]="form_5">
+            <ion-item lines="none" class="ion-item-custom" mode="ios">
+              <ion-radio-group
+                formControlName="functionalStatus"
+                class="ion-padding-start"
+                [(ngModel)]="functional_status"
+              >
+                <ion-item lines="none" class="ion-no-margin radio-item">
+                  <ion-label>Yes</ion-label>
+                  <ion-radio slot="start" value="yes"></ion-radio>
+                </ion-item>
+
+                <ion-item lines="none" class="ion-no-margin radio-item">
+                  <ion-label>No</ion-label>
+                  <ion-radio slot="start" value="no"></ion-radio>
+                </ion-item>
+              </ion-radio-group>
+            </ion-item>
+
+            <span
+              class="error-txt"
+              *ngIf="form_5.get('functionalStatus').invalid && form_5.get('functionalStatus')?.touched"
+            >
+              *Please select Yes/No
+            </span>
+          </form>
+        </ion-card>
+
+        <ion-grid>
+          <ion-row class="ion-padding-top ion-padding-bottom"> </ion-row>
+
+          <ion-row class="ion-padding-top ion-padding-bottom">
+            <!-- <ion-col>
+              <ion-button
+                Expand="block"
+                style="width: fit-content"
+                (click)="prevSlide()"
+              >
+                <ion-icon
+                  name="arrow-back"
+                  style="font-size: 18px; color: #fff"
+                ></ion-icon>
+              </ion-button>
+            </ion-col> -->
+            <ion-col>
+              <ion-button
+                Expand="block"
+                (click)="verify()"
+                [disabled]="this.form_1.invalid || this.form_2.invalid || this.form_3.invalid || this.form_3a.invalid || this.form_4.invalid || this.form_5.invalid || equipment_list.length ==0 || !this.longitude || !this.latitude"
+              >
+                {{"Verify" | translate}}
+              </ion-button>
+              <!-- <ion-button Expand="block" (click)="verify()">
+                {{"Verify" | translate}}
+              </ion-button> -->
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ng-template>
+  </swiper>
+</ion-content>

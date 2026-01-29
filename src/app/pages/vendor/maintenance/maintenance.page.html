@@ -1,0 +1,471 @@
+<!---------------------------
+Name: tnalert admin
+-----------------------------
+Author: Mohammed Rizwan S
+Date:   23/02/2024
+---------------------------->
+
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <!-- <ion-title>{{"Report Civil Work Issue"}}</ion-title> -->
+    <ion-title>Maintenance Entry</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button mode="ios" defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="ion-padding" #content>
+  <ion-grid>
+    <ion-row class="ion-padding-top">
+      <ion-col class="header-card">
+        <ion-label style="
+            font-size: var(--ion-font-regular);
+            color: var(--ion-color-primary);
+            font-weight: var(--ion-font-weight-medium);
+          ">
+          {{"Please fill out all the fields below to update Maintenance record" }}
+          <span class="note">Note: {{"Ensure that all are accurate."}}
+          </span>
+        </ion-label>
+
+        <div class="slide-indicator-wrapper">
+          <div class="slide-indicator" (click)="goToSlide(0)" [ngClass]="activeSlide==0 ? 'slide-indicator-active':'' "
+            [ngStyle]="{'background': form_1.invalid && form_1.touched && activeSlide!=0  ? 'var(--ion-color-danger)' :
+                        (form_1.valid && form_1.touched ? '#6ab200' : '')}">
+            1
+          </div>
+          <div class="line"></div>
+          <!-- <div class="slide-indicator" (click)="goToSlide(1)" [ngClass]="activeSlide==1  ? 'slide-indicator-active':''"
+            [ngStyle]="{  'background': 
+            activeSlide==1 ? 
+            ''
+            : 
+            (selected_maintenance_types.length!=0 && ((before_img && before_img_help_text) && (during_img && during_img_help_text) &&(after_img && after_img_help_text)) && form_2.valid ?
+            '#6ab200':
+
+           (selected_maintenance_types.length==0 || (!before_img && before_img_help_text ||!during_img && during_img_help_text ||!after_img && after_img_help_text) ? 
+           (!checkbox_checked && checkbox_touched ? 'var(--ion-color-danger)':  (!before_img && before_img_help_text ||!during_img && during_img_help_text ||!after_img && after_img_help_text) ?'var(--ion-color-danger)':'')
+             :   
+           ((form_2.contains('issueDetail') && !form_2.get('issueDetail').valid && form_2.get('issueDetail').touched ) || (form_2.contains('replacementDetail') && !form_2.get('replacementDetail').valid &&form_2.get('replacementDetail').touched  ) ? 'var(--ion-color-danger)':'')
+           ))
+
+            
+      }">
+            2
+          </div> -->
+          <div class="slide-indicator" (click)="goToSlide(1)" [ngClass]="activeSlide==1  ? 'slide-indicator-active':''"
+            [ngStyle]="{
+            'background': activeSlide == 1 ? 
+            
+            
+            (selected_maintenance_types.length != 0 && 
+               ((before_img && before_img_help_text) && 
+               (form_2.contains('replacementDetail') ? 
+               (during_img && during_img_help_text || 
+                (!form_2.get('replacementDetail').valid && form_2.get('replacementDetail').touched)) 
+             : true) && 
+              (after_img && after_img_help_text)) && 
+                form_2.valid) ? '#6ab200':''
+                
+                
+                :
+              (selected_maintenance_types.length != 0 && 
+               ((before_img && before_img_help_text) && 
+               (form_2.contains('replacementDetail') ? 
+               (during_img && during_img_help_text || 
+                (!form_2.get('replacementDetail').valid && form_2.get('replacementDetail').touched)) 
+             : true) && 
+              (after_img && after_img_help_text)) && 
+                form_2.valid) ? '#6ab200' :
+     
+              (selected_maintenance_types.length == 0 || 
+               (!before_img && before_img_help_text || 
+                (!during_img && during_img_help_text && 
+                 (form_2.contains('replacementDetail') && !form_2.get('replacementDetail').valid && form_2.get('replacementDetail').touched)) || 
+                !after_img && after_img_help_text)) ? 
+                (!checkbox_checked && checkbox_touched ? 'var(--ion-color-danger)' : 
+                (!before_img && before_img_help_text || 
+                 (!during_img && during_img_help_text && 
+                  (form_2.contains('replacementDetail') && !form_2.get('replacementDetail').valid && form_2.get('replacementDetail').touched)) || 
+                 !after_img && after_img_help_text) ? 
+                 'var(--ion-color-danger)' : '') :
+     
+              ((form_2.contains('issueDetail') && 
+                !form_2.get('issueDetail').valid && 
+                form_2.get('issueDetail').touched) || 
+               ((form_2.contains('replacementDetail') && 
+                !form_2.get('replacementDetail').valid && 
+                form_2.get('replacementDetail').touched ||!during_img && during_img_help_text) ) ) ? 
+                'var(--ion-color-danger)' : ''
+          }">
+            2
+          </div>
+          <!-- <div class=" slide-indicator" (click)="goToSlide(1)"
+            [ngClass]="activeSlide==1  ? 'slide-indicator-active':''" [ngStyle]="{  'background': 
+            !form_2.get('issueDetail') 
+              ? (activeSlide != 1 &&
+                  ((!this.before_img && before_img_help_text) ||
+                  (!this.during_img && during_img_help_text) ||
+                  (!this.after_img && after_img_help_text) ||
+                  (!checkbox_checked && checkbox_touched)) 
+                ? 'var(--ion-color-danger)' : '') 
+              : (!form_2.get('issueDetail').valid && form_2.get('issueDetail').touched && activeSlide != 1 || 
+                  ((!this.before_img && before_img_help_text) ||
+                  (!this.during_img && during_img_help_text) ||
+                  (!this.after_img && after_img_help_text)) &&
+                  (!checkbox_checked && checkbox_touched) 
+                ? 'var(--ion-color-danger)' 
+                : (form_2.valid && this.after_img && this.during_img && this.before_img && this.checkbox_checked 
+                  ? '#6ab200' : ''))}">
+            2
+          </div> -->
+          <!-- <div class="slide-indicator" (click)="goToSlide(1)" [ngClass]="activeSlide==1  ? 'slide-indicator-active':''"
+            [ngStyle]="{
+            'background': getSlideIndicatorBackground()
+          }">
+            2
+          </div> -->
+          <div class="line"></div>
+          <div class="slide-indicator" (click)="goToSlide(2)" [ngClass]="activeSlide==2  ? 'slide-indicator-active':''"
+            [ngStyle]="{'background': 
+            form_3.invalid && activeSlide!=2 && 
+            form_3.touched ? 'var(--ion-color-danger)' :
+                      (form_3.valid && form_3.touched ? '#6ab200' : '')}">
+            3
+          </div>
+
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <swiper [config]="config" (swiper)="onSwiper($event)" (slideChange)="onSlideChange()" #swiper_maintenance>
+
+    <ng-template swiperSlide>
+      <div class="slide">
+        <ion-card style="padding: 16px 10px 10px 10px; margin-top: 12px">
+
+          <form [formGroup]="form_1">
+            <ion-select formControlName="district" label="{{ 'District' }}" label-placement="stacked" fill="outline"
+              placeholder="Select district" [(ngModel)]="district" (ionChange)="updateName('dis');getTaluks();"
+              interface="action-sheet">
+              <ion-select-option *ngFor="let dis of district_data" value="{{dis.district_id}}">
+                <span>{{dis.district_name}}</span>
+              </ion-select-option>
+            </ion-select>
+            <span class="error-txt" *ngIf="!form_1.get('district').valid && form_1.get('district').touched">
+              *Please select district</span>
+
+            <ion-select formControlName="taluk" label="{{ 'Taluk' }}" label-placement="stacked" fill="outline"
+              placeholder="Select taluk" [(ngModel)]="taluk" (ionChange)="updateName('tal');getStations()"
+              interface="action-sheet">
+              <ion-select-option *ngFor="let tal of taluk_data" value="{{tal.taluk_name}}">
+                <span>{{tal.taluk_name}}</span>
+              </ion-select-option>
+            </ion-select>
+            <span class="error-txt" *ngIf="!form_1.get('taluk').valid && form_1.get('taluk').touched">
+              *Please select taluk</span>
+
+
+            <ion-select formControlName="station" label="{{ 'Station ID / Name' }}" label-placement="stacked"
+              fill="outline" placeholder="Select Station id" [(ngModel)]="station" interface="action-sheet"
+              (ionChange)="updateName('stat')">
+              <ion-select-option class="ion-select-uppercase" *ngFor="let station of station_data"
+                value="{{station.station_code}}">
+                <b>{{station.station_code}} - {{station.location_name}}</b>
+              </ion-select-option>
+            </ion-select>
+            <span class="error-txt" *ngIf="!form_1.get('station').valid && form_1.get('station').touched">
+              *Please select station</span>
+
+
+            <ng-container *ngIf="station_name">
+              <div style="display: none;">
+
+                <ion-input formControlName="stationName" label="{{'Station Name'}}" label-placement="stacked"
+                  fill="outline" placeholder="Select station code" [(ngModel)]="station_name" mode="md" type="text"
+                  readonly>
+                </ion-input>
+                <span class="error-txt" *ngIf="!form_1.get('stationName').valid && form_1.get('stationName').touched">
+                  *select station code</span>
+              </div>
+
+            </ng-container>
+
+            <ion-input formControlName="visitDate" label="{{'Date of visit'}}" class="ip-cursor" datetime="datetime"
+              label-placement="stacked" fill="outline" placeholder="Select date" readonly mode="md" id="date-trigger"
+              [(ngModel)]="today">
+            </ion-input>
+
+            <!-- 
+            <ion-modal trigger="date-trigger" [keepContentsMounted]="true" style="--background:none">
+              <ng-template>
+                <ion-datetime id="datetime" min="today" max="today" presentation="date"
+                  (ionChange)="visitDateChange($event)">
+                </ion-datetime>
+              </ng-template>
+            </ion-modal> -->
+
+            <ion-select formControlName="purpose" label="{{ 'Purpose of visit' }}" label-placement="stacked"
+              fill="outline" placeholder="Select purpose" [(ngModel)]="purpose" interface="action-sheet">
+              <ion-select-option *ngFor="let type of maintenance_menu['purpose']" value="{{type}}">
+                <span>{{type}}</span>
+              </ion-select-option>
+            </ion-select>
+            <span class="error-txt" *ngIf="!form_1.get('purpose').valid && form_1.get('purpose').touched">
+              *Please select maintenance type</span>
+
+
+          </form>
+
+
+        </ion-card>
+
+        <ion-grid>
+          <ion-row class="ion-padding-top ion-padding-bottom">
+            <ion-col class="ion-text-center">
+              <ion-button Expand="block" style="width: fit-content" (click)="nextSlide()">
+                <ion-icon name="arrow-forward" style="font-size: 18px; color: #fff"></ion-icon>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ng-template>
+
+
+
+    <ng-template swiperSlide>
+      <div class="slide">
+        <ion-card style="padding: 16px 10px 10px 10px; margin-top: 12px">
+
+          <form [formGroup]="form_2">
+            <!-- <ion-select formControlName="maintenanceType" label="{{ 'Type of Maintenance' }}" label-placement="stacked"
+              fill="outline" placeholder="Select maintenance type" [(ngModel)]="maintenance_type"
+              interface="action-sheet" (ionChange)="typeChange($event)">
+              <ion-select-option *ngFor="let type of maintenance_menu['type']" value="{{type}}">
+                <span>value="{{type}}"</span>
+              </ion-select-option>
+            </ion-select>
+            <span class="error-txt"
+              *ngIf="!form_2.get('maintenanceType').valid && form_2.get('maintenanceType').touched">
+              *Please select maintenance type</span> -->
+
+
+            <ion-item lines="none" class="ion-item-custom" mode="ios" style="
+              margin-bottom: -60px;
+              transform-origin: left top;
+              transform: translateY(-32%) scale(0.75);
+              margin-top: 20px;
+              margin-left: 5.2px;
+            ">
+              <ion-label class="headers custom-label" position="stacked" style>{{"Maintenance performed"}}</ion-label>
+            </ion-item>
+
+            <ion-item lines="none" *ngFor="let type of maintenance_menu['type']; let i = index" class="ion-item-custom"
+              style="--min-height:40px">
+
+              <ion-checkbox slot="start" [formControlName]="'type_' + i" (ionChange)="onCheckboxChange(type,i, $event)"
+                mode="md">
+              </ion-checkbox>
+              <ion-label style="  color: #555;">{{type}}</ion-label>
+            </ion-item>
+
+            <span class="error-txt" *ngIf="!checkbox_checked && checkbox_touched" style="margin-top: 8px;">
+              *Please select type of maintenance performed
+            </span>
+
+
+            <ng-container *ngIf="form_2.contains('replacementDetail')">
+              <ion-textarea formControlName="replacementDetail" label="{{'Part Replaced'}}" label-placement="stacked"
+                fill="outline" placeholder="Enter part name" [(ngModel)]="replacement_detail" mode="md" type="text"
+                autocapitalize="sentences"
+                [ngClass]="{'fade-in': form_2.contains('replacementDetail'), 'fade-out': !form_2.contains('replacementDetail')}">
+              </ion-textarea>
+              <span class="error-txt"
+                *ngIf="!form_2.get('replacementDetail').valid && form_2.get('replacementDetail').touched">
+                *Enter part detail</span>
+            </ng-container>
+
+            <ng-container *ngIf="form_2.contains('issueDetail')">
+              <ion-textarea formControlName="issueDetail" label="{{'Issue in detail'}}" label-placement="stacked"
+                fill="outline" placeholder="Enter issue in detail" [(ngModel)]="issue" mode="md" type="text"
+                autocapitalize="sentences"
+                [ngClass]="{'fade-in': form_2.contains('issueDetail'), 'fade-out': !form_2.contains('issueDetail')}">
+              </ion-textarea>
+              <span class="error-txt" *ngIf="!form_2.get('issueDetail').valid && form_2.get('issueDetail').touched">
+                *Enter issue in detail</span>
+            </ng-container>
+
+
+
+            <br>
+            <br>
+
+            <ion-item lines="none" class="ion-item-custom item-wrapper" mode="ios">
+              <ion-label class="headers custom-label" position="stacked" style>{{ 'Attach Before Maintenance Image'
+                }}</ion-label>
+              <div style="width: 100%;">
+                <span style="    font-size: 0.8rem;display: block;"> (Capture outside the fencing to covering the
+                  overall
+                  condition)</span>
+
+                <br>
+                <ion-button slot="start" size="small" fill="outline" style="width: 70px;height: 60px;"
+                  (click)="before_img_help_text=true;camera_mode=1;getPhoto()">
+                  <ion-icon name="attach-outline" size="large" style="transform: scale(1.2);"></ion-icon>
+                </ion-button>
+              </div>
+            </ion-item>
+            <span class="error-txt" *ngIf="!this.before_img && before_img_help_text">
+              *Please attach before maintenance picture
+              <br>
+              <br>
+            </span>
+
+
+            <ion-button *ngIf="before_img" fill="clear" size="small" (click)="camera_mode=1;clearAttachment()"
+              class="circular-close-btn">
+              <ion-icon name="close-circle"></ion-icon>
+            </ion-button>
+
+
+            <ion-card *ngIf="before_img" class="img-holder">
+              <img src="{{this.before_img}}" />
+            </ion-card>
+
+            <ng-container *ngIf="form_2.contains('replacementDetail')">
+
+
+              <br>
+              <br>
+              <ion-item lines="none" class="ion-item-custom item-wrapper" mode="ios"
+                [ngClass]="{'fade-in': form_2.contains('replacementDetail'), 'fade-out': !form_2.contains('replacementDetail')}">
+
+                <ion-label class="headers custom-label" position="stacked" style>{{ 'Attach During Maintenance Image'
+                  }}</ion-label>
+                <div style="width: 100%;">
+                  <span style="    font-size: 0.8rem;display: block;"> (A clear picture of the instruments showing the
+                    issue being
+                    addressed)</span>
+
+                  <br>
+                  <ion-button slot="start" size="small" fill="outline" style="width: 70px;height: 60px;"
+                    (click)="during_img_help_text=true;camera_mode=2;getPhoto()">
+                    <ion-icon name="attach-outline" size="large" style="transform: scale(1.2);"></ion-icon>
+                  </ion-button>
+                </div>
+              </ion-item>
+
+              <span class="error-txt" *ngIf="!this.during_img && during_img_help_text">
+                *Please attach during maintenance picture
+                <br>
+                <br></span>
+
+
+              <ion-button *ngIf="during_img" fill="clear" size="small" (click)="camera_mode=2;clearAttachment()"
+                class="circular-close-btn">
+                <ion-icon name="close-circle"></ion-icon>
+              </ion-button>
+              <ion-card *ngIf="during_img" class="img-holder">
+                <img src="{{this.during_img}}" />
+              </ion-card>
+
+            </ng-container>
+
+            <br />
+            <br />
+
+            <ion-item lines="none" class="ion-item-custom item-wrapper" mode="ios">
+              <ion-label class="headers custom-label" position="stacked" style>{{ 'Attach After Maintenance Image'
+                }}</ion-label>
+              <div style="width: 100%;">
+                <span style="    font-size: 0.8rem;display: block;"> ( After the maintenance is completed, capture a
+                  image showing the fixed condition)</span>
+
+                <br>
+                <ion-button slot="start" size="small" fill="outline" style="width: 70px;height: 60px;"
+                  (click)="after_img_help_text=true;camera_mode=3;getPhoto()">
+                  <ion-icon name="attach-outline" size="large" style="transform: scale(1.2);"></ion-icon>
+                </ion-button>
+              </div>
+            </ion-item>
+            <span class="error-txt" *ngIf="!this.after_img && after_img_help_text">
+              *Please attach during maintenance picture
+              <br>
+              <br>
+            </span>
+
+            <ion-button *ngIf="after_img" fill="clear" size="small" (click)="camera_mode=3;clearAttachment()"
+              class="circular-close-btn">
+              <ion-icon name="close-circle"></ion-icon>
+            </ion-button>
+            <ion-card *ngIf="after_img" class="img-holder">
+              <img src="{{this.after_img}}" />
+            </ion-card>
+
+            <br />
+            <br />
+
+          </form>
+
+
+        </ion-card>
+
+        <ion-grid>
+          <ion-row class="ion-padding-top ion-padding-bottom">
+            <ion-col>
+              <ion-button Expand="block" style="width: fit-content" (click)="prevSlide()">
+                <ion-icon name="arrow-back" style="font-size: 18px; color: #fff"></ion-icon>
+              </ion-button>
+            </ion-col>
+            <ion-col class="ion-text-center">
+              <ion-button Expand="block" style="width: fit-content" (click)="nextSlide()">
+                <ion-icon name="arrow-forward" style="font-size: 18px; color: #fff"></ion-icon>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ng-template>
+
+
+
+
+    <ng-template swiperSlide>
+      <div class="slide">
+        <ion-card style="padding: 16px 10px 10px 10px; margin-top: 12px">
+
+          <form [formGroup]="form_3">
+
+            <ion-textarea formControlName="remarksDetail" label="{{'Remarks'}}" label-placement="stacked" fill="outline"
+              placeholder="Enter additional comments or observations" [(ngModel)]="remarks" mode="md" type="text"
+              autocapitalize="sentences">
+            </ion-textarea>
+            <span class="error-txt" *ngIf="!form_3.get('remarksDetail').valid && form_3.get('remarksDetail').touched">
+              *Enter additional comments or observations</span>
+          </form>
+        </ion-card>
+
+        <ion-grid>
+          <ion-row class="ion-padding-top ion-padding-bottom">
+
+
+            <ion-col class="ion-text-center">
+              <ion-button Expand="block" (click)="verify()"
+                [disabled]="this.form_1.invalid || this.form_3.invalid ||  this.form_2.invalid || selected_maintenance_types.length == 0 ||  !before_img || !after_img || (form_2.contains('replacementDetail') && !during_img)">
+                Verify
+              </ion-button>
+            </ion-col>
+
+
+            <!-- <ion-col class=" ion-text-center">
+                <ion-button Expand="block" (click)="verify()">Verify </ion-button>
+            </ion-col> -->
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ng-template>
+  </swiper>
+</ion-content>

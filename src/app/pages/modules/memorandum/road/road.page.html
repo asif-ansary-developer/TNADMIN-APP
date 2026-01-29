@@ -1,0 +1,134 @@
+<!---------------------------
+Name: tnsmart
+-----------------------------
+Author: Mohammed Rizwan S
+Data:   10/2/2024
+---------------------------->
+
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <ion-title>{{"Roads"}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button mode="ios" defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <div class="content-wrapper">
+    <ion-grid>
+      <ion-row class="ion-padding-top">
+        <ion-col class="header-card">
+          <ion-label style="
+            font-size: var(--ion-font-regular);
+            color: var(--ion-color-primary);
+            font-weight: var(--ion-font-weight-medium);
+          ">
+            {{"Please fill out all the fields below" }}
+            <span class="note">Note: {{"Ensure that all details are accurate."}}
+
+            </span>
+          </ion-label>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-card style="padding: 16px 10px 10px 10px; margin-top: 12px">
+      <ion-select label="{{ 'District' }}" (ionChange)="getTaluks()" label-placement="stacked" fill="outline"
+        placeholder="Select District" required errorText="*Please select a District" interface="action-sheet"
+        [(ngModel)]='district_id' #districtCtrl="ngModel" readonly style="pointer-events: none;">
+        <ion-select-option *ngFor="let dis of districts_data" value="{{dis.district_id}}">
+          <span>{{dis.district_name}}</span>
+        </ion-select-option>
+      </ion-select>
+
+      <ion-select label="{{ 'Taluk' }}" (ionChange)="getFirkas()" label-placement="stacked" fill="outline"
+        placeholder="Select taluk" required errorText="*Please select a Taluk" interface="action-sheet"
+        [(ngModel)]='taluk_id' #talukCtrl="ngModel">
+        <ion-select-option *ngFor="let taluk of taluks_data" value="{{taluk.taluk_id}}">
+          <span>{{taluk.taluk_name}}</span>
+        </ion-select-option>
+      </ion-select>
+
+
+    </ion-card>
+    <ion-card style="padding: 16px 10px 18px 10px; margin-top: 12px">
+
+
+
+
+      <!-- <ion-select label="{{ 'Type of road' }}" label-placement="stacked" fill="outline"
+        placeholder="Select type of road" (ionChange)="getVillages()" required errorText=" *" interface="action-sheet">
+        <ion-select-option *ngFor="let fir of firkas_data" value="{{fir.firka_id}}">
+          <span *ngIf="lang=='en'">{{fir.firka_name}}</span>
+          <span *ngIf="lang=='ta'">{{fir.firka_name_ta}}</span>
+        </ion-select-option>
+      </ion-select> -->
+
+
+
+      <ion-input label="{{ 'No of Roads' }}" label-placement="stacked" fill="outline" [min]="1" type="number"
+        placeholder="Enter no of roads" errorText="*Please enter no of roads" required mode="md" spellcheck="true"
+        minlength="1" maxlength="4" clearInput="true" [(ngModel)]='no_of_roads' #roadCtrl="ngModel">
+      </ion-input>
+
+      <ion-input label="{{ 'Length' }}" label-placement="stacked" fill="outline" [min]="1" type="number"
+        placeholder="Enter length in kms" errorText="*Please length in kms" required mode="md" spellcheck="true"
+        minlength="1" maxlength="4" clearInput="true" [(ngModel)]='length_kms' #lengthCtrl="ngModel">
+        <label slot="end">Km</label>
+      </ion-input>
+
+
+
+
+      <ion-input label="{{ 'Cost of Temporary restoration (Damages upto 30%)' }}" label-placement="stacked"
+        fill="outline" [min]="0" type="number" placeholder="Enter temporary restoration cost"
+        errorText="*Please enter temporary restoration cost" required mode="md" spellcheck="true" minlength="1"
+        clearInput="true" [(ngModel)]='cost_temp' #tempCostCtrl="ngModel">
+        <label slot="end">₹</label>
+      </ion-input>
+
+      <ion-input label="{{ 'Cost of Permanent restoration (Damages from 30% to 70%)' }}" label-placement="stacked"
+        fill="outline" [min]="0" type="number" placeholder="Enter permanent restoration cost"
+        errorText="*Please enter permanent restoration cost" required mode="md" spellcheck="true" minlength="1"
+        clearInput="true" [(ngModel)]='cost_perm_1' #permCost1Ctrl="ngModel">
+        <label slot="end">₹</label>
+      </ion-input>
+
+      <ion-input label="{{ 'Cost of Permanent restoration (Damages above 70%)' }}" label-placement="stacked"
+        fill="outline" [min]="0" type="number" placeholder="Enter permanent restoration cost"
+        errorText="*Please enter permanent restoration cost" required mode="md" spellcheck="true" minlength="1"
+        clearInput="true" [(ngModel)]='cost_perm_2' #permCost2Ctrl="ngModel">
+        <label slot="end">₹</label>
+      </ion-input>
+
+
+
+      <!-- <ion-input label="{{ 'Attach Image' }} (If
+    available)" class="ip-cursor" label-placement="stacked" fill="outline" class="attach-input" readonly clickable
+        mode="md">
+
+        <ion-button slot="start" size="small" fill="outline" style="width: 50px;margin-top: 20px;">
+          <ion-icon name="attach-outline" size="large"></ion-icon>
+        </ion-button>
+      </ion-input> -->
+
+
+    </ion-card>
+
+
+
+
+  </div>
+
+
+  <ion-grid class="bottom-submit">
+    <ion-row class="ion-padding-top ion-padding-bottom">
+      <ion-col>
+        <ion-button (click)="submit()" Expand="block"
+          [disabled]="!districtCtrl.valid || !talukCtrl.valid ||
+        !tempCostCtrl.valid || !permCost2Ctrl.valid || !roadCtrl.valid || !lengthCtrl.valid || !permCost1Ctrl.valid">{{"Submit" }}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

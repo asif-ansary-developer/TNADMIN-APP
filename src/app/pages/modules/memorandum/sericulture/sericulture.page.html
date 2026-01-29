@@ -1,0 +1,132 @@
+<!---------------------------
+Name: tnsmart
+-----------------------------
+Author: Mohammed Rizwan S
+Data:   10/2/2024
+---------------------------->
+
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <ion-title>{{"Sericulture"}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button mode="ios" defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <div class="content-wrapper">
+    <ion-grid>
+      <ion-row class="ion-padding-top">
+        <ion-col class="header-card">
+          <ion-label style="
+            font-size: var(--ion-font-regular);
+            color: var(--ion-color-primary);
+            font-weight: var(--ion-font-weight-medium);
+          ">
+            {{"Please fill out all the fields below" }}
+            <span class="note">Note: {{"Ensure that all details are accurate."}}
+
+            </span>
+          </ion-label>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-card style="padding: 16px 10px 10px 10px; margin-top: 12px">
+      <ion-select label="{{ 'District' }}" (ionChange)="getTaluks()" label-placement="stacked" fill="outline"
+        placeholder="Select District" required errorText="*Please select a District" interface="action-sheet"
+        [(ngModel)]='district_id' #districtCtrl="ngModel" readonly style="pointer-events: none;">
+        <ion-select-option *ngFor="let dis of districts_data" value="{{dis.district_id}}">
+          <span>{{dis.district_name}}</span>
+        </ion-select-option>
+      </ion-select>
+
+      <ion-select label="{{ 'Taluk' }}" (ionChange)="getFirkas()" label-placement="stacked" fill="outline"
+        placeholder="Select taluk" required errorText="*Please select a Taluk" interface="action-sheet"
+        [(ngModel)]='taluk_id' #talukCtrl="ngModel">
+        <ion-select-option *ngFor="let taluk of taluks_data" value="{{taluk.taluk_id}}">
+          <span>{{taluk.taluk_name}}</span>
+        </ion-select-option>
+      </ion-select>
+
+
+    </ion-card>
+
+
+    <ion-card style="padding: 16px 10px 18px 10px; margin-top: 12px">
+
+
+
+      <ion-input label="{{ 'No of Farmers' }}" label-placement="stacked" fill="outline" [min]="1" type="number"
+        placeholder="Enter no. of farmers" errorText="*Please enter no. of farmers" required mode="md" spellcheck="true"
+        minlength="1" maxlength="4" clearInput="true" [(ngModel)]='type_of_farmers' #farmerTypeCtrl="ngModel">
+      </ion-input>
+
+
+
+      <ion-input label="{{ 'Rainfed affected area'}}" label-placement="stacked" fill="outline" [min]="0" type="number"
+        placeholder="Enter rainfed affected area" errorText="*Please enter rainfed affected area" required mode="md"
+        spellcheck="true" minlength="1" clearInput="true" [(ngModel)]='rainfed_area' #rainfedCtrl="ngModel">
+        <label slot="end">ha</label>
+      </ion-input>
+      <ion-input label="{{ 'Irrigated affected area'}}" label-placement="stacked" fill="outline" [min]="0" type="number"
+        placeholder="Enter irrigated affected area" errorText="*Please enter irrigated affected area" required mode="md"
+        spellcheck="true" minlength="1" clearInput="true" [(ngModel)]='irrigated_area' #rirrigatedCtrl="ngModel">
+        <label slot="end">ha</label>
+      </ion-input>
+
+      <ion-input label="{{ 'Perennial affected area'}}" label-placement="stacked" fill="outline" [min]="0" type="number"
+        placeholder="Enter perennial affected area" errorText="*Please enter perennial affected area" required mode="md"
+        spellcheck="true" minlength="1" clearInput="true" [(ngModel)]='perennial_area' #perennialCtrl="ngModel">
+        <label slot="end">ha</label>
+      </ion-input>
+
+
+      <ion-input label="{{ 'No. of farmers affected - Rainfed'}}" label-placement="stacked" fill="outline" [min]="0"
+        type="number" placeholder="Enter no. of affected farmers" errorText="*Please enter no. of affected farmers"
+        required mode="md" spellcheck="true" minlength="1" clearInput="true" [(ngModel)]='farmers_rainfed'
+        #rainfedFarmerCtrl="ngModel">
+      </ion-input>
+
+      <ion-input label="{{ 'No. of farmers affected - Irrigated'}}" label-placement="stacked" fill="outline" [min]="0"
+        type="number" placeholder="Enter no. of affected farmers" errorText="*Please enter no. of affected farmers"
+        required mode="md" spellcheck="true" minlength="1" clearInput="true" [(ngModel)]='farmers_irrigated'
+        #irrigatedFarmerCtrl="ngModel">
+      </ion-input>
+
+      <ion-input label="{{ 'No. of farmers affected - Perennial'}}" label-placement="stacked" fill="outline" [min]="0"
+        type="number" placeholder="Enter no. of affected farmers" errorText="*Please enter no. of affected farmers"
+        required mode="md" spellcheck="true" minlength="1" clearInput="true" [(ngModel)]='farmers_perennial'
+        #perennialFarmerCtrl="ngModel">
+      </ion-input>
+
+
+
+
+
+      <!-- <ion-input label="{{ 'Attach Image' }} (If
+    available)" class="ip-cursor" label-placement="stacked" fill="outline" class="attach-input" readonly clickable
+        mode="md">
+
+        <ion-button slot="start" size="small" fill="outline" style="width: 50px;margin-top: 20px;">
+          <ion-icon name="attach-outline" size="large"></ion-icon>
+        </ion-button>
+      </ion-input> -->
+
+
+    </ion-card>
+
+  </div>
+
+
+  <ion-grid class="bottom-submit">
+    <ion-row class="ion-padding-top ion-padding-bottom">
+      <ion-col>
+        <ion-button (click)="submit()" Expand="block"
+          [disabled]="!districtCtrl.valid || !talukCtrl.valid ||
+        !farmerTypeCtrl.valid || !rainfedCtrl.valid || !rirrigatedCtrl.valid ||!perennialCtrl.valid  ||!rainfedFarmerCtrl.valid ||!irrigatedFarmerCtrl.valid ||!perennialFarmerCtrl.valid">{{"Submit"
+          }}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

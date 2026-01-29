@@ -1,0 +1,95 @@
+<ion-content>
+  <ion-card class="bg">
+    <ion-header class="ion-no-border ion-text-center">
+      <ion-toolbar mode="ios">
+        <ion-title>Resolution</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeModal()" fill="clear" size="small">
+            <ion-icon name="close" style="color: #000000"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-input
+      label="Attach Before Image"
+      class="ip-cursor"
+      label-placement="stacked"
+      fill="outline"
+      class="attach-input"
+      readonly
+      clickable
+      mode="md"
+      [ngStyle]="img_before? {'pointer-events':'none'} : {'pointer-events':'auto'}"
+    >
+      <ion-button
+        slot="start"
+        size="small"
+        fill="outline"
+        (click)="getPhoto(1)"
+        *ngIf="!img_before"
+        style="width: 50px; margin-top: 20px"
+      >
+        <ion-icon name="attach-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-input>
+    <ion-button
+      *ngIf="img_before"
+      fill="clear"
+      size="small"
+      (click)="clearAttachment(1)"
+      style="margin-top: -112px"
+      class="circular-close-btn"
+    >
+      <ion-icon name="close-circle"></ion-icon>
+    </ion-button>
+    <ion-card *ngIf="img_before" class="img-holder">
+      <img src="{{this.img_before}}" />
+    </ion-card>
+
+    <ion-input
+      label="Attach After Image"
+      class="ip-cursor"
+      label-placement="stacked"
+      fill="outline"
+      class="attach-input"
+      readonly
+      clickable
+      mode="md"
+      [ngStyle]="img_after? {'pointer-events':'none'} : {'pointer-events':'auto'}"
+    >
+      <ion-button
+        slot="start"
+        size="small"
+        *ngIf="!img_after"
+        fill="outline"
+        (click)="getPhoto(2)"
+        style="width: 50px; margin-top: 20px"
+      >
+        <ion-icon name="attach-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-input>
+    <ion-button
+      fill="clear"
+      *ngIf="img_after"
+      size="small"
+      (click)="clearAttachment(2)"
+      style="margin-top: -112px"
+      class="circular-close-btn"
+    >
+      <ion-icon name="close-circle"></ion-icon>
+    </ion-button>
+    <ion-card class="img-holder" *ngIf="img_after">
+      <img src="{{this.img_after}}" />
+    </ion-card>
+
+    <div class="ion-text-center">
+      <ion-button style="min-width: 90px" (click)="submitImgs()">
+        <ion-icon
+          name="checkmark"
+          style="color: rgb(255, 255, 255); transform: scale(1.4)"
+        ></ion-icon>
+      </ion-button>
+    </div>
+  </ion-card>
+</ion-content>

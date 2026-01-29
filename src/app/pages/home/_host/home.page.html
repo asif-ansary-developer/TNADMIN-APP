@@ -1,0 +1,321 @@
+<!---------------------------
+Name: tnalert admin
+-----------------------------
+Author: Mohammed Rizwan S
+Date:   23/02/2024
+---------------------------->
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <ion-title style="font-size: 1rem;/* margin-left: 21.5px*/">{{"T N S M A R T" | translate}}<span
+        style="width: 22px;margin-left:3px;position: absolute;">ᴬᴰᴹᴵᴺ</span></ion-title>
+    <ion-buttons slot="end" class="modal-right-btn">
+      <ion-button mode="ios" (click)="logout()">
+        <ion-icon name="log-out-outline" style="color: red"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" [scrollY]="false" style="display: none;">
+  <ion-card class="ion-padding-top ion-padding-bottom" *ngIf="user_data" style="background-color: #9accff7a;">
+    <ion-row *ngIf="user_data[0]['last_login']">
+      <ion-col size="6">
+        <ion-card class=" btn-card" (click)="route('inventory/inventory-map')">
+          <div>
+            <ion-icon src="assets/home/btn_inventory_ic_l.svg" size="large"></ion-icon>
+            <ion-text class="ion-text-center">Inventory Stock</ion-text>
+          </div>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+  </ion-card>
+
+</ion-content>
+
+
+<ion-content [fullscreen]="true" [scrollY]="false" *ngIf="is_dev_login" style="display: none;">
+  <ion-card class="ion-padding-top ion-padding-bottom" *ngIf="user_data" style="background-color: #9accff7a;">
+    <ion-row *ngIf="user_data[0]['last_login']">
+      <ion-col size="4" style="color:#555;text-align: left;padding-left: 30px;">Last login</ion-col>
+      <ion-col style="text-align: left;font-weight: 600;"> {{_moment(user_data[0]['last_login']).format('DD-MM-yyyy
+        HH:mm')}}
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4" style="color:#555;text-align: left;padding-left: 30px">Phone</ion-col>
+      <ion-col style="text-align: left;font-weight: 600">{{user_data[0]['mobile_number']}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4" style="color:#555;text-align: left;padding-left: 30px">Desciption</ion-col>
+      <ion-col style="text-align: left;font-weight: 600">{{user_data[0]['description']}}</ion-col>
+    </ion-row>
+
+  </ion-card>
+
+
+
+
+  <ion-card class="ion-padding-top ion-padding-bottom">
+    <ion-grid>
+      <ion-row class="ion-text-center">
+        <ion-col style="display: block;" size="6" *ngIf="_role=='ven_master'">
+          <ion-card class="btn-card" (click)="route('ticket-system/view-tickets-ven-master')">
+            <div>
+              <ion-icon src="assets/home/btn_report_issue_ic_l.svg" size="large"></ion-icon>
+              <ion-text class="ion-text-center">ARG/AWS Ticket</ion-text>
+            </div>
+          </ion-card>
+        </ion-col>
+
+        <ion-col style="display: block;" size="6" *ngIf="_role=='ven' || _role=='1'|| _role=='96'  ">
+          <!-- *ngIf="_role=='ven' || _role=='94' || _role=='96' || _role=='98' || _role=='1' "> -->
+          <ion-card class="btn-card" (click)="route('ticket-system')">
+            <div>
+              <ion-icon src="assets/home/btn_report_issue_ic_l.svg" size="large"></ion-icon>
+              <ion-text class="ion-text-center">ARG/AWS Ticket</ion-text>
+            </div>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="6" *ngIf="_role!='ven' && _role!='camp' && _role!='ven_master'">
+          <ion-card class="btn-card" (click)="route('raingauge')">
+            <div>
+              <ion-icon src="assets/home/btn_raingauge_ic_l.svg" size="large"></ion-icon>
+              <ion-text class="ion-text-center">Raingauge Stations</ion-text>
+            </div>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="6" *ngIf="_role!='camp'">
+          <ion-card class="btn-card" (click)="route('overall-statusmap')">
+            <div>
+              <ion-icon src="assets/home/btn_status_ic_l.svg" size="large"></ion-icon>
+              <ion-text class="ion-text-center">ARG/AWS status</ion-text>
+            </div>
+          </ion-card>
+        </ion-col>
+
+        <!-- <ion-col size="6"> -->
+        <ion-col size="6">
+          <ion-card class="btn-card" (click)="route('inventory/add-inventory-slide')">
+            <div>
+              <ion-icon src="assets/home/btn_inventory_ic_l.svg" size="large"></ion-icon>
+              <ion-text class="ion-text-center">Inventory</ion-text>
+            </div>
+          </ion-card>
+        </ion-col>
+
+
+        <ion-col size="6">
+          <ion-card class="btn-card" (click)="route('memorandum')">
+            <div>
+              <ion-icon name="document-text-outline" size="large"
+                style="color: blueviolet;transform: scale(1.6);"></ion-icon>
+              <ion-text class="ion-text-center">Memorandum</ion-text>
+            </div>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="6">
+          <ion-card class="btn-card" (click)="route('relief-camp')">
+            <div>
+              <ion-icon src="assets/home/btn_relief_center_ic_l.svg" size="large"></ion-icon>
+              <ion-text class="ion-text-center">Relief Camp</ion-text>
+            </div>
+          </ion-card>
+        </ion-col>
+
+        <!-- <ion-col size="6" *ngIf="_role=='92'"> -->
+        <!-- <ion-col size="6">
+            <ion-card class="btn-card" (click)="route('emergency-call-reg')">
+              <div>
+                <ion-icon
+                  src="assets/home/btn_inventory_ic_l.svg"
+                  size="large"
+                ></ion-icon>
+                <ion-text class="ion-text-center"
+                  >Emergency Call Registry</ion-text
+                >
+              </div>
+            </ion-card>
+          </ion-col> -->
+
+        <ion-col size="6" *ngIf="_role=='ven'">
+          <ion-card class="btn-card" (click)="route('vendor/maintenance')">
+            <div>
+              <ion-icon src="assets/home/btn_civil_work_ic_l.svg" size="large"></ion-icon>
+              <ion-text class="ion-text-center">Maintenance</ion-text>
+            </div>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+
+    </ion-grid>
+  </ion-card>
+
+  <div class="footer-text">T N S M A R T</div>
+</ion-content>
+
+
+<ion-content [fullscreen]="true" [scrollY]="false">
+  <ion-card class="ion-padding-top ion-padding-bottom" *ngIf="user_data" style="background-color: #9accff7a;">
+    <ion-row *ngIf="user_data[0]['last_login']">
+      <ion-col size="4" style="color:#555;text-align: left;padding-left: 30px;">Last login</ion-col>
+      <ion-col style="text-align: left;font-weight: 600;"> {{_moment(user_data[0]['last_login']).format('DD-MM-yyyy
+        HH:mm')}}
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4" style="color:#555;text-align: left;padding-left: 30px">Phone</ion-col>
+      <ion-col style="text-align: left;font-weight: 600">{{user_data[0]['mobile_number']}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4" style="color:#555;text-align: left;padding-left: 30px">Desciption</ion-col>
+      <ion-col style="text-align: left;font-weight: 600">{{user_data[0]['description']}}</ion-col>
+    </ion-row>
+
+  </ion-card>
+
+
+
+
+  <ion-card class="ion-padding-top ion-padding-bottom">
+    <ion-grid>
+      <ion-row class="ion-text-center">
+        <ion-col style="display: block;" size="6" *ngIf="_role=='ven_master'">
+          <ion-card class="btn-card" (click)="route('ticket-system/view-tickets-ven-master')">
+            <div>
+              <ion-icon src="assets/home/btn_report_issue_ic_l.svg" size="large"></ion-icon>
+              <ion-text class="ion-text-center">ARG/AWS Ticket</ion-text>
+            </div>
+          </ion-card>
+        </ion-col>
+
+        <ion-col style="display: block;" size="6" *ngIf="_role=='ven' || _role=='1'|| _role=='96'  ">
+          <!-- *ngIf="_role=='ven' || _role=='94' || _role=='96' || _role=='98' || _role=='1' "> -->
+          <ion-card class="btn-card" (click)="route('ticket-system')">
+            <div>
+              <ion-icon src="assets/home/btn_report_issue_ic_l.svg" size="large"></ion-icon>
+              <ion-text class="ion-text-center">ARG/AWS Ticket</ion-text>
+            </div>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="6" *ngIf="_role!='ven' && _role!='camp' && _role!='ven_master'">
+          <ion-card class="btn-card" (click)="route('raingauge')">
+            <div>
+              <ion-icon src="assets/home/btn_raingauge_ic_l.svg" size="large"></ion-icon>
+              <ion-text class="ion-text-center">Raingauge Stations</ion-text>
+            </div>
+          </ion-card>
+        </ion-col>
+
+        <!-- <ion-col size="6" *ngIf="_role!='camp'">
+            <ion-card class="btn-card" (click)="route('overall-statusmap')">
+              <div>
+                <ion-icon
+                  src="assets/home/btn_status_ic_l.svg"
+                  size="large"
+                ></ion-icon>
+                <ion-text class="ion-text-center">ARG/AWS status</ion-text>
+              </div>
+            </ion-card>
+          </ion-col> -->
+
+        <!-- <ion-col size="6"> -->
+
+        <ion-col size="6" *ngIf="_role!='ven' && _role!='ven_master' ">
+          <ion-card class=" btn-card" (click)="route('inventory/inventory-map')">
+            <div>
+              <ion-icon src="assets/home/btn_inventory_ic_l.svg" size="large"></ion-icon>
+              <ion-text class="ion-text-center">Inventory Stock</ion-text>
+            </div>
+          </ion-card>
+        </ion-col>
+
+
+        <ion-col size="6" *ngIf="_role=='92'">
+          <ion-card class="btn-card" (click)="route('inventory/add-inventory-slide')">
+            <div>
+              <ion-icon src="assets/home/btn_inventory_ic_l.svg" size="large"></ion-icon>
+              <ion-text class="ion-text-center">Inventory</ion-text>
+            </div>
+          </ion-card>
+        </ion-col>
+
+
+        <ion-col size="6" *ngIf="(_role=='96')">
+          <!-- *ngIf="(_role=='92' ||  _role=='1' ) && (_dept_id && _dept_id!='null' && _dept_id!='undefined')"> -->
+          <ion-card class="btn-card" (click)="route('memorandum')">
+            <div>
+              <ion-icon name="document-text-outline" size="large"
+                style="color: blueviolet;transform: scale(1.6);"></ion-icon>
+              <ion-text class="ion-text-center">Losses and Damages</ion-text>
+            </div>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="6" *ngIf="_role=='camp'">
+          <ion-card class="btn-card" (click)="route('relief-camp')">
+            <div>
+              <ion-icon src="assets/home/btn_relief_center_ic_l.svg" size="large"></ion-icon>
+              <ion-text class="ion-text-center">Relief Camp</ion-text>
+            </div>
+          </ion-card>
+        </ion-col>
+
+        <!-- <ion-col size="6" *ngIf="_role=='92'"> -->
+        <!-- <ion-col size="6">
+            <ion-card class="btn-card" (click)="route('emergency-call-reg')">
+              <div>
+                <ion-icon
+                  src="assets/home/btn_inventory_ic_l.svg"
+                  size="large"
+                ></ion-icon>
+                <ion-text class="ion-text-center"
+                  >Emergency Call Registry</ion-text
+                >
+              </div>
+            </ion-card>
+          </ion-col> -->
+
+        <ion-col size="6" *ngIf="_role=='ven'">
+          <ion-card class="btn-card" (click)="route('vendor/maintenance')">
+            <div>
+              <ion-icon src="assets/home/btn_civil_work_ic_l.svg" size="large"></ion-icon>
+              <ion-text class="ion-text-center">Maintenance</ion-text>
+            </div>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+
+    </ion-grid>
+  </ion-card>
+
+  <div class="footer-text">T N S M A R T</div>
+</ion-content>
+
+
+<ion-content [fullscreen]="true" [scrollY]="false" style="display: none;">
+  <ion-card class="ion-padding-top ion-padding-bottom">
+    <ion-grid>
+      <ion-row class="ion-text-center">
+        <ion-col size="6" *ngIf="_role=='ven'">
+          <ion-card class="btn-card" (click)="route('vendor/maintenance')">
+            <div>
+              <ion-icon src="assets/home/btn_civil_work_ic_l.svg" size="large"></ion-icon>
+              <ion-text class="ion-text-center">Maintenance</ion-text>
+            </div>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+
+    </ion-grid>
+  </ion-card>
+
+  <div class="footer-text">T N S M A R T</div>
+</ion-content>
