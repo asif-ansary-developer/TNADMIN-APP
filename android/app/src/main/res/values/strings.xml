@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">tnalert_7_admin</string>
+    <string name="title_activity_main">tnalert_7_admin</string>
+    <string name="package_name">int_.rimes.tnsmart_admin</string>
+    <string name="custom_url_scheme">int_.rimes.tnsmart_admin</string>
+</resources>

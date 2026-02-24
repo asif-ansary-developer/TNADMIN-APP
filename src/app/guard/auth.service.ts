@@ -15,7 +15,7 @@ import {
 } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { Storage } from '@capacitor/storage';
+import { Preferences } from '@capacitor/preferences';
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { take } from 'rxjs/operators';
@@ -58,13 +58,13 @@ export class AuthService {
   }
 
   async getToken() {
-    const ret = await Storage.get({ key: 'deviceid' });
+    const ret = await Preferences.get({ key: 'deviceid' });
     const user = ret.value;
     console.log('deviceid *****', ret);
   }
 
   async loadAuth() {
-    const authState = await Storage.get({ key: 'authenticated' });
+    const authState = await Preferences.get({ key: 'authenticated' });
     console.log('Authentication state ******', authState.value);
     if (authState && authState.value) {
       this.isAuthenticated.next(true);
@@ -74,7 +74,7 @@ export class AuthService {
   }
 
   async cleanAuth() {
-    await Storage.set({
+    await Preferences.set({
       key: 'authenticated',
       value: null,
     });
@@ -238,14 +238,14 @@ export class AuthService {
 
   getLoginState() {
     var value = '';
-    Storage.get({ key: 'authenticated' }).then((res) => {
+    Preferences.get({ key: 'authenticated' }).then((res) => {
       value = JSON.stringify(res.value);
     });
     return value;
   }
 
   async setLoginState(state: string = 'false') {
-    await Storage.set({
+    await Preferences.set({
       key: 'authenticated',
       value: state,
     });
@@ -273,7 +273,7 @@ export class AuthService {
         this.http.post(url, params, { responseType: 'text' }).subscribe(
           (data) => {
             console.log('post data', data);
-            Storage.clear();
+            Preferences.clear();
             localStorage.clear();
             this.setDefaultLang();
             this.navController.navigateRoot('/login-phone', {
@@ -300,7 +300,7 @@ export class AuthService {
       })
       .then((el) => {
         el.present();
-        Storage.clear();
+        Preferences.clear();
         // localStorage.clear();
         localStorage.removeItem('district_id');
         localStorage.removeItem('district_name');
@@ -452,14 +452,14 @@ export class AuthService {
   }
 
   async setStorage(key, value) {
-    await Storage.set({
+    await Preferences.set({
       key: key,
       value: value,
     });
   }
 
   async getStorage(key) {
-    const value = await Storage.get({ key: key }).then((res) => {
+    const value = await Preferences.get({ key: key }).then((res) => {
       return res.value;
     });
     return value;

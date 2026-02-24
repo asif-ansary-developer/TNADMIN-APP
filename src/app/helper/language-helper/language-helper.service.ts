@@ -7,7 +7,7 @@ Date:   23/09/2022 *
 
 import { Platform } from '@ionic/angular';
 import { Injectable } from '@angular/core';
-import { Storage } from '@capacitor/storage';
+import { Preferences } from '@capacitor/preferences';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
@@ -35,7 +35,7 @@ export class LanguageHelperService {
     this.translate.use(lang);
     this.translate.setDefaultLang(lang);
 
-    Storage.set({
+    Preferences.set({
       key: 'language',
       value: lang,
     });
@@ -43,7 +43,7 @@ export class LanguageHelperService {
   }
 
   getDisplayLanguage() {
-    const value = Storage.get({ key: 'language' });
+    const value = Preferences.get({ key: 'language' });
     return value.toString();
   }
 
