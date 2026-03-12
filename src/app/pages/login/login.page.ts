@@ -239,7 +239,8 @@ export class LoginPage implements OnInit {
       .then(async (loadingEl) => {
         loadingEl.present();
         const id = await this.getCode();
-        var params = JSON.stringify({
+
+        const params = {
           phone: this.phone_number,
           device_id: localStorage.getItem('deviceid'),
           id: id,
@@ -247,8 +248,9 @@ export class LoginPage implements OnInit {
             this.platform.is('android') || this.platform.is('ios')
               ? 'login_admin_approval_method'
               : 'login_admin',
-        });
-        console.log('param', params);
+        };
+
+        console.log('params', params);
         this.api
           .post_admin(params)
           .pipe(take(1))
@@ -508,7 +510,7 @@ export class LoginPage implements OnInit {
   }
 
   async getCode(): Promise<string> {
-    this.logDeviceId();
+    await this.logDeviceId();
     const txt = await this.encryptData(this.identifier);
     return txt;
   }
@@ -534,7 +536,7 @@ export class LoginPage implements OnInit {
       });
   }
   resetAccessRequested = false;
- 
+
   resetAccessRequest() {
     this.loadingCtrl
       .create({

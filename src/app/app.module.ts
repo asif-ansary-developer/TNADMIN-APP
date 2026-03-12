@@ -10,6 +10,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { pageTransition } from './helper/page-transistions';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ApiLoggerInterceptor } from './api-logger.interceptor';
 
 export function setTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, '../assets/language/', '.json');
@@ -38,7 +40,13 @@ export function setTranslateLoader(http: HttpClient) {
     }),
     AppRoutingModule,
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: ApiLoggerInterceptor,
+    multi: true,
+  },
+  ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

@@ -19,7 +19,8 @@ let headers = new HttpHeaders({
 })
 export class ApiService {
   constructor(private http: HttpClient) {}
-  base_url = 'https://beta-tnsmart.rimes.int/';
+  //base_url = 'https://beta-tnsmart.rimes.int/';
+  base_url = 'https://tnsmart.tnsdma.rimes.int/';
   // base_url = 'http://192.168.1.103/tn-pk-smart/';
   /*************************
    * API USER *
@@ -887,7 +888,8 @@ export class ApiService {
     return this.http.post(
       // 'http://192.168.1.74/tn-pk-smart/' +
       //   'index.php/Api_mobile/Api_admin/admin_post',
-      this.base_url + 'index.php/Api_mobile/Api_admin/admin_post',
+     // this.base_url + 'index.php/Api_mobile/Api_admin/admin_post',
+      this.base_url + 'api/mobile/admin_post',
       params
     );
   }
@@ -903,7 +905,8 @@ export class ApiService {
 
   get_id_key() {
     return this.http.get(
-      this.base_url + 'index.php/Api_mobile/Api_admin/id_key_get'
+     // this.base_url + 'index.php/Api_mobile/Api_admin/id_key_get'
+      this.base_url + 'api/mobile/id_key_get'
     );
   }
   post_civil_work_update(params) {
