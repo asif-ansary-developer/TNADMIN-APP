@@ -33,6 +33,9 @@ export class ApiLoggerInterceptor implements HttpInterceptor {
             console.log("API_SHERLOCK URL:", req.url);
             console.log("API_SHERLOCK STATUS:", event.status);
             console.log("API_SHERLOCK RESPONSE:", JSON.stringify(event.body));
+            if (event.body == null || event.body.length === 0) {
+              console.warn("API_SHERLOCK ⚠️ EMPTY RESPONSE:", req.url);
+            }
 
           }
 

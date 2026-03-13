@@ -4,7 +4,7 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import { apiLoggerInterceptor } from './api-logger.interceptor';
 
 describe('apiLoggerInterceptor', () => {
-  const interceptor: HttpInterceptorFn = (req, next) => 
+  const interceptor: HttpInterceptorFn = (req, next) =>
     TestBed.runInInjectionContext(() => apiLoggerInterceptor(req, next));
 
   beforeEach(() => {
