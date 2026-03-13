@@ -577,4 +577,8 @@ export class LoginPage implements OnInit {
       })
       .then((alertEl) => alertEl.present());
   }
+
+  goToSignup() {
+    this.navCtrl.navigateForward('/signup');
+  }
 }

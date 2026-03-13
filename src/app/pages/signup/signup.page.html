@@ -1,0 +1,111 @@
+<ion-header class="ion-no-border ion-text-center">
+  <ion-toolbar mode="ios">
+    <!-- <ion-title>{{"Report Civil Work Issue"| translate}}</ion-title> -->
+    <ion-title>{{"Sign up"| translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button mode="ios" defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="ion-padding">
+
+  <ion-card class="glass-effect ion-padding">
+
+    <ion-card-header class="ion-text-center">
+      <ion-card-title>Create Account</ion-card-title>
+      <ion-card-subtitle>Fill details to register</ion-card-subtitle>
+    </ion-card-header>
+
+    <form (ngSubmit)="signup()">
+
+      <!-- Name -->
+      <ion-item>
+        <ion-label position="floating">Full Name</ion-label>
+        <ion-input [(ngModel)]="form.name" name="name"></ion-input>
+      </ion-item>
+
+      <!-- Phone -->
+      <ion-item>
+        <ion-label position="floating">Phone</ion-label>
+        <ion-input type="tel" maxlength="10" [(ngModel)]="form.phone" name="phone"></ion-input>
+      </ion-item>
+
+      <!-- Email -->
+      <ion-item>
+        <ion-label position="floating">Email</ion-label>
+        <ion-input type="email" [(ngModel)]="form.email" name="email"></ion-input>
+      </ion-item>
+
+      <!-- Designation -->
+      <ion-item>
+        <ion-label position="floating">Designation</ion-label>
+        <ion-input [(ngModel)]="form.designation" name="designation"></ion-input>
+      </ion-item>
+
+      <!-- State -->
+      <ion-item>
+        <ion-label>State</ion-label>
+        <ion-select [(ngModel)]="form.state" name="state" (ionChange)="loadDistricts()">
+          <ion-select-option *ngFor="let s of states" [value]="s.id">
+            {{s.name}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <!-- District -->
+      <ion-item>
+        <ion-label>District</ion-label>
+        <ion-select [(ngModel)]="form.district" name="district" (ionChange)="loadDepartments()">
+          <ion-select-option *ngFor="let d of districts" [value]="d.id">
+            {{d.name}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <!-- Department -->
+      <ion-item>
+        <ion-label>Department</ion-label>
+        <ion-select [(ngModel)]="form.department" name="department" (ionChange)="loadRoles()">
+          <ion-select-option *ngFor="let dept of departments" [value]="dept.id">
+            {{dept.name}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <!-- Organization -->
+      <ion-item>
+        <ion-label position="floating">Organization</ion-label>
+        <ion-input [(ngModel)]="form.organization" name="organization"></ion-input>
+      </ion-item>
+
+      <!-- Role -->
+      <ion-item>
+        <ion-label>Role</ion-label>
+        <ion-select [(ngModel)]="form.role" name="role">
+          <ion-select-option *ngFor="let r of roles" [value]="r.id">
+            {{r.name}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-button expand="block" class="ion-margin-top" shape="round" type="submit">
+
+        Sign Up
+
+      </ion-button>
+
+    </form>
+
+    <!-- Login Link -->
+    <div class="login-link">
+      <p>
+        Already have an account?
+        <span (click)="goToLogin()">Login</span>
+      </p>
+    </div>
+
+  </ion-card>
+
+</ion-content>
