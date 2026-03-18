@@ -47,7 +47,7 @@ export class HomePage implements OnInit {
       localStorage.getItem('dev_login') == 'true' ? true : false;
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
   ionViewWillEnter() {
     // this.logDeviceId();
     // this.checkIdentiferNew();
@@ -60,7 +60,7 @@ export class HomePage implements OnInit {
     }, 100);
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   checkIdentiferNew() {
     this.loadingCtrl
@@ -77,17 +77,17 @@ export class HomePage implements OnInit {
         console.log('phone', id);
         console.log('phone', localStorage.getItem('phone'));
 
-        var params = JSON.stringify({
+        var params = {
           phone: localStorage.getItem('phone'),
           device_id: localStorage.getItem('deviceid'),
           id: id,
           extra_param:
             this.platform.is('android') ||
-            (this.platform.is('ios') && !this.is_dev_login)
+              (this.platform.is('ios') && !this.is_dev_login)
               ? 'login_admin_id_check'
               : 'login_admin',
           // extra_param: 'login_admin',
-        });
+        };
         console.log('param', params);
         this.api
           .post_admin(params)
@@ -138,17 +138,17 @@ export class HomePage implements OnInit {
           this.generateRandomString();
         console.log('phone', localStorage.getItem('phone'));
 
-        var params = JSON.stringify({
+        var params = {
           phone: localStorage.getItem('phone'),
           device_id: localStorage.getItem('deviceid'),
           id: id,
           extra_param:
             this.platform.is('android') ||
-            (this.platform.is('ios') && !this.is_dev_login)
+              (this.platform.is('ios') && !this.is_dev_login)
               ? 'login_admin_id_check'
               : 'login_admin',
           // extra_param: 'login_admin',
-        });
+        };
         console.log('param', params);
         this.api
           .post_admin(params)
@@ -212,7 +212,7 @@ export class HomePage implements OnInit {
     console.log('id', JSON.stringify(info));
     this.identifier = info['identifier'];
   };
-
+  //here
   logDeviceIdnew = async () => {
     if (
       localStorage.getItem('dev_login') == 'false' ||
@@ -236,17 +236,17 @@ export class HomePage implements OnInit {
           console.log('phone', id);
           console.log('phone', localStorage.getItem('phone'));
 
-          var params = JSON.stringify({
+          var params = {
             phone: localStorage.getItem('phone'),
             device_id: localStorage.getItem('deviceid'),
             id: id,
             extra_param:
               this.platform.is('android') ||
-              (this.platform.is('ios') && !this.is_dev_login)
+                (this.platform.is('ios') && !this.is_dev_login)
                 ? 'login_admin_id_check'
                 : 'login_admin',
             // extra_param: 'login_admin',
-          });
+          };
           console.log('param', params);
           this.api
             .post_admin(params)
