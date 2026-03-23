@@ -17,6 +17,12 @@ const routes: Routes = [
       import('./pages/login/login.module').then((m) => m.LoginPageModule),
   },
 
+
+  {
+    path: 'signup',
+    loadChildren: () => import('./pages/signup/signup.module').then(m => m.SignupPageModule)
+  },
+
   {
     path: 'splash-screen',
     loadChildren: () =>
@@ -150,10 +156,14 @@ const routes: Routes = [
         './pages/modules/inventory/inventory-map/inventory-map.module'
       ).then((m) => m.InventoryMapPageModule),
   },
+  {
+    path: 'signup',
+    loadChildren: () => import('./pages/signup/signup.module').then(m => m.SignupPageModule)
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

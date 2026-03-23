@@ -15,6 +15,7 @@ ion-card {
     // color: var(--ion-color-primary);
     font-family: "Protest Strike", sans-serif !important;
   }
+
   ion-card-subtitle {
     font-weight: 500;
     text-transform: none;
@@ -28,11 +29,25 @@ ion-card {
   min-height: 67px;
   font-size: 1.2rem;
 }
+
+.signup-link {
+  text-align: center;
+  margin-top: 25px;
+  margin-left: 80px;
+}
+
+.signup-link span {
+  color: #3f80e2;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 .back-btn {
   position: absolute;
   margin: auto auto;
   top: 54px;
   left: 26px;
+
   ion-icon {
     transform: scale(1.5);
   }
@@ -84,6 +99,7 @@ ion-input.ip:focus:focus,
 ion-input.ip:focus-visible,
 ion-input.ip:focus-within {
   outline: 1.4px solid var(--ion-color-primary);
+
   ion-label {
     top: -12px;
     font-size: 0.65rem;
@@ -130,6 +146,7 @@ img.bg-bottom {
   right: 2px;
   z-index: 1;
   display: none;
+
   ion-icon {
     transform: scale(1.6);
     opacity: 0.8;
@@ -140,6 +157,7 @@ ion-popover {
   ion-button {
     color: #555;
   }
+
   ion-button:last-child {
     color: #555;
     border-top: 1px #55555587 solid;

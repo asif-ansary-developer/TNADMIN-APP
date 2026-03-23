@@ -43,9 +43,21 @@
           size="large" expand="block">Sign
           In</ion-button>
 
+
+
         <ion-button *ngIf="sign_request" class="ion-margin sign-in-btn" style="" shape="round" size="large"
           (click)="cancelRequest()" expand="block">Cancel Request</ion-button>
+
+
       </form>
+
+      <div class="signup-link">
+        <p>
+          Don't have an account?
+          <span (click)="goToSignup()">Sign Up</span>
+        </p>
+      </div>
+
     </ng-container>
 
     <ng-container *ngIf="current_card=='card2'">

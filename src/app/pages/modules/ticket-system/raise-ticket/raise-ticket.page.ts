@@ -59,9 +59,9 @@ export class RaiseTicketPage implements OnInit {
     this.resolvingEntity = this.role == '1' ? 'ven' : '1';
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
-  ionViewDidEnter() {}
+  ionViewDidEnter() { }
 
   goToHome() {
     this.navCtrl.navigateBack('/ticket-system');
@@ -79,9 +79,9 @@ export class RaiseTicketPage implements OnInit {
         componentProps: {
           username:
             this.role == '94' ||
-            this.role == '96' ||
-            this.role == '98' ||
-            this.role == '1'
+              this.role == '96' ||
+              this.role == '98' ||
+              this.role == '1'
               ? this.raiser_id
               : '',
         },
@@ -121,7 +121,7 @@ export class RaiseTicketPage implements OnInit {
         }
         this.modalState = false;
       });
-      return await modal.present().then(() => {});
+      return await modal.present().then(() => { });
     }
   }
 
@@ -142,7 +142,7 @@ export class RaiseTicketPage implements OnInit {
       {
         text: this.lang == 'en' ? 'Cancel' : 'ரத்துசெய்',
         role: 'cancel',
-        handler: () => {},
+        handler: () => { },
       },
     ];
 
@@ -215,7 +215,7 @@ export class RaiseTicketPage implements OnInit {
                 .then((loadingEl) => {
                   loadingEl.present();
 
-                  var params = JSON.stringify({
+                  var params = {
                     // author: localStorage.getItem('user_id'),
                     // v_id: 'v001',
                     v_id: this.raiser_id,
@@ -235,7 +235,7 @@ export class RaiseTicketPage implements OnInit {
                         ? this.paymentInvolved
                         : 0,
                     extra_param: 'raise_cwt',
-                  });
+                  };
 
                   console.log('param', params);
                   this.api
