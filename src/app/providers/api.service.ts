@@ -569,7 +569,9 @@ export class ApiService {
     return this.http.get(
       // 'https://beta-tnsmart.rimes.int/index.php/Api_mobile/Api_admin/all_cw_tickets_get'
       this.base_url +
-      'index.php/Api_mobile/Api_admin/all_cw_tickets_by_resolver_id_get?page=' +
+      //'index.php/Api_mobile/Api_admin/all_cw_tickets_by_resolver_id_get?page='
+      'api/mobile/cw_tickets_by_resolver_id_get?page='
+      +
       param.page +
       '&&r_id=' +
       param.r_id +
@@ -618,7 +620,8 @@ export class ApiService {
       //   '&&v_id=' +
       //   param.v_id
       `${this.base_url
-      }index.php/Api_mobile/Api_admin/cw_tickets_by_raiser_id_get?page=${param.page ? param.page : ''
+      // }index.php/Api_mobile/Api_admin/cw_tickets_by_raiser_id_get?page=${param.page ? param.page : ''
+      }api/mobile/cw_tickets_by_raiser_id_get?page=${param.page ? param.page : ''
       }&v_id=${param.v_id ? param.v_id : ''}
       ${param['type'] ? '&type=' + param.type : ''}`
     );
@@ -638,7 +641,8 @@ export class ApiService {
   get_cw_tickets_districtwise(param) {
     return this.http.get(
       `${this.base_url
-      }index.php/Api_mobile/Api_admin/cw_tickets_districtwise_get?page=${param.page ? param.page : ''
+      //}index.php/Api_mobile/Api_admin/cw_tickets_districtwise_get?page=${param.page ? param.page : ''
+      }api/mobile/cw_tickets_districtwise_get?page=${param.page ? param.page : ''
       }&d_id=${param.d_id ? param.d_id : ''}
        ${param['type'] ? '&type=' + param.type : ''}`
     );
@@ -648,7 +652,8 @@ export class ApiService {
   get_cw_tickets_districtwise_ven(param) {
     return this.http.get(
       `${this.base_url
-      }index.php/Api_mobile/Api_admin/cw_tickets_districtwise_get?resolver=Vendor&&page=${param.page ? param.page : ''
+      // }index.php/Api_mobile/Api_admin/cw_tickets_districtwise_get?resolver=Vendor&&page=${param.page ? param.page : ''
+      }api/mobile/cw_tickets_districtwise_get?resolver=Vendor&&page=${param.page ? param.page : ''
       }&d_id=${param.d_id ? param.d_id : ''}
        ${param['type'] ? '&type=' + param.type : ''}`
     );
@@ -670,7 +675,9 @@ export class ApiService {
     return this.http.get(
       // 'https://beta-tnsmart.rimes.int/index.php/Api_mobile/Api_admin/cw_tickets_by_vendor_id_get?v_id=' +
       this.base_url +
-      'index.php/Api_mobile/Api_admin/cw_tickets_by_resolver_role_get?role=' +
+      //'index.php/Api_mobile/Api_admin/cw_tickets_by_resolver_role_get?role=' 
+      'api/mobile/cw_tickets_by_resolver_role_get?role='
+      +
       param.role +
       '&page=' +
       param.page +
@@ -830,7 +837,9 @@ export class ApiService {
   get_cw_tickets_with_actions(param) {
     return this.http.get(
       this.base_url +
-      'index.php/Api_mobile/Api_admin/cw_tickets_with_actions_get?d_id=' +
+      // 'index.php/Api_mobile/Api_admin/cw_tickets_with_actions_get?d_id=' 
+      'api/mobile/cw_tickets_with_actions_get?d_id='
+      +
       param.d_id +
       '&&page=' +
       param.page +
@@ -873,7 +882,9 @@ export class ApiService {
   update_arg_complaints_view_status(param) {
     return this.http.get(
       this.base_url +
-      'index.php/Api_mobile/Api_admin/arg_complaints_status_update?c_id=' +
+      // 'index.php/Api_mobile/Api_admin/arg_complaints_status_update?c_id=' 
+      'api/mobile/arg_complaints_status_update?c_id='
+      +
       param['c_id'] +
       '&status=' +
       param['status']
@@ -920,7 +931,8 @@ export class ApiService {
 
   get_master_districts() {
     return this.http.get(
-      this.base_url + 'index.php/Api_mobile/Api_admin/all_districts_get'
+      // this.base_url + 'index.php/Api_mobile/Api_admin/all_districts_get'
+      this.base_url + 'api/mobile/all_districts_get'
     );
   }
 
@@ -971,7 +983,9 @@ export class ApiService {
   get_arg_aws_stations_by_district_id(params) {
     return this.http.get(
       this.base_url +
-      'index.php/Api_mobile/Api_admin/rainguage_station_by_district_id_get?d_id=' +
+      //'index.php/Api_mobile/Api_admin/rainguage_station_by_district_id_get?d_id='
+      'api/mobile/rainguage_station_by_district_id_get?d_id='
+      +
       params.id
     );
   }

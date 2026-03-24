@@ -38,16 +38,19 @@ export class ApiLoggerInterceptor implements HttpInterceptor {
               console.log("API_SHERLOCK URL:", req.url);
               console.log("API_SHERLOCK STATUS:", event.status);
 
-              if (event.body && JSON.stringify(event.body).length < 2000) {
+
+              // if (!event.body) {
+
+              if (event.body == null || (Array.isArray(event.body) && event.body.length === 0)) {
+                console.warn("API_SHERLOCK ⚠️ EMPTY RESPONSE:", req.url);
+
+
+              } else if (event.body && JSON.stringify(event.body).length < 2000) {
                 console.log("API_SHERLOCK RESPONSE:", JSON.stringify(event.body));
 
-                // if (!event.body) {
-              } else if (event.body == null || event.body.length === 0) {
-
-                console.warn("API_SHERLOCK ⚠️ EMPTY RESPONSE:", req.url);
-              }
-              else {
+              } else {
                 console.log("API_SHERLOCK RESPONSE: Large response received");
+                console.log("API_SHERLOCK RESPONSE:", JSON.stringify(event.body));
               }
 
 
