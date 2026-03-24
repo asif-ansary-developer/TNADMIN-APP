@@ -19,9 +19,9 @@ let headers = new HttpHeaders({
 })
 export class ApiService {
   constructor(private http: HttpClient) { }
-  // base_url = 'https://beta-tnsmart.rimes.int/';
+  base_url = 'https://beta-tnsmart.rimes.int/';
   //new
-  base_url = 'https://tnsmart.tnsdma.rimes.int/';
+  // base_url = 'https://tnsmart.tnsdma.rimes.int/';
   // base_url = 'http://192.168.1.103/tn-pk-smart/';
   /*************************
    * API USER *
@@ -539,8 +539,8 @@ export class ApiService {
   get_arg_stations(param) {
     return this.http.get(
       this.base_url +
-      //'index.php/Api_mobile/Api_admin/arg_stations_get?fetch=' 
-      'api/mobile/arg_stations_get?fetch='
+      'index.php/Api_mobile/Api_admin/arg_stations_get?fetch='
+      //'api/mobile/arg_stations_get?fetch='
       +
       param.fetch
     );
@@ -756,8 +756,8 @@ export class ApiService {
   get_cw_tickets_open_with_closure_requests(param) {
     return this.http.get(
       this.base_url +
-      // 'index.php/Api_mobile/Api_admin/open_cw_tickets_with_closure_requests?u_id='
-      'api/mobile/open_cw_tickets_with_closure_requests?u_id='
+      'index.php/Api_mobile/Api_admin/open_cw_tickets_with_closure_requests?u_id='
+      // 'api/mobile/open_cw_tickets_with_closure_requests?u_id='
       +
       param.u_id +
       '&&page=' +
@@ -768,8 +768,8 @@ export class ApiService {
   get_cw_tickets_open_with_closure_requests_count(param) {
     return this.http.get(
       this.base_url +
-      // 'index.php/Api_mobile/Api_admin/open_cw_tickets_with_closure_requests_count?u_id='
-      'api/mobile/open_cw_tickets_with_closure_requests_count?u_id='
+      'index.php/Api_mobile/Api_admin/open_cw_tickets_with_closure_requests_count?u_id='
+      // 'api/mobile/open_cw_tickets_with_closure_requests_count?u_id='
       +
       param.u_id
     );
@@ -787,8 +787,8 @@ export class ApiService {
   get_payment_involved_tickets_by_raiser_id(param) {
     return this.http.get(
       `${this.base_url
-      // }index.php/Api_mobile/Api_admin/cw_tickets_hq_payment_involved_get?page=${param.page ? param.page : ''
-      }api/mobile/cw_tickets_hq_payment_involved_get?page=${param.page ? param.page : ''
+      }index.php/Api_mobile/Api_admin/cw_tickets_hq_payment_involved_get?page=${param.page ? param.page : ''
+      //}api/mobile/cw_tickets_hq_payment_involved_get?page=${param.page ? param.page : ''
       }&r_id=${param.r_id ? param.r_id : ''}`
     );
   }
@@ -797,8 +797,8 @@ export class ApiService {
   get_cw_tickets_closed_with_closure_requests(param) {
     return this.http.get(
       this.base_url +
-      // 'index.php/Api_mobile/Api_admin/closed_cw_tickets_with_closure_requests?u_id=' 
-      'api/mobile/closed_cw_tickets_with_closure_requests?u_id='
+      'index.php/Api_mobile/Api_admin/closed_cw_tickets_with_closure_requests?u_id='
+      // 'api/mobile/closed_cw_tickets_with_closure_requests?u_id='
       +
       param.u_id +
       '&&page=' +
@@ -842,8 +842,8 @@ export class ApiService {
   //get arg complaint
   get_arg_complaints(param) {
     return this.http.get(
-      // `${this.base_url}index.php/Api_mobile/Api_admin/arg_complaints_get?page=${param.page ? param.page : ''
-      `${this.base_url}api/mobile/arg_complaints_get?page=${param.page ? param.page : ''
+      `${this.base_url}index.php/Api_mobile/Api_admin/arg_complaints_get?page=${param.page ? param.page : ''
+      // `${this.base_url}api/mobile/arg_complaints_get?page=${param.page ? param.page : ''
       }&u_id=${param.u_id ? param.u_id : ''}
         ${param['type'] ? '&type=' + param.type : ''}
         ${param['d_id'] ? '&d_id=' + param.d_id : ''}`
@@ -853,8 +853,8 @@ export class ApiService {
   get_arg_complaints_by_search(param) {
     return this.http.get(
       `${this.base_url
-      //}index.php/Api_mobile/Api_admin/arg_complaints_search_get?page=${param.page ? param.page : ''
-      }api/mobile/arg_complaints_search_get?page=${param.page ? param.page : ''
+      }index.php/Api_mobile/Api_admin/arg_complaints_search_get?page=${param.page ? param.page : ''
+      //}api/mobile/arg_complaints_search_get?page=${param.page ? param.page : ''
       }&u_id=${param.u_id ? param.u_id : ''}
       ${param['type'] ? '&type=' + param.type : ''}
       ${param['d_id'] ? '&d_id=' + param.d_id : ''}`
@@ -864,8 +864,8 @@ export class ApiService {
   //get arg complaint unread count
   get_arg_complaints_count() {
     return this.http.get(
-      //`${this.base_url}index.php/Api_mobile/Api_admin/arg_complaints_unread_count_get`
-      `${this.base_url}api/mobile/arg_complaints_unread_count_get`
+      `${this.base_url}index.php/Api_mobile/Api_admin/arg_complaints_unread_count_get`
+      // `${this.base_url}api/mobile/arg_complaints_unread_count_get`
     );
   }
 
@@ -884,8 +884,8 @@ export class ApiService {
     return this.http.post(
       // 'http://192.168.1.74/tn-pk-smart/' +
       //   'index.php/Api_mobile/Api_admin/admin_post',
-      // this.base_url + 'index.php/Api_mobile/Api_admin/admin_post',
-      this.base_url + 'api/mobile/admin_post',
+      this.base_url + 'index.php/Api_mobile/Api_admin/admin_post',
+      //this.base_url + 'api/mobile/admin_post',
       params
     );
   }
@@ -901,8 +901,8 @@ export class ApiService {
 
   get_id_key() {
     return this.http.get(
-      //  this.base_url + 'index.php/Api_mobile/Api_admin/id_key_get'
-      this.base_url + 'api/mobile/id_key_get'
+      this.base_url + 'index.php/Api_mobile/Api_admin/id_key_get'
+      // this.base_url + 'api/mobile/id_key_get'
     );
   }
   post_civil_work_update(params) {
