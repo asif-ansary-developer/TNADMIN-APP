@@ -214,12 +214,12 @@ export class ViewClosuresPage implements OnInit {
                 })
                 .then((loadingEl) => {
                   loadingEl.present();
-                  var params = JSON.stringify({
+                  var params = {
                     ticket_id: this.selected_ticket['t_id'],
                     u_id: this.user_id,
                     msg_from: 1,
                     extra_param: 'close_cwt',
-                  });
+                  };
                   console.log('param', params);
                   this.api
                     .post_admin(params)

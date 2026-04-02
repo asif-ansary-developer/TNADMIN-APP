@@ -115,12 +115,12 @@ export class TicketViewerPage implements OnInit, AfterViewInit, OnDestroy {
       })
       .then((loadingEl) => {
         // loadingEl.present();
-        var params = JSON.stringify({
+        var params = {
           ticket_id: this.ticket_id,
           msg_from: '1',
           text: '_|||Reminder',
           extra_param: 'update_thread_cwt',
-        });
+        };
         console.log('param', params);
         this.api
           .post_admin(params)
@@ -154,12 +154,12 @@ export class TicketViewerPage implements OnInit, AfterViewInit, OnDestroy {
         })
         .then((loadingEl) => {
           // loadingEl.present();
-          var params = JSON.stringify({
+          var params = {
             ticket_id: this.ticket_id,
             msg_from: '1',
             text: text,
             extra_param: 'update_thread_cwt',
-          });
+          };
           console.log('param', params);
           this.api
             .post_admin(params)

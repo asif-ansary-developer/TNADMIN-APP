@@ -161,7 +161,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           if (
             data['notification']['data']['redirect'] &&
             data['notification']['data']['content'] ==
-              'ticket-system/view-complaints'
+            'ticket-system/view-complaints'
           ) {
             this.navCtrl.navigateForward('ticket-system/view-complaints', {
               replaceUrl: true,
@@ -192,7 +192,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                   )
                     this.navCtrl.navigateForward(
                       JSON.parse(data['notification']['data']['redirect'])[
-                        'url'
+                      'url'
                       ]
                     );
                 });
@@ -282,7 +282,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           console.log('phone', id);
           console.log('phone', localStorage.getItem('phone'));
 
-          var params = JSON.stringify({
+          var params = {
             phone: localStorage.getItem('phone'),
             device_id: localStorage.getItem('deviceid'),
             id: id,
@@ -291,7 +291,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 ? 'login_admin_id_check'
                 : 'login_admin',
             // extra_param: 'login_admin',
-          });
+          };
           console.log('param', params);
           this.api
             .post_admin(params)
@@ -338,13 +338,13 @@ export class AppComponent implements OnInit, AfterViewInit {
           '' +
           this.generateRandomString();
         console.log('phone', localStorage.getItem('phone'));
-        var params = JSON.stringify({
+        var params = {
           phone: localStorage.getItem('phone'),
           device_id: localStorage.getItem('deviceid'),
           id: id,
           extra_param: 'login_admin_new',
           // extra_param: 'login_admin',
-        });
+        };
         console.log('param', params);
         this.api
           .post_admin(params)

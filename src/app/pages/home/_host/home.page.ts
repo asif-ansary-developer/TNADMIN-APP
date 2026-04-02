@@ -303,13 +303,13 @@ export class HomePage implements OnInit {
             '' +
             this.generateRandomString();
           console.log(id);
-          var params = JSON.stringify({
+          var params = {
             phone: this.phone_number,
             id: id,
             dev_login: true,
             extra_param: 'login_admin',
             // extra_param: 'login_admin',
-          });
+          };
           // console.log('param', params);
           this.api
             .post_admin(params)

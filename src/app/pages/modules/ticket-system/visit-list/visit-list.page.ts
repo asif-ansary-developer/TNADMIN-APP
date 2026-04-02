@@ -217,8 +217,8 @@ export class VisitListPage implements OnInit {
             tic['type'] == 'intermediate_action'
               ? 'Intermediate Action'
               : tic['type'] == 'field_entry'
-              ? 'Field Entry'
-              : tic['type'],
+                ? 'Field Entry'
+                : tic['type'],
           value: tic['type'],
         });
       });
@@ -297,14 +297,14 @@ export class VisitListPage implements OnInit {
                 })
                 .then((loadingEl) => {
                   loadingEl.present();
-                  var params = JSON.stringify({
+                  var params = {
                     ticket_id: this.selected_ticket['t_id'],
                     u_id: this.user_id,
                     msg_from: '0',
                     types: types.join(','),
                     // extra_param: 'entry_approval_cwt',
                     extra_param: 'action_approval_cwt',
-                  });
+                  };
                   console.log('param', params);
                   this.api
                     .post_admin(params)

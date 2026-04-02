@@ -143,7 +143,7 @@ export class RaingaugeStationEntryPage implements OnInit {
         }
         this.modalState = false;
       });
-      return await modal.present().then(() => {});
+      return await modal.present().then(() => { });
     }
   }
 
@@ -290,7 +290,7 @@ export class RaingaugeStationEntryPage implements OnInit {
       .then((loadingEl) => {
         loadingEl.present();
 
-        var params = JSON.stringify({
+        var params = {
           username: this.vendor_id,
           station_code: this.stationCode,
           district_id: this.district_id,
@@ -315,7 +315,7 @@ export class RaingaugeStationEntryPage implements OnInit {
           sensor_solar_radiation: this.sensors[6]['checked'] ? 1 : 0,
           sensor_soil_moisture: this.sensors[7]['checked'] ? 1 : 0,
           extra_param: 'add_rainguage_station',
-        });
+        };
 
         console.log('param', params);
         this.api

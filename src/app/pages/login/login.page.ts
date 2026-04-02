@@ -181,7 +181,7 @@ export class LoginPage implements OnInit {
           '' +
           this.generateRandomString();
         console.log(id);
-        var params = JSON.stringify({
+        var params = {
           phone: this.phone_number,
           device_id: localStorage.getItem('deviceid'),
           id: id,
@@ -189,7 +189,7 @@ export class LoginPage implements OnInit {
             this.platform.is('android') || this.platform.is('ios')
               ? 'login_admin_new'
               : 'login_admin',
-        });
+        };
         // console.log('param', params);
         this.api
           .post_admin(params)

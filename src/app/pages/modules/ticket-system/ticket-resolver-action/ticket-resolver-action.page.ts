@@ -145,12 +145,12 @@ export class TicketResolverActionPage implements OnInit {
       })
       .then((loadingEl) => {
         // loadingEl.present();
-        var params = JSON.stringify({
+        var params = {
           ticket_id: this.ticket_id,
           text: '_|||Acknowledge',
           msg_from: '0',
           extra_param: 'update_thread_cwt',
-        });
+        };
         console.log('param', params);
         this.api
           .post_admin(params)
@@ -181,11 +181,11 @@ export class TicketResolverActionPage implements OnInit {
       })
       .then((loadingEl) => {
         // loadingEl.present();
-        var params = JSON.stringify({
+        var params = {
           resolver: this.resolver_id,
           ticket_id: this.ticket_id,
           extra_param: 'assign_cwt',
-        });
+        };
         console.log('param', params);
         this.api
           .post_admin(params)
@@ -231,11 +231,11 @@ export class TicketResolverActionPage implements OnInit {
                   })
                   .then((loadingEl) => {
                     loadingEl.present();
-                    var params = JSON.stringify({
+                    var params = {
                       ticket_id: this.ticket_id,
                       resolver_role: role,
                       extra_param: 'escalate_cwt',
-                    });
+                    };
                     console.log('param', params);
                     this.api
                       .post_admin(params)
@@ -279,12 +279,12 @@ export class TicketResolverActionPage implements OnInit {
         })
         .then((loadingEl) => {
           // loadingEl.present();
-          var params = JSON.stringify({
+          var params = {
             ticket_id: this.ticket_id,
             msg_from: '0',
             text: text,
             extra_param: 'update_thread_cwt',
-          });
+          };
           console.log('param', params);
           this.api
             .post_admin(params)
@@ -396,11 +396,11 @@ export class TicketResolverActionPage implements OnInit {
                 })
                 .then((loadingEl) => {
                   loadingEl.present();
-                  var params = JSON.stringify({
+                  var params = {
                     ticket_id: this.ticket_id,
                     msg_from: 0,
                     extra_param: 'close_cwt',
-                  });
+                  };
                   console.log('param', params);
                   this.api
                     .post_admin(params)
@@ -459,14 +459,14 @@ export class TicketResolverActionPage implements OnInit {
                 .then((loadingEl) => {
                   loadingEl.present();
 
-                  var params = JSON.stringify({
+                  var params = {
                     ticket_id: this.ticket_id,
                     msg_from: '0',
                     type: type,
                     image_before: this.img_before,
                     image_after: this.img_after,
                     extra_param: 'resolved_request_cwt',
-                  });
+                  };
 
                   console.log('param', params);
                   this.api
@@ -549,7 +549,7 @@ export class TicketResolverActionPage implements OnInit {
           {
             text: 'No',
             role: 'cancel',
-            handler: async () => {},
+            handler: async () => { },
           },
           {
             text: 'Continue',
@@ -599,7 +599,7 @@ export class TicketResolverActionPage implements OnInit {
         }
         this.modalState = false;
       });
-      return await modal.present().then(() => {});
+      return await modal.present().then(() => { });
     }
   }
 
@@ -641,10 +641,10 @@ export class TicketResolverActionPage implements OnInit {
                 })
                 .then((loadingEl) => {
                   loadingEl.present();
-                  var params = JSON.stringify({
+                  var params = {
                     ticket_id: this.ticket_id,
                     extra_param: 'entry_request_cwt',
-                  });
+                  };
                   console.log('param', params);
                   this.api
                     .post_admin(params)
@@ -703,12 +703,12 @@ export class TicketResolverActionPage implements OnInit {
                 })
                 .then((loadingEl) => {
                   loadingEl.present();
-                  var params = JSON.stringify({
+                  var params = {
                     ticket_id: this.ticket_id,
                     type: 'field_entry',
                     msg_from: '1',
                     extra_param: 'action_request_cwt',
-                  });
+                  };
                   console.log('param', params);
                   this.api
                     .post_admin(params)
@@ -767,14 +767,14 @@ export class TicketResolverActionPage implements OnInit {
                 })
                 .then((loadingEl) => {
                   loadingEl.present();
-                  var params = JSON.stringify({
+                  var params = {
                     ticket_id: this.ticket_id,
                     type: 'intermediate_action',
                     msg_from: '1',
                     extra_param: 'action_request_cwt',
                     reason: this.reason,
                     imgs: this.support_imgs,
-                  });
+                  };
                   console.log('param', params);
                   this.api
                     .post_admin(params)
@@ -830,7 +830,7 @@ export class TicketResolverActionPage implements OnInit {
       {
         text: 'Cancel',
         role: 'cancel',
-        handler: () => {},
+        handler: () => { },
       },
     ];
 

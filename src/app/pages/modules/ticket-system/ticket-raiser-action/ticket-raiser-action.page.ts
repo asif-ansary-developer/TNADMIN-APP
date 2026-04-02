@@ -30,8 +30,7 @@ import { RefreshHelperService } from 'src/app/helper/refresh-helper.service';
   styleUrls: ['./ticket-raiser-action.page.scss'],
 })
 export class TicketRaiserActionPage
-  implements OnInit, AfterViewInit, OnDestroy
-{
+  implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('note', { read: ElementRef }) note_element: ElementRef;
   @ViewChild('content', { read: ElementRef }) content: ElementRef;
   @ViewChild('textbox') textbox;
@@ -119,12 +118,12 @@ export class TicketRaiserActionPage
       })
       .then((loadingEl) => {
         // loadingEl.present();
-        var params = JSON.stringify({
+        var params = {
           ticket_id: this.ticket_id,
           msg_from: '1',
           text: '_|||Reminder',
           extra_param: 'update_thread_cwt',
-        });
+        };
         console.log('param', params);
         this.api
           .post_admin(params)
@@ -158,12 +157,12 @@ export class TicketRaiserActionPage
         })
         .then((loadingEl) => {
           // loadingEl.present();
-          var params = JSON.stringify({
+          var params = {
             ticket_id: this.ticket_id,
             msg_from: '1',
             text: text,
             extra_param: 'update_thread_cwt',
-          });
+          };
           console.log('param', params);
           this.api
             .post_admin(params)

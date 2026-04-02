@@ -695,7 +695,9 @@ export class ApiService {
   get_cw_tickets_by_admin_role(param) {
     return this.http.get(
       `${this.base_url
-      }index.php/Api_mobile/Api_admin/cw_tickets_by_resolver_role_get?page=${param.page ? param.page : ''
+      // }index.php/Api_mobile/Api_admin/cw_tickets_by_resolver_role_get?page=${param.page ? param.page : ''
+
+      }api/mobile/cw_tickets_by_resolver_role_get?page=${param.page ? param.page : ''
       }&role=${param.role}`
     );
   }
@@ -705,7 +707,9 @@ export class ApiService {
     return this.http.get(
       // 'https://beta-tnsmart.rimes.int/index.php/Api_mobile/Api_admin/cw_ticket_by_id_get?t_id=' +
       this.base_url +
-      'index.php/Api_mobile/Api_admin/cw_ticket_by_id_get?t_id=' +
+      // 'index.php/Api_mobile/Api_admin/cw_ticket_by_id_get?t_id='
+      'api/mobile/cw_ticket_by_id_get?t_id='
+      +
       param.t_id
     );
   }
@@ -728,7 +732,9 @@ export class ApiService {
     return this.http.get(
       // 'https://beta-tnsmart.rimes.int/index.php/Api_mobile/Api_admin/cw_ticket_by_id_get?t_id=' +
       this.base_url +
-      'index.php/Api_mobile/Api_admin/cw_ticket_actions_by_id_get?t_id=' +
+      // 'index.php/Api_mobile/Api_admin/cw_ticket_actions_by_id_get?t_id='
+      'api/mobile/cw_ticket_actions_by_id_get?t_id='
+      +
       param.t_id
     );
   }
@@ -738,7 +744,9 @@ export class ApiService {
     return this.http.get(
       // 'https://beta-tnsmart.rimes.int/index.php/Api_mobile/Api_admin/cw_tickets_by_resolver_id_get?r_id=' +
       this.base_url +
-      'index.php/Api_mobile/Api_admin/cw_tickets_by_resolver_id_get?page=' +
+      // 'index.php/Api_mobile/Api_admin/cw_tickets_by_resolver_id_get?page=' 
+      'api/mobile/cw_tickets_by_resolver_id_get?page='
+      +
       param.page +
       '&&r_id=' +
       param.r_id +
@@ -947,7 +955,9 @@ export class ApiService {
   get_station_status_by_district_id(param) {
     return this.http.get(
       this.base_url +
-      'index.php/Api_mobile/Api_admin/arg_stations_by_district_get?d_id=' +
+      // 'index.php/Api_mobile/Api_admin/arg_stations_by_district_get?d_id=' 
+      'api/mobile/arg_stations_by_district_get?d_id='
+      +
       param.id
     );
   }
@@ -1014,13 +1024,15 @@ export class ApiService {
 
   get_inventory_sources() {
     return this.http.get(
-      this.base_url + 'index.php/Api_mobile/Api_inventory/get_sources'
+      //  this.base_url + 'index.php/Api_mobile/Api_inventory/get_sources'
+      this.base_url + 'api/mobile/get_sources'
     );
   }
 
   get_equipment_list() {
     return this.http.get(
-      this.base_url + 'index.php/Api_mobile/Api_inventory/get_inventory'
+      //this.base_url + 'index.php/Api_mobile/Api_inventory/get_inventory'
+      this.base_url + 'api/mobile/get_inventory'
     );
   }
 
@@ -1048,7 +1060,9 @@ export class ApiService {
       // 'http://localhost/tn-pk-smart/index.php/Api_mobile/Api_inventory/inventory_stockhouse_nearby_get?lat=' +
       // 'http://203.156.108.109/tnsmart_dev/index.php/Api_mobile/Api_inventory/inventory_stockhouse_nearby_get?lat=' +
       this.base_url +
-      'index.php/Api_mobile/Api_inventory/inventory_stockhouse_nearby_get?lat=' +
+      // 'index.php/Api_mobile/Api_inventory/inventory_stockhouse_nearby_get?lat='
+      'api/mobile/inventory_stockhouse_nearby_get?lat='
+      +
       param['lat'] +
       '&lng=' +
       param['lng'] +

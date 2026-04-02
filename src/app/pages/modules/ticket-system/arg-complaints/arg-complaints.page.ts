@@ -62,9 +62,9 @@ export class ArgComplaintsPage implements OnInit {
     // this.role = '96';
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
-  ionViewDidEnter() {}
+  ionViewDidEnter() { }
 
   goToHome() {
     this.navCtrl.navigateBack('/ticket-system');
@@ -83,9 +83,9 @@ export class ArgComplaintsPage implements OnInit {
         componentProps: {
           username:
             this.role == '94' ||
-            this.role == '96' ||
-            this.role == '98' ||
-            this.role == '1'
+              this.role == '96' ||
+              this.role == '98' ||
+              this.role == '1'
               ? this.raiser_id
               : '',
         },
@@ -126,7 +126,7 @@ export class ArgComplaintsPage implements OnInit {
         }
         this.modalState = false;
       });
-      return await modal.present().then(() => {});
+      return await modal.present().then(() => { });
     }
   }
 
@@ -147,7 +147,7 @@ export class ArgComplaintsPage implements OnInit {
       {
         text: this.lang == 'en' ? 'Cancel' : 'ரத்துசெய்',
         role: 'cancel',
-        handler: () => {},
+        handler: () => { },
       },
     ];
 
@@ -241,7 +241,7 @@ export class ArgComplaintsPage implements OnInit {
                 .then((loadingEl) => {
                   loadingEl.present();
 
-                  var params = JSON.stringify({
+                  var params = {
                     username: this.raiser_id,
                     station_code: this.stationCode,
                     station_name: this.stationName,
@@ -254,7 +254,7 @@ export class ArgComplaintsPage implements OnInit {
                     img_2: this.imgs[1] != null ? this.imgs[1] : '',
                     img_3: this.imgs[2] != null ? this.imgs[2] : '',
                     extra_param: 'arg_complaints',
-                  });
+                  };
                   console.log('param', params);
                   this.api
                     .post_admin(params)

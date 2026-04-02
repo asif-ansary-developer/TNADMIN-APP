@@ -42,7 +42,7 @@ export class FenceUpdatePage implements OnInit {
     this.maxDate = moment().utcOffset('+05:30').format('yyyy-MM-DD');
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
   updateStatus(status) {
     this.fence_status = status;
   }
@@ -79,7 +79,7 @@ export class FenceUpdatePage implements OnInit {
         }
         this.modalState = false;
       });
-      return await modal.present().then(() => {});
+      return await modal.present().then(() => { });
     }
   }
 
@@ -99,13 +99,13 @@ export class FenceUpdatePage implements OnInit {
       .then((loadingEl) => {
         loadingEl.present();
 
-        var params = JSON.stringify({
+        var params = {
           v_id: this.username,
           station_code: this.stationCode,
           date: this.date,
           img: this.img != null ? this.img : '',
           extra_param: 'update_fence_work',
-        });
+        };
 
         console.log('param', params);
 
@@ -158,7 +158,7 @@ export class FenceUpdatePage implements OnInit {
       {
         text: this.lang == 'en' ? 'Cancel' : 'ரத்துசெய்',
         role: 'cancel',
-        handler: () => {},
+        handler: () => { },
       },
     ];
 

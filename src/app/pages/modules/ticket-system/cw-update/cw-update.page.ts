@@ -170,7 +170,7 @@ export class CwUpdatePage implements OnInit {
         }
         this.modalState = false;
       });
-      return await modal.present().then(() => {});
+      return await modal.present().then(() => { });
     }
   }
 
@@ -191,7 +191,7 @@ export class CwUpdatePage implements OnInit {
       {
         text: this.lang == 'en' ? 'Cancel' : 'ரத்துசெய்',
         role: 'cancel',
-        handler: () => {},
+        handler: () => { },
       },
     ];
 
@@ -255,13 +255,13 @@ export class CwUpdatePage implements OnInit {
       .then((loadingEl) => {
         loadingEl.present();
 
-        var params = JSON.stringify({
+        var params = {
           v_id: this.username,
           station_code: this.stationCode,
           date: this.date,
           img: this.img != null ? this.img : '',
           extra_param: 'update_civil_work',
-        });
+        };
 
         console.log('param', params);
         if (this.civil_work == 'yes') {
