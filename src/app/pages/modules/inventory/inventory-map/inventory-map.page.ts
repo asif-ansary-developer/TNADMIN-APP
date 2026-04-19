@@ -403,9 +403,10 @@ export class InventoryMapPage implements OnInit {
             ? this.selected_item_filter
             : null,
       };
-    console.log(param);
+    console.log('inventory location param', JSON.stringify(param));
     this.api.get_inventory_stockhouse_get(param).subscribe((data) => {
       console.log('inventory locations', data);
+      console.log('inventory location param', JSON.stringify(param));
       this.inventory_locations = data;
       this.removePlotMarkers();
       if (this.inventory_locations?.length == 0)
@@ -689,7 +690,7 @@ export class InventoryMapPage implements OnInit {
         spinner: 'dots',
         mode: 'ios',
       });
-      this.loader.present().then(() => {});
+      this.loader.present().then(() => { });
     }
   }
 
