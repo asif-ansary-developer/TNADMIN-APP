@@ -22,6 +22,10 @@ import { AuthService } from 'src/app/guard/auth.service';
 import { PreviewPage } from './preview/preview.page';
 import { Geolocation } from '@capacitor/geolocation';
 import { LocationAccuracy } from '@awesome-cordova-plugins/location-accuracy/ngx';
+import { AlertController } from '@ionic/angular';
+import { App } from '@capacitor/app';
+import { NativeSettings, AndroidSettings, IOSSettings } from 'capacitor-native-settings';
+
 
 @Component({
   selector: 'app-maintenance',
@@ -31,6 +35,7 @@ import { LocationAccuracy } from '@awesome-cordova-plugins/location-accuracy/ngx
 export class MaintenancePage implements OnInit {
   @ViewChild('swiper_maintenance', { static: true }) swiper?: SwiperComponent;
   @ViewChild('content', { static: false }) content: IonContent;
+
 
   activeSlide = 0;
   config: SwiperOptions = {
@@ -93,16 +98,19 @@ export class MaintenancePage implements OnInit {
     private authService: AuthService,
     private platform: Platform,
     private loadingCtrl: LoadingController,
-    private locationAccuracy: LocationAccuracy
+    private locationAccuracy: LocationAccuracy,
+    private alertController: AlertController,
   ) {
     this.getDistricts();
     this.getMaintananceMenu();
     this.today = moment().utcOffset('+05:30').format('yyyy-MM-DD');
   }
 
+
   async requestPermission() {
     try {
       const status = await Geolocation.checkPermissions();
+
       console.log('First status...', JSON.stringify(status));
 
       if (
@@ -110,17 +118,20 @@ export class MaintenancePage implements OnInit {
         status.coarseLocation === 'granted'
       ) {
         this.permission = true;
-        this.getLocation();
+        await this.getLocation();
       } else {
         console.log('Default status...', JSON.stringify(status));
         this.permission = false;
         await this.requestGeolocationPermission();
+
       }
     } catch (err) {
       console.error(err);
       this.turnOnGPS();
     }
   }
+
+
 
   async requestGeolocationPermission() {
     try {
@@ -135,16 +146,25 @@ export class MaintenancePage implements OnInit {
         permissionStatus.coarseLocation === 'granted'
       ) {
         this.permission = true;
-        this.getLocation();
+        await this.getLocation();
       } else {
         this.permission = false;
         this.authService.showToast('Please enable Location permission!');
+        // this.showLocationPermissionAlert();
       }
-    } catch (err) {
-      console.error('Error requesting location permissions', err);
-      this.authService.showToast('Failed to request location permissions!');
+    }
+    // catch (err) {
+    //   console.error('Error requesting location permissions', err);
+    //   this.authService.showToast('Failed to request location permissions!');
+    // }
+
+    catch (err) {
+      console.error("Permission Error:", err);
+      // alert(JSON.stringify(err));
+      this.authService.showToast("Failed to request location permissions!");
     }
   }
+
 
   async turnOnGPS() {
     if (this.platform.is('android')) {
@@ -159,7 +179,7 @@ export class MaintenancePage implements OnInit {
         this.authService.showToast('Failed to enable high accuracy location!');
       }
     } else {
-      this.getLocation();
+      await this.getLocation();
     }
   }
 
@@ -260,6 +280,9 @@ export class MaintenancePage implements OnInit {
       ],
     });
   }
+  IonViewWillEnter() {
+    this.requestPermission();
+  }
 
   getDistricts() {
     this.station = null;
@@ -355,7 +378,7 @@ export class MaintenancePage implements OnInit {
       {
         text: 'Cancel',
         role: 'cancel',
-        handler: () => {},
+        handler: () => { },
       },
     ];
 
@@ -412,12 +435,28 @@ export class MaintenancePage implements OnInit {
   };
 
   async setImage(img) {
+    //  alert("SET IMAGE CALLED");
     if (!this.station) {
       this.authService.showToast('Please select station');
       return;
     }
+
+
+    //     alert(
+    //       `Lat=${this.latitude}
+    // Lng=${this.longitude}
+    // Mode=${this.camera_mode}`
+    //     );
+    console.log("camera_mode =", this.camera_mode);
+    console.log("latitude =", this.latitude);
+    console.log("longitude =", this.longitude);
+
     if (this.latitude && this.longitude) {
       var _case = 0;
+
+
+
+
       switch (this.camera_mode) {
         case 1:
           this.before_img = img;
@@ -561,17 +600,17 @@ export class MaintenancePage implements OnInit {
     console.log(
       'rest',
       !this.form_2.get('issueDetail').valid &&
-        this.form_2.get('issueDetail').touched &&
-        this.activeSlide != 1
+      this.form_2.get('issueDetail').touched &&
+      this.activeSlide != 1
     );
 
     console.log(
       (!this.before_img && this.before_img_help_text) ||
-        (!this.during_img && this.during_img_help_text) ||
-        (!this.after_img &&
-          this.after_img_help_text &&
-          !this.checkbox_checked &&
-          this.checkbox_touched)
+      (!this.during_img && this.during_img_help_text) ||
+      (!this.after_img &&
+        this.after_img_help_text &&
+        !this.checkbox_checked &&
+        this.checkbox_touched)
     );
   }
 
@@ -608,8 +647,8 @@ export class MaintenancePage implements OnInit {
             filter == 'district'
               ? this.district_data
               : filter == 'station'
-              ? this.station_data
-              : this.district_data,
+                ? this.station_data
+                : this.district_data,
         },
       });
 
@@ -641,7 +680,7 @@ export class MaintenancePage implements OnInit {
           this.modalState = false;
         }
       });
-      return await modal.present().then(() => {});
+      return await modal.present().then(() => { });
     }
     // this.cdr.detectChanges();
   }
@@ -737,5 +776,44 @@ export class MaintenancePage implements OnInit {
     }
 
     return ''; // Default state
+  }
+
+  async openAppSettings() {
+    if (this.platform.is('android')) {
+      await NativeSettings.open({
+        optionAndroid: AndroidSettings.ApplicationDetails,
+        optionIOS: IOSSettings.About
+      });
+    } else {
+      await NativeSettings.open({
+        optionIOS: IOSSettings.App,
+        optionAndroid: AndroidSettings.Accessibility
+      });
+    }
+  }
+
+  async showLocationPermissionAlert() {
+    const alert = await this.alertController.create({
+      header: 'Location Permission Required',
+      message:
+        'Location permission is mandatory to capture the maintenance location and latitude/longitude. Please enable it from the app settings.',
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+
+          text: 'Open Settings',
+          handler: async () => {
+            await this.openAppSettings();
+          }
+
+        },
+      ],
+    });
+
+    await alert.present();
   }
 }
