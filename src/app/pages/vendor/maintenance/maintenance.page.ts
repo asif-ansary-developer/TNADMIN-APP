@@ -682,7 +682,7 @@ export class MaintenancePage implements OnInit {
       });
       return await modal.present().then(() => { });
     }
-    // this.cdr.detectChanges();
+
   }
 
   async compressImage(dataUrl) {
@@ -694,7 +694,7 @@ export class MaintenancePage implements OnInit {
         const ctx = canvas.getContext('2d');
 
         // Set maximum dimensions for resizing
-        const MAX_WIDTH = 600; // Example: Adjust dimensions as needed
+        const MAX_WIDTH = 600;
         const MAX_HEIGHT = 800;
         let width = img.width;
         let height = img.height;
@@ -739,7 +739,6 @@ export class MaintenancePage implements OnInit {
     const issueDetail = this.form_2.get('issueDetail');
     const replacementDetail = this.form_2.get('replacementDetail');
 
-    // Conditions for invalid states
     const isInvalid = (detail) => !detail?.valid && detail?.touched;
 
     const hasMissingImages =
