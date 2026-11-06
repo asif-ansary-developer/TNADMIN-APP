@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1031884805412:android:59ee08285148626a4d8fb1",
         "android_client_info": {
-          "package_name": "int_.rimes.tnsmart_admin"
+          "package_name": "com.rimes.tnsmartadmin"
         }
       },
       "oauth_client": [
@@ -35,7 +35,7 @@
               "client_id": "1031884805412-dpsra92fq8vvrpks9kldf21t5pl4gpia.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "int_.rimes.tnsmart_admin"
+                "bundle_id": "com.rimes.tnsmartadmin"
               }
             }
           ]
@@ -46,7 +46,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1031884805412:android:330224334fccb4b34d8fb1",
         "android_client_info": {
-          "package_name": "int_.rimes.tnsmart_admin"
+          "package_name": "com.rimes.tnsmartadmin"
         }
       },
       "oauth_client": [

@@ -2,10 +2,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services' 
 
 android {
-    namespace "int_.rimes.tnsmart_admin"
+    //namespace "int_.rimes.tnsmart_admin"
+    namespace "com.rimes.tnsmartadmin"
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "int_.rimes.tnsmart_admin"
+       // applicationId "int_.rimes.tnsmart_admin"
+        applicationId "com.rimes.tnsmartadmin"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

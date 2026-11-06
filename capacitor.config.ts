@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'int_.rimes.tnsmart_admin',
-  appName: 'tnalert_7_admin',
+  appId: 'com.rimes.tnsmartadmin',
+  appName: 'TN-ADMIN',
   webDir: 'www',
   server: {
     androidScheme: 'http',

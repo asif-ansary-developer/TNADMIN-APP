@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "int_.rimes.tnsmart_admin",
+  "applicationId": "com.rimes.tnsmartadmin",
   "variantName": "release",
   "elements": [
     {
