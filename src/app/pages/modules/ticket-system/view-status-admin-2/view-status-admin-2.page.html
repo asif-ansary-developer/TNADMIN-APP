@@ -666,6 +666,14 @@ Data:   11/7/2022
 
 
   <div class="container" *ngIf="tab=='vendor_payment_tickets'">
+
+
+    <ion-card class="ion-padding" style="margin-bottom: 12px;">
+      <ion-searchbar mode="ios" [(ngModel)]="paymentSearchTerm" (ionInput)="filterPaymentTickets($event)"
+        placeholder="Search by Ticket ID, Difficulty or Station Code" debounce="350" clearText="true"
+        style="padding: 0; --border-radius: 100px; --background: #f3f3f3;">
+      </ion-searchbar>
+    </ion-card>
     <div *ngIf="loading_payment_tickets">
       <div class="skeleton-container" style="margin: 40px 0 0 0 ;">
         <div class="skeleton skeleton-card" style="height: 300px; margin-top: -15px;margin-bottom:22px;"></div>
@@ -674,8 +682,12 @@ Data:   11/7/2022
       </div>
     </div>
 
-    <ion-card class="ion-padding  ion-text-center" *ngIf="payment_tickets.length==0 && !loading_payment_tickets">No
-      tickets</ion-card>
+    <!-- <ion-card class="ion-padding  ion-text-center" *ngIf="payment_tickets.length==0 && !loading_payment_tickets">No
+      tickets</ion-card> -->
+
+    <ion-card class="ion-padding ion-text-center" *ngIf="payment_tickets.length === 0 && !loading_payment_tickets">
+      No matching tickets found
+    </ion-card>
 
     <ion-card class="ion-padding ticket-card" *ngFor="let ticket of payment_tickets"
       (click)="openTicketRaiserAction(ticket['t_id'])">

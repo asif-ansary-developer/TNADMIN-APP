@@ -40,6 +40,9 @@ export class ViewStatusAdmin2Page implements OnInit {
 
   current_page = [1, 1, 1, 1, 1];
 
+  paymentSearchTerm: string = '';
+  paymentSearchRequestId = 0;
+
   previousUrl;
   refreshSubscription;
   reload = true;
@@ -350,34 +353,119 @@ export class ViewStatusAdmin2Page implements OnInit {
     });
   }
 
+  // getPaymentTickets(event) {
+  //   if (this.no_more_data[5]) {
+  //     this.clearEvent(event);
+  //     return;
+  //     ``;
+  //   }
+
+  //   const requestId = this.paymentSearchRequestId;
+
+  //   let params: {
+  //     page: number;
+  //     r_id: any;
+  //     search?: string;
+  //   } = {
+  //     page: this.current_page[5],
+  //     r_id: this.username,
+  //   };
+
+  //   const keyword = this.paymentSearchTerm?.trim();
+
+  //   if (keyword) {
+  //     params.search = keyword;
+  //   }
+
+  //   this.api
+  //     .get_payment_involved_tickets_by_raiser_id(params)
+  //     .subscribe((data: any) => {
+  //       if (requestId !== this.paymentSearchRequestId) {
+  //         this.clearEvent(event);
+  //         return;
+  //       }
+  //       if (data.length === 0 && !this.loading_payment_tickets) {
+  //         this.no_more_data[5] = true;
+  //         this.current_page[5] = 0;
+
+  //         this.clearEvent(event);
+  //         return;
+  //       }
+  //       this.payment_tickets = this.payment_tickets.concat(data);
+  //       this.loading_payment_tickets = false;
+  //       console.log('payment tickets are..', this.payment_tickets);
+  //       this.current_page[5]++;
+  //       this.clearEvent(event);
+  //     }, (error) => {
+  //       if (requestId === this.paymentSearchRequestId) {
+  //         this.loading_payment_tickets = false;
+  //       }
+
+  //       console.error('Payment ticket search error:', error);
+  //       this.clearEvent(event);
+  //     }
+  //     );
+
+  // }
+
+
   getPaymentTickets(event) {
     if (this.no_more_data[5]) {
       this.clearEvent(event);
       return;
-      ``;
     }
-    let params = {
+
+    const requestId = this.paymentSearchRequestId;
+
+    let params: {
+      page: number;
+      r_id: any;
+      search?: string;
+    } = {
       page: this.current_page[5],
       r_id: this.username,
     };
 
+    const keyword = this.paymentSearchTerm?.trim();
+
+    if (keyword) {
+      params.search = keyword;
+    }
+
     this.api
       .get_payment_involved_tickets_by_raiser_id(params)
-      .subscribe((data: any) => {
-        if (data.length === 0 && !this.loading_payment_tickets) {
-          this.no_more_data[5] = true;
-          this.current_page[5] = 0;
+      .subscribe(
+        (data: any) => {
+          if (requestId !== this.paymentSearchRequestId) {
+            this.clearEvent(event);
+            return;
+          }
 
+          if (!Array.isArray(data) || data.length === 0) {
+            this.no_more_data[5] = true;
+            this.current_page[5] = 0;
+            this.loading_payment_tickets = false;
+            this.clearEvent(event);
+            return;
+          }
+
+          this.payment_tickets = this.payment_tickets.concat(data);
+          this.loading_payment_tickets = false;
+
+          this.current_page[5]++;
           this.clearEvent(event);
-          return;
+        },
+        (error) => {
+          if (requestId === this.paymentSearchRequestId) {
+            this.loading_payment_tickets = false;
+          }
+
+          console.error('Payment ticket search error:', error);
+          this.clearEvent(event);
         }
-        this.payment_tickets = this.payment_tickets.concat(data);
-        this.loading_payment_tickets = false;
-        console.log('payment tickets are..', this.payment_tickets);
-        this.current_page[5]++;
-        this.clearEvent(event);
-      });
+      );
   }
+
 
   loadMore(event) {
     switch (this.tab) {
@@ -464,7 +552,7 @@ export class ViewStatusAdmin2Page implements OnInit {
         }
         this.modalState = false;
       });
-      return await modal.present().then(() => {});
+      return await modal.present().then(() => { });
     }
   }
 
@@ -514,5 +602,18 @@ export class ViewStatusAdmin2Page implements OnInit {
     } else {
       this.authService.showToast('Please select a District');
     }
+  }
+
+
+  filterPaymentTickets(ev: any) {
+    this.paymentSearchTerm = ev.detail.value || '';
+
+    this.paymentSearchRequestId++;
+    this.current_page[5] = 1;
+    this.no_more_data[5] = false;
+    this.payment_tickets = [];
+    this.loading_payment_tickets = true;
+
+    this.getPaymentTickets(null);
   }
 }

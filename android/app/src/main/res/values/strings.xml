@@ -2,8 +2,8 @@
 <resources>
     <!-- <string name="app_name">tnalert_7_admin</string>
     <string name="title_activity_main">tnalert_7_admin</string> -->
-    <string name="app_name">Tnsmart-Admin</string>
-    <string name="title_activity_main">Tnsmart-Admin</string>
+    <string name="app_name">TN-Admin</string>
+    <string name="title_activity_main">TN-Admin</string>
     <string name="package_name">com.rimes.tnsmartadmin</string>
     <string name="custom_url_scheme">com.rimes.tnsmartadmin</string>
 </resources>

@@ -10,7 +10,7 @@
         <string>tnalert_7_admin</string> -->
 
 		<key>CFBundleDisplayName</key>
-        <string>Tnsmart-Admin</string>
+        <string>TN-Admin</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
