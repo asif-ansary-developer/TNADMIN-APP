@@ -299,20 +299,23 @@ Data:   11/7/2022
     </ng-container>
   </ion-grid>
 
-  <ng-container *ngIf="ticket">
-    <ion-footer *ngIf="ticket['ticket_status']==1"
-      [ngClass]="ticket['threads'][ticket['threads']?.length-1]['status']!=88 ? 'full-op': 'reduce-op'">
-      <div class="reply-box-wrapper">
-        <div class="reply-box">
-          <ion-input placeholder="{{'Type here' | translate}}" autocapitalize="sentences" autocomplete="language"
-            #textCtrl="ngModel" [(ngModel)]="reply_text" (keyup.enter)="sendMsgAsRaiser()" required #textbox>
-          </ion-input>
-        </div>
 
-        <div class="reply-box">
-          <ion-button mode="ios" fill="clear" (click)="sendMsgAsRaiser()"><ion-icon name="send"></ion-icon></ion-button>
-        </div>
-      </div>
-    </ion-footer>
-  </ng-container>
 </ion-content>
+
+
+<ng-container *ngIf="ticket">
+  <ion-footer *ngIf="ticket['ticket_status']==1"
+    [ngClass]="ticket['threads'][ticket['threads']?.length-1]['status']!=88 ? 'full-op': 'reduce-op'">
+    <div class="reply-box-wrapper">
+      <div class="reply-box">
+        <ion-input placeholder="{{'Type here' | translate}}" autocapitalize="sentences" autocomplete="off"
+          #textCtrl="ngModel" [(ngModel)]="reply_text" (keyup.enter)="sendMsgAsRaiser()" required #textbox>
+        </ion-input>
+      </div>
+
+      <div class="reply-box">
+        <ion-button mode="ios" fill="clear" (click)="sendMsgAsRaiser()"><ion-icon name="send"></ion-icon></ion-button>
+      </div>
+    </div>
+  </ion-footer>
+</ng-container>
