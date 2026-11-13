@@ -316,44 +316,42 @@ Data:   11/7/2022
       </ng-container>
     </ng-container>
   </ion-grid>
+</ion-content>
 
-  <ng-container *ngIf="ticket">
-    <ion-footer *ngIf="edit_per"
-      [ngClass]="this.ticket['threads'].length >3 && this.ticket['ticket_status']!='0' && ticket['threads'][ticket['threads']?.length-1]['status']!=88 ? 'full-op': 'reduce-op'"
-      [ngStyle]="action ? {'border-top-right-radius':'0'}: {}">
-      <div *ngIf="action=='reply'" class="reply-box-wrapper">
-        <ion-button mode="ios" class="floating-btn" (click)="action=null"><ion-icon
-            name="close"></ion-icon></ion-button>
+<ng-container *ngIf="ticket">
+  <ion-footer *ngIf="edit_per"
+    [ngClass]="this.ticket['threads'].length >3 && this.ticket['ticket_status']!='0' && ticket['threads'][ticket['threads']?.length-1]['status']!=88 ? 'full-op': 'reduce-op'"
+    [ngStyle]="action ? {'border-top-right-radius':'0'}: {}">
+    <div *ngIf="action=='reply'" class="reply-box-wrapper">
+      <ion-button mode="ios" class="floating-btn" (click)="action=null"><ion-icon name="close"></ion-icon></ion-button>
 
-        <div class="reply-box">
-          <ion-input placeholder="{{'Type here' | translate}}" #textCtrl="ngModel" [(ngModel)]="reply_text" required
-            #textbox autocapitalize="sentences" id="textbox">
-          </ion-input>
-        </div>
-        <div class="reply-box">
-          <ion-button mode="ios" fill="clear" (click)="sendMsgAsResolver()"><ion-icon
-              name="send"></ion-icon></ion-button>
-        </div>
+      <div class="reply-box">
+        <ion-input placeholder="{{'Type here' | translate}}" #textCtrl="ngModel" [(ngModel)]="reply_text" required
+          #textbox autocapitalize="sentences" id="textbox">
+        </ion-input>
       </div>
-
-      <div *ngIf="action=='escalate'" class="escalate-box">
-        <ion-button mode="ios" class="floating-btn" (click)="action=null"><ion-icon
-            name="close"></ion-icon></ion-button>
-
-        <ion-select interface="action-sheet" placeholder="{{'Select a department to Escalate/Reassign' | translate}}"
-          [(ngModel)]="escalate_dept" required (ionChange)="escalate()">
-          <ion-select-option *ngIf="role != '96'" value="96">DM Tahsildar</ion-select-option>
-          <ion-select-option *ngIf="role != '94'" value="94">DRO</ion-select-option>
-          <ion-select-option *ngIf="role != '98'" value="98">Collector</ion-select-option>
-          <ion-select-option *ngIf="role != '1'" value="1">HQ</ion-select-option>
-          <ion-select-option *ngIf="['96', '94', '98', '1'].includes(role) && !ticket['ticket_owner'].startsWith('ven')"
-            value="ven">Vendor</ion-select-option>
-        </ion-select>
-
+      <div class="reply-box">
+        <ion-button mode="ios" fill="clear" (click)="sendMsgAsResolver()"><ion-icon name="send"></ion-icon></ion-button>
       </div>
+    </div>
+
+    <div *ngIf="action=='escalate'" class="escalate-box">
+      <ion-button mode="ios" class="floating-btn" (click)="action=null"><ion-icon name="close"></ion-icon></ion-button>
+
+      <ion-select interface="action-sheet" placeholder="{{'Select a department to Escalate/Reassign' | translate}}"
+        [(ngModel)]="escalate_dept" required (ionChange)="escalate()">
+        <ion-select-option *ngIf="role != '96'" value="96">DM Tahsildar</ion-select-option>
+        <ion-select-option *ngIf="role != '94'" value="94">DRO</ion-select-option>
+        <ion-select-option *ngIf="role != '98'" value="98">Collector</ion-select-option>
+        <ion-select-option *ngIf="role != '1'" value="1">HQ</ion-select-option>
+        <ion-select-option *ngIf="['96', '94', '98', '1'].includes(role) && !ticket['ticket_owner'].startsWith('ven')"
+          value="ven">Vendor</ion-select-option>
+      </ion-select>
+
+    </div>
 
 
-      <!-- <div *ngIf="action=='int_act_from_ven'" class="escalate-box">
+    <!-- <div *ngIf="action=='int_act_from_ven'" class="escalate-box">
         <ion-button mode="ios" class="floating-btn" (click)="action=null"><ion-icon
             name="close"></ion-icon></ion-button>
 
@@ -369,100 +367,98 @@ Data:   11/7/2022
       </div> -->
 
 
-      <div class="btn-box" *ngIf="!action">
-        <ion-button expand="block" mode="ios" (click)="this.action='reply'"
-          style="outline: 1px solid #fff; border-radius: 10px">Reply</ion-button>
-      </div>
+    <div class="btn-box" *ngIf="!action">
+      <ion-button expand="block" mode="ios" (click)="this.action='reply'"
+        style="outline: 1px solid #fff; border-radius: 10px">Reply</ion-button>
+    </div>
 
 
-      <div class="btn-box" *ngIf="!action && role == 'ven'">
-        <ion-button id="more-actions-trigger" expand="block" mode="ios" style="--background: red">More</ion-button>
+    <div class="btn-box" *ngIf="!action && role == 'ven'">
+      <ion-button id="more-actions-trigger" expand="block" mode="ios" style="--background: red">More</ion-button>
 
-        <ion-popover trigger="more-actions-trigger" triggerAction="click">
-          <ng-template>
-            <div style="height: fit-content; width: auto;">
-              <ion-button style="margin: 12px;" expand="block" (click)="ionpopover.dismiss();entryRequest()">Field entry
-                request</ion-button>
-              <ion-button style="margin: 12px;--background: red" expand="block"
-                (click)="ionpopover.dismiss();this.intermediate_action=true;">Intermediate
-                Action request</ion-button>
-            </div>
+      <ion-popover trigger="more-actions-trigger" triggerAction="click">
+        <ng-template>
+          <div style="height: fit-content; width: auto;">
+            <ion-button style="margin: 12px;" expand="block" (click)="ionpopover.dismiss();entryRequest()">Field entry
+              request</ion-button>
+            <ion-button style="margin: 12px;--background: red" expand="block"
+              (click)="ionpopover.dismiss();this.intermediate_action=true;">Intermediate
+              Action request</ion-button>
+          </div>
 
-          </ng-template>
-        </ion-popover>
-      </div>
+        </ng-template>
+      </ion-popover>
+    </div>
 
-      <div class="btn-box" *ngIf="!action && role != 'ven'" style="pointer-events: none;">
+    <!-- <div class="btn-box" *ngIf="!action && role != 'ven'" style="pointer-events: none;">
         <ion-button expand="block" mode="ios" style="--background: red" (click)="this.action='escalate'"
           [ngStyle]="">Escalate/Reassign</ion-button>
-      </div>
-    </ion-footer>
-  </ng-container>
+      </div> -->
+    <div class="btn-box" *ngIf="!action && role != 'ven'">
+      <ion-button expand="block" mode="ios" style="--background: red" (click)="this.action='escalate'"
+        [ngStyle]="">Escalate/Reassign</ion-button>
+    </div>
+  </ion-footer>
+</ng-container>
 
 
+<ion-modal #modal [showBackdrop]="true" [isOpen]="intermediate_action" [canDismiss]="canDismiss" mode="ios"
+  (willDismiss)="handleModalDismiss($event)">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Intermediate Action Request</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="modal.dismiss();intermediate_action=false"><ion-icon name="close"
+              style="font-size: 20px;"></ion-icon></ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <div class="container">
+        <ion-card style="padding: 16px 10px 8px 10px; margin:22px 0 0 0px;    outline: 1.2px #d7d7d7 solid;">
+
+          <ion-textarea label="{{ 'Reason' | translate}}" label-placement="stacked" fill="outline" [counter]="true"
+            placeholder="Enter reason for intermediate action" #reasonCtrl="ngModel" [(ngModel)]="reason"
+            clearInput="true" spellcheck="true" autocapitalize="sentences" minlength="5" maxlength="200" required
+            errorText="*Please enter reason in detail" mode="md"></ion-textarea>
 
 
+          <ion-input label="{{ 'Attach Image' | translate}}" class="ip-cursor" label-placement="stacked" fill="outline"
+            class="attach-input" readonly clickable mode="md">
+            <ion-button [disabled]="support_imgs.length>=2" slot="start" size="small" fill="outline"
+              style="width: 50px; margin-top: 20px" (click)="getPhoto()">
+              <ion-icon name="attach-outline" size="large"></ion-icon>
+            </ion-button>
+          </ion-input>
+          <span style="font-size: 0.8rem;display: block;padding: 0 16px;"> (Attach two image clearly that illustrate
+            your action request)</span>
 
-  <ion-modal #modal [showBackdrop]="true" [isOpen]="intermediate_action" [canDismiss]="canDismiss" mode="ios"
-    (willDismiss)="handleModalDismiss($event)">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Intermediate Action Request</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="modal.dismiss();intermediate_action=false"><ion-icon name="close"
-                style="font-size: 20px;"></ion-icon></ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content>
-        <div class="container">
-          <ion-card style="padding: 16px 10px 8px 10px; margin:22px 0 0 0px;    outline: 1.2px #d7d7d7 solid;">
-
-            <ion-textarea label="{{ 'Reason' | translate}}" label-placement="stacked" fill="outline" [counter]="true"
-              placeholder="Enter reason for intermediate action" #reasonCtrl="ngModel" [(ngModel)]="reason"
-              clearInput="true" spellcheck="true" autocapitalize="sentences" minlength="5" maxlength="200" required
-              errorText="*Please enter reason in detail" mode="md"></ion-textarea>
-
-
-            <ion-input label="{{ 'Attach Image' | translate}}" class="ip-cursor" label-placement="stacked"
-              fill="outline" class="attach-input" readonly clickable mode="md">
-              <ion-button [disabled]="support_imgs.length>=2" slot="start" size="small" fill="outline"
-                style="width: 50px; margin-top: 20px" (click)="getPhoto()">
-                <ion-icon name="attach-outline" size="large"></ion-icon>
+          <ng-container *ngIf="support_imgs">
+            <div *ngFor="let img of support_imgs;let i=index">
+              <ion-button *ngIf="img" fill="clear" size="small" (click)="clearAttachment(i)" class="circular-close-btn">
+                <ion-icon name="close-circle" style="background: #fff;border-radius: 100px;"></ion-icon>
               </ion-button>
-            </ion-input>
-            <span style="font-size: 0.8rem;display: block;padding: 0 16px;"> (Attach two image clearly that illustrate
-              your action request)</span>
-
-            <ng-container *ngIf="support_imgs">
-              <div *ngFor="let img of support_imgs;let i=index">
-                <ion-button *ngIf="img" fill="clear" size="small" (click)="clearAttachment(i)"
-                  class="circular-close-btn">
-                  <ion-icon name="close-circle" style="background: #fff;border-radius: 100px;"></ion-icon>
-                </ion-button>
-                <ion-card class="support-img-holder">
-                  <img src="{{img}}" />
-                </ion-card>
-              </div>
-            </ng-container>
-          </ion-card>
+              <ion-card class="support-img-holder">
+                <img src="{{img}}" />
+              </ion-card>
+            </div>
+          </ng-container>
+        </ion-card>
 
 
-          <ion-grid>
-            <ion-row class="ion-padding-top ion-padding-bottom ion-margin-bottom">
-              <ion-col>
-                <ion-button Expand="block" (click)="actionRequest()"
-                  [disabled]="!reasonCtrl.valid || support_imgs.length==0" style="width: 50%;margin:0 auto">
-                  {{"Request" | translate}}
-                </ion-button>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
+        <ion-grid>
+          <ion-row class="ion-padding-top ion-padding-bottom ion-margin-bottom">
+            <ion-col>
+              <ion-button Expand="block" (click)="actionRequest()"
+                [disabled]="!reasonCtrl.valid || support_imgs.length==0" style="width: 50%;margin:0 auto">
+                {{"Request" | translate}}
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
 
-        </div>
-      </ion-content>
-    </ng-template>
-  </ion-modal>
-
-</ion-content>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
