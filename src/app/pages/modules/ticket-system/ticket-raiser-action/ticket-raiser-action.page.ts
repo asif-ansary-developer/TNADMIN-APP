@@ -30,8 +30,7 @@ import { RefreshHelperService } from 'src/app/helper/refresh-helper.service';
   styleUrls: ['./ticket-raiser-action.page.scss'],
 })
 export class TicketRaiserActionPage
-  implements OnInit, AfterViewInit, OnDestroy
-{
+  implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('note', { read: ElementRef }) note_element: ElementRef;
   @ViewChild('content', { read: ElementRef }) content: ElementRef;
   @ViewChild('textbox') textbox;
