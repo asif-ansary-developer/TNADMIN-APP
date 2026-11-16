@@ -1,10 +1,3 @@
-<!---------------------------
-Name: tnsmart
------------------------------
-Author: Mohammed Rizwan S
-Data:   11/7/2022
----------------------------->
-
 <ion-header class="ion-no-border">
   <ion-toolbar mode="ios">
     <ion-title *ngIf="tab=='raised_tickets'">{{"Raised Tickets" | translate}}</ion-title>
@@ -16,17 +9,46 @@ Data:   11/7/2022
       <ion-back-button *ngIf="role !='ven_master'" mode="ios" defaultHref="/ticket-system"></ion-back-button>
       <ion-back-button *ngIf="role =='ven_master'" mode="ios" defaultHref="/home"></ion-back-button>
     </ion-buttons>
+
   </ion-toolbar>
 
 
-  <ion-toolbar *ngIf="tab=='vendor_payment_tickets' || tab=='assigned_tickets'" class="payment-search-toolbar">
+  <!-- <ion-toolbar
+    *ngIf="tab=='vendor_payment_tickets' || tab=='assigned_tickets' || tab=='unassigned_tickets' || tab=='raised_tickets'"
+    class="payment-search-toolbar">
     <ion-card class="payment-search-wrapper">
       <ion-searchbar class="payment-searchbar-direct" placeholder="Search by Ticket ID, Station Code, or Issue"
-        [value]="tab=='vendor_payment_tickets' ? paymentSearchTerm : assignedSearchTerm"
-        (ionInput)="onTabSearch($event)" [debounce]="500" show-clear-button="always">
+        [value]="activeSearchTerm" (ionInput)="onTabSearch($event)" [debounce]="500" show-clear-button="always">
       </ion-searchbar>
     </ion-card>
+  </ion-toolbar> -->
+
+  <ion-toolbar
+    *ngIf="tab=='vendor_payment_tickets' || tab=='assigned_tickets' || tab=='unassigned_tickets' || tab=='raised_tickets'"
+    class="payment-search-toolbar">
+    <div class="search-action-row">
+      <ion-card class="payment-search-wrapper">
+        <ion-searchbar class="payment-searchbar-direct" mode="ios" placeholder="Search ID, Station, or Issue"
+          [value]="activeSearchTerm" (ionInput)="onTabSearch($event)" [debounce]="500" show-clear-button="always">
+        </ion-searchbar>
+      </ion-card>
+
+      <!-- Filter Button (Right End) -->
+      <ion-button fill="outline" size="small" class="toolbar-icon-btn" [color]="hasActiveFilters ? 'primary' : 'medium'"
+        (click)="filterModalOpen = true">
+        <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+        <span *ngIf="hasActiveFilters" class="active-filter-dot"></span>
+      </ion-button>
+
+      <!-- Sort Button (Right End) -->
+      <ion-button fill="outline" size="small" class="toolbar-icon-btn"
+        [color]="sortOrder !== 'newest' ? 'primary' : 'medium'" (click)="openSortOptions()">
+        <ion-icon slot="icon-only" name="swap-vertical-outline"></ion-icon>
+      </ion-button>
+    </div>
   </ion-toolbar>
+
+
 </ion-header>
 
 
@@ -35,6 +57,91 @@ Data:   11/7/2022
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" style="z-index: 10; margin-top: -1%">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
+
+
+  <ion-modal [isOpen]="filterModalOpen" (didDismiss)="filterModalOpen = false" [initialBreakpoint]="0.68"
+    [breakpoints]="[0, 0.68, 0.9]" mode="ios" cssClass="custom-filter-sheet">
+    <ng-template>
+      <ion-header class="ion-no-border">
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button color="danger" fill="clear" (click)="resetFilters()" [disabled]="!hasActiveFilters">
+              Reset
+            </ion-button>
+          </ion-buttons>
+          <ion-title>
+            Filter Tickets
+            <span *ngIf="activeFilterCount > 0" class="filter-count-pill">{{ activeFilterCount }}</span>
+          </ion-title>
+          <ion-buttons slot="end">
+            <ion-button strong="true" color="primary" (click)="filterModalOpen = false">Done</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding-horizontal">
+        <ion-list lines="full" class="filter-list">
+          <ion-item>
+            <ion-label>Status :</ion-label>
+            <ion-select interface="action-sheet" [(ngModel)]="selectedStatusFilter">
+              <ion-select-option value="all">All Status</ion-select-option>
+              <ion-select-option *ngFor="let status of getUniqueStatusOptions()" [value]="status">
+                {{ status }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>District :</ion-label>
+            <ion-select interface="action-sheet" [(ngModel)]="selectedDistrictFilter"
+              (ionChange)="onDistrictFilterChange()">
+              <ion-select-option value="all">All Districts</ion-select-option>
+              <ion-select-option *ngFor="let dist of getUniqueOptions('district')" [value]="dist">
+                {{ dist }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Taluk :</ion-label>
+            <ion-select interface="action-sheet" [(ngModel)]="selectedTalukFilter">
+              <ion-select-option value="all">All Taluks</ion-select-option>
+              <ion-select-option *ngFor="let taluk of getUniqueOptions('taluk')" [value]="taluk">
+                {{ taluk }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Issue Type :</ion-label>
+            <ion-select interface="action-sheet" [(ngModel)]="selectedIssueTypeFilter">
+              <ion-select-option value="all">All Issue Types</ion-select-option>
+              <ion-select-option *ngFor="let issueType of getUniqueOptions('difficulty')" [value]="issueType">
+                {{ issueType }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item lines="none">
+            <ion-label>Raiser Name :</ion-label>
+            <ion-select interface="action-sheet" [(ngModel)]="selectedRaiserFilter">
+              <ion-select-option value="all">All Raisers</ion-select-option>
+              <ion-select-option *ngFor="let raiser of getUniqueOptions('raiser_name')" [value]="raiser">
+                {{ raiser }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-list>
+
+        <div class="ion-padding-top">
+          <ion-button expand="block" shape="round" (click)="filterModalOpen = false">
+            {{ activeFilterCount > 0 ? 'Apply ' + activeFilterCount + (activeFilterCount === 1 ? ' Filter' : ' Filters')
+            : 'Show All Tickets' }}
+          </ion-button>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 
   <!-- <ion-segment [(ngModel)]="tab" mode="ios">
     <ion-segment-button value="raised_tickets">
@@ -56,17 +163,25 @@ Data:   11/7/2022
 
 
   <div class="container" *ngIf="tab=='raised_tickets'">
+
     <div *ngIf="loading_raised_tickets">
+
+      <div *ngIf="loading_payment_tickets" class="ion-text-center ion-padding">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Fetching Raised Tickets...</p>
+      </div>
+
       <div class="skeleton-container" style="margin: 40px 0 0 0 ;">
         <div class="skeleton skeleton-card" style="height: 300px; margin-top: -15px;margin-bottom:22px;"></div>
         <div class="skeleton skeleton-card" style="margin-top: 16px;height: 300px;padding: 0;"></div>
         <div class="skeleton skeleton-card" style="margin-top: 16px;height: 300px;padding: 0;"></div>
       </div>
     </div>
-    <ion-card class="ion-padding  ion-text-center" *ngIf=" raised_tickets.length==0 && !loading_raised_tickets">No
+    <ion-card class="ion-padding  ion-text-center"
+      *ngIf="getProcessedTickets(raised_tickets).length === 0 && !loading_raised_tickets">No
       tickets</ion-card>
 
-    <ion-card class="ion-padding ticket-card" *ngFor="let ticket of raised_tickets"
+    <ion-card class="ion-padding ticket-card" *ngFor="let ticket of getProcessedTickets(raised_tickets)"
       (click)="openTicketRaiserAction(ticket['t_id'])">
       <ion-label class="ticket-card-label" style="
       margin-top: 8px;
@@ -161,12 +276,13 @@ Data:   11/7/2022
         <div class="skeleton skeleton-card" style="margin-top: 16px;height: 300px;padding: 0;"></div>
       </div>
     </div>
-    <ion-card class="ion-padding  ion-text-center" *ngIf=" tickets.length==0 && !loading_tickets">No matching tickets
+    <ion-card class="ion-padding  ion-text-center"
+      *ngIf="getProcessedTickets(tickets).length === 0 && !loading_tickets">No matching tickets
       found</ion-card>
 
 
 
-    <ion-card class="ion-padding ticket-card" *ngFor="let ticket of tickets"
+    <ion-card class="ion-padding ticket-card" *ngFor="let ticket of getProcessedTickets(tickets)"
       (click)="openTicketResolverAction(ticket['t_id'])">
       <ion-label class="ticket-card-label" style="font-family: monospace !important;"> {{ticket['t_id']}}</ion-label>
 
@@ -595,6 +711,11 @@ Data:   11/7/2022
 
   <div class="container" *ngIf="tab=='unassigned_tickets'">
     <div *ngIf="loading_unassigned_tickets">
+
+      <div *ngIf="loading_payment_tickets" class="ion-text-center ion-padding">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Fetching Unassigned Tickets...</p>
+      </div>
       <div class="skeleton-container" style="margin: 40px 0 0 0 ;">
         <div class="skeleton skeleton-card" style="height: 300px; margin-top: -15px;margin-bottom:22px;"></div>
         <div class="skeleton skeleton-card" style="margin-top: 16px;height: 300px;padding: 0;"></div>
@@ -602,9 +723,9 @@ Data:   11/7/2022
       </div>
     </div>
     <ion-card class="ion-padding  ion-text-center"
-      *ngIf="unassigned_tickets.length==0 && !loading_unassigned_tickets">No
+      *ngIf="getProcessedTickets(unassigned_tickets).length === 0 && !loading_unassigned_tickets">No
       tickets</ion-card>
-    <ion-card class="ion-padding ticket-card" *ngFor="let ticket of unassigned_tickets"
+    <ion-card class="ion-padding ticket-card" *ngFor="let ticket of getProcessedTickets(unassigned_tickets)"
       (click)="openTicketResolverAction(ticket['t_id'])">
       <ion-label class="ticket-card-label" style="font-family: monospace !important;"> {{ticket['t_id']}}</ion-label>
 
@@ -711,11 +832,12 @@ Data:   11/7/2022
     <!-- <ion-card class="ion-padding  ion-text-center" *ngIf="payment_tickets.length==0 && !loading_payment_tickets">No
       tickets</ion-card> -->
 
-    <ion-card class="ion-padding ion-text-center" *ngIf="payment_tickets.length === 0 && !loading_payment_tickets">
+    <ion-card class="ion-padding ion-text-center"
+      *ngIf="getProcessedTickets(payment_tickets).length === 0 && !loading_payment_tickets">
       No matching tickets found
     </ion-card>
 
-    <ion-card class="ion-padding ticket-card" *ngFor="let ticket of payment_tickets"
+    <ion-card class="ion-padding ticket-card" *ngFor="let ticket of getProcessedTickets(payment_tickets)"
       (click)="openTicketRaiserAction(ticket['t_id'])">
       <ion-label class="ticket-card-label" style="font-family: monospace !important;"> {{ticket['t_id']}}</ion-label>
 

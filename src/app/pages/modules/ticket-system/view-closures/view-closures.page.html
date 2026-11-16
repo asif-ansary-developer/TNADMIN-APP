@@ -1,10 +1,3 @@
-<!---------------------------
-Name: tnsmart
------------------------------
-Author: Mohammed Rizwan S
-Data:   11/7/2022
----------------------------->
-
 <ion-header class="ion-no-border">
   <ion-toolbar mode="ios">
     <ion-title>Closure Status</ion-title>
@@ -12,6 +5,36 @@ Data:   11/7/2022
       <ion-back-button mode="ios" defaultHref="/ticket-system"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
+
+  <ion-toolbar class="segment-toolbar">
+    <ion-segment [(ngModel)]="tab" mode="ios">
+      <ion-segment-button value="open">
+        <ion-label [ngClass]="tab=='open'? 'segement-transition':''">Requests</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="closed">
+        <ion-label [ngClass]="tab=='closed'? 'segement-transition':''">Closed</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+
+  <ion-toolbar *ngIf="tab=='open'" class="payment-search-toolbar">
+    <ion-card class="payment-search-wrapper">
+      <ion-searchbar class="payment-searchbar-direct" mode="ios"
+        placeholder="Search by Ticket ID, Station Code, or Issue" [value]="openSearchTerm"
+        (ionInput)="filterOpenTickets($event)" [debounce]="500" show-clear-button="always">
+      </ion-searchbar>
+    </ion-card>
+  </ion-toolbar>
+
+  <ion-toolbar *ngIf="tab=='closed'" class="payment-search-toolbar">
+    <ion-card class="payment-search-wrapper">
+      <ion-searchbar class="payment-searchbar-direct" mode="ios"
+        placeholder="Search by Ticket ID, Station Code, or Issue" [value]="closedSearchTerm"
+        (ionInput)="filterClosedTickets($event)" [debounce]="500" show-clear-button="always">
+      </ion-searchbar>
+    </ion-card>
+  </ion-toolbar>
+
 </ion-header>
 
 <ion-content>
@@ -55,6 +78,8 @@ Data:   11/7/2022
             </ion-col>
           </ion-row>
         </ion-grid>
+
+
 
 
 
@@ -190,19 +215,24 @@ Data:   11/7/2022
     </ng-template>
   </ion-modal>
 
-  <ion-segment [(ngModel)]="tab" mode="ios">
+  <!-- <ion-segment [(ngModel)]="tab" mode="ios">
     <ion-segment-button value="open">
       <ion-label [ngClass]="tab=='open'? 'segement-transition':''">Requests</ion-label>
     </ion-segment-button>
     <ion-segment-button value="closed">
       <ion-label [ngClass]="tab=='closed'? 'segement-transition':''">Closed</ion-label>
     </ion-segment-button>
-  </ion-segment>
+  </ion-segment> -->
 
 
 
   <div class="container" *ngIf="tab=='open'">
     <div *ngIf="loading_open_tickets">
+
+      <div class="ion-text-center ion-padding">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Fetching Requests...</p>
+      </div>
       <div class="skeleton-container" style="margin: 40px 0 0 0">
         <div class="skeleton skeleton-card" style="height: 300px; margin-top: -15px; margin-bottom: 22px"></div>
         <div class="skeleton skeleton-card" style="margin-top: 16px; height: 300px; padding: 0"></div>
@@ -239,6 +269,10 @@ Data:   11/7/2022
 
   <div class="container" *ngIf="tab=='closed'">
     <div *ngIf="loading_closed_tickets">
+      <div class="ion-text-center ion-padding">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Fetching Closed Tickets...</p>
+      </div>
       <div class="skeleton-container" style="margin: 40px 0 0 0">
         <div class="skeleton skeleton-card" style="height: 300px; margin-top: -15px; margin-bottom: 22px"></div>
         <div class="skeleton skeleton-card" style="margin-top: 16px; height: 300px; padding: 0"></div>

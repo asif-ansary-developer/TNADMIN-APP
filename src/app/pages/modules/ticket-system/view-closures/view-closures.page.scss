@@ -1,6 +1,7 @@
 ion-content {
   --padding: 12px;
 }
+
 ion-segment {
   margin: 12px 16px;
   width: calc(100% - 32px);
@@ -12,6 +13,7 @@ ion-segment {
     --indicator-color: var(--ion-color-primary);
     --border-radius: 30px;
   }
+
   .segement-transition {
     color: #fff !important;
     transition: 100ms color linear;
@@ -92,6 +94,7 @@ ion-searchbar {
 .on-progress {
   color: #ffba19 !important;
 }
+
 .on-hold {
   color: #ff3b19 !important;
 }
@@ -105,6 +108,7 @@ ion-searchbar {
   --box-shadow: none;
   position: absolute;
   right: 10px;
+
   ion-icon {
     color: var(--ion-color-primary);
     font-size: 18px;
@@ -177,30 +181,36 @@ ion-note {
   b {
     font-weight: 500;
   }
+
   b,
   ion-text,
   ion-row,
-  ion-icon {
-  }
+  ion-icon {}
+
   ion-grid {
     padding: 4px 0;
   }
+
   ion-row:first-child {
     // padding: 0 0 4px 0;
   }
+
   ion-row:last-child {
     padding: 0 0 4px 0;
     // justify-content: center;
   }
+
   ion-row {
     display: flex;
     // justify-content: space-between;
     align-items: center;
     // padding: 6px 0 6px 0;
     border-bottom: 0.6px #555555a5 solid;
+
     ion-col {
       padding: 6px 4px 6px 4px;
     }
+
     ion-col:first-child {
       background: var(--ion-color-primary);
       color: #fff;
@@ -210,6 +220,7 @@ ion-note {
   .close-btn-wrapper {
     justify-content: center;
   }
+
   .close-tic-btn {
     --background: rgb(223, 36, 19);
     float: right;
@@ -230,11 +241,13 @@ ion-note {
       display: flex;
       height: 100%;
       align-items: center;
+
       ion-label {
         // min-height: 28px;
         min-height: 36px;
       }
     }
+
     ion-col:first-child {
       //   justify-content: center;
       //   max-width: 590px !important;
@@ -255,6 +268,7 @@ ion-note {
         align-items: center;
       }
     }
+
     ion-icon {
       padding: 2.2px 10px 17.8px 0;
       min-width: 18px !important;
@@ -266,6 +280,7 @@ ion-note {
       z-index: 1;
     }
   }
+
   ion-row:last-child {
     .vert-line {
       display: none;
@@ -281,6 +296,7 @@ ion-note {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
   }
+
   ion-row:nth-child(odd) {
     background: var(--ion-color-light);
   }
@@ -301,6 +317,7 @@ ion-note {
 
   ion-col:first-child {
     background: #d0e7ff;
+
     ion-label {
       color: #555;
     }
@@ -313,4 +330,106 @@ ion-note {
   margin-left: -16px;
   padding: 10px 16px;
   margin-bottom: -16px;
+}
+
+
+
+
+
+
+
+
+.segment-toolbar {
+  --background: var(--ion-background-color, #ffffff);
+  --border-width: 0 !important;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-bottom: 4px;
+}
+
+.payment-search-toolbar {
+  --background: var(--ion-background-color, #ffffff);
+  --border-width: 0 !important;
+  --padding-top: 2px;
+  --padding-bottom: 0px;
+  --padding-start: calc(16px + env(safe-area-inset-left, 0px));
+  --padding-end: calc(16px + env(safe-area-inset-right, 0px));
+  --min-height: 44px;
+}
+
+.payment-search-wrapper {
+  margin: 0 6px 2px 6px;
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid #dcdfe4;
+  box-shadow: none;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.payment-searchbar-direct {
+  width: 100%;
+  margin: 0 !important;
+  padding: 0 4px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  --background: transparent;
+  --box-shadow: none;
+  --placeholder-color: #8c95a2;
+  --placeholder-opacity: 1;
+  --icon-color: #5c6672;
+  --clear-button-color: #5c6672;
+  --color: #1e242b;
+  font-size: clamp(11.5px, 3.2vw, 13.5px);
+
+  ::ng-deep .searchbar-input-container {
+    height: 40px !important;
+    min-height: 40px !important;
+  }
+
+  ::ng-deep input.searchbar-input {
+    font-size: clamp(11.5px, 3.2vw, 13.5px) !important;
+    padding-inline-start: 32px !important;
+    padding-inline-end: 30px !important;
+    text-overflow: ellipsis;
+  }
+
+  ::ng-deep .searchbar-search-icon {
+    width: 16px !important;
+    height: 16px !important;
+    margin-top: 9px !important;
+    font-weight: 600 !important;
+    --ionicon-stroke-width: 48px !important;
+    inset-inline-start: 10px !important;
+  }
+}
+
+.container {
+  padding-top: 0 !important;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+
+  .ticket-card:first-of-type {
+    margin-top: 4px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .payment-searchbar-direct {
+    height: 36px !important;
+    min-height: 36px !important;
+    font-size: 11px;
+
+    ::ng-deep .searchbar-input-container {
+      height: 36px !important;
+      min-height: 36px !important;
+    }
+
+    ::ng-deep input.searchbar-input {
+      font-size: 11px !important;
+      padding-inline-start: 28px !important;
+      padding-inline-end: 26px !important;
+    }
+  }
 }

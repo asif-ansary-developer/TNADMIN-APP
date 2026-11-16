@@ -609,18 +609,45 @@ export class ApiService {
   }
 
   //get cw tickets by vendor id
-  get_cw_tickets_by_raiser_id(param) {
+  // get_cw_tickets_by_raiser_id(param) {
+  //   return this.http.get(
+  //     // 'https://beta-tnsmart.rimes.int/index.php/Api_mobile/Api_admin/cw_tickets_by_vendor_id_get?v_id=' +
+  //     // this.base_url +
+  //     //   'index.php/Api_mobile/Api_admin/cw_tickets_by_raiser_id_get?page=' +
+  //     //   param.page +
+  //     //   '&&v_id=' +
+  //     //   param.v_id
+  //     `${this.base_url
+  //     }index.php/Api_mobile/Api_admin/cw_tickets_by_raiser_id_get?page=${param.page ? param.page : ''
+  //     }&v_id=${param.v_id ? param.v_id : ''}
+  //     ${param['type'] ? '&type=' + param.type : ''}`
+  //   );
+  // }
+
+  get_cw_tickets_by_raiser_id(param: any) {
+    let httpParams = new HttpParams()
+      .set('page', param.page ?? '')
+      .set('v_id', param.v_id ?? '');
+
+    if (param['type']) {
+      httpParams = httpParams.set('type', param.type);
+    }
+    if (param.search) {
+      httpParams = httpParams.set('search', param.search);
+    }
+    if (param.t_id) {
+      httpParams = httpParams.set('t_id', param.t_id);
+    }
+    if (param.station_code) {
+      httpParams = httpParams.set('station_code', param.station_code);
+    }
+    if (param.issue) {
+      httpParams = httpParams.set('issue', param.issue);
+    }
+
     return this.http.get(
-      // 'https://beta-tnsmart.rimes.int/index.php/Api_mobile/Api_admin/cw_tickets_by_vendor_id_get?v_id=' +
-      // this.base_url +
-      //   'index.php/Api_mobile/Api_admin/cw_tickets_by_raiser_id_get?page=' +
-      //   param.page +
-      //   '&&v_id=' +
-      //   param.v_id
-      `${this.base_url
-      }index.php/Api_mobile/Api_admin/cw_tickets_by_raiser_id_get?page=${param.page ? param.page : ''
-      }&v_id=${param.v_id ? param.v_id : ''}
-      ${param['type'] ? '&type=' + param.type : ''}`
+      `${this.base_url}index.php/Api_mobile/Api_admin/cw_tickets_by_raiser_id_get`,
+      { params: httpParams }
     );
   }
 
@@ -685,11 +712,35 @@ export class ApiService {
     );
   }
   //get cw tickets by admin role
-  get_cw_tickets_by_admin_role(param) {
+  // get_cw_tickets_by_admin_role(param) {
+  //   return this.http.get(
+  //     `${this.base_url
+  //     }index.php/Api_mobile/Api_admin/cw_tickets_by_resolver_role_get?page=${param.page ? param.page : ''
+  //     }&role=${param.role}`
+  //   );
+  // }
+
+  get_cw_tickets_by_admin_role(param: any) {
+    let httpParams = new HttpParams()
+      .set('page', param.page ?? '')
+      .set('role', param.role ?? '');
+
+    if (param.search) {
+      httpParams = httpParams.set('search', param.search);
+    }
+    if (param.t_id) {
+      httpParams = httpParams.set('t_id', param.t_id);
+    }
+    if (param.station_code) {
+      httpParams = httpParams.set('station_code', param.station_code);
+    }
+    if (param.issue) {
+      httpParams = httpParams.set('issue', param.issue);
+    }
+
     return this.http.get(
-      `${this.base_url
-      }index.php/Api_mobile/Api_admin/cw_tickets_by_resolver_role_get?page=${param.page ? param.page : ''
-      }&role=${param.role}`
+      `${this.base_url}index.php/Api_mobile/Api_admin/cw_tickets_by_resolver_role_get`,
+      { params: httpParams }
     );
   }
 
@@ -782,17 +833,44 @@ export class ApiService {
   }
 
   //get open cw ticket with closure requests
-  get_cw_tickets_open_with_closure_requests(param) {
+  // get_cw_tickets_open_with_closure_requests(param) {
+  //   return this.http.get(
+  //     this.base_url +
+  //     'index.php/Api_mobile/Api_admin/open_cw_tickets_with_closure_requests?u_id='
+  //     // 'api/mobile/open_cw_tickets_with_closure_requests?u_id='
+  //     +
+  //     param.u_id +
+  //     '&&page=' +
+  //     param.page
+  //   );
+  // }
+
+  get_cw_tickets_open_with_closure_requests(param: any) {
+    let httpParams = new HttpParams()
+      .set('u_id', param.u_id ?? '')
+      .set('page', param.page ?? '');
+
+    if (param.search) {
+      httpParams = httpParams.set('search', param.search);
+    }
+    if (param.t_id) {
+      httpParams = httpParams.set('t_id', param.t_id);
+    }
+    if (param.station_code) {
+      httpParams = httpParams.set('station_code', param.station_code);
+    }
+    if (param.issue) {
+      httpParams = httpParams.set('issue', param.issue);
+    }
+
     return this.http.get(
-      this.base_url +
-      'index.php/Api_mobile/Api_admin/open_cw_tickets_with_closure_requests?u_id='
-      // 'api/mobile/open_cw_tickets_with_closure_requests?u_id='
-      +
-      param.u_id +
-      '&&page=' +
-      param.page
+      `${this.base_url}index.php/Api_mobile/Api_admin/open_cw_tickets_with_closure_requests`,
+      { params: httpParams }
     );
   }
+
+
+
   //get open cw ticket with closure requests
   get_cw_tickets_open_with_closure_requests_count(param) {
     return this.http.get(
@@ -852,15 +930,31 @@ export class ApiService {
   }
 
   //get closed cw ticket with closure requests
-  get_cw_tickets_closed_with_closure_requests(param) {
+  // get_cw_tickets_closed_with_closure_requests(param) {
+  //   return this.http.get(
+  //     this.base_url +
+  //     'index.php/Api_mobile/Api_admin/closed_cw_tickets_with_closure_requests?u_id='
+  //     // 'api/mobile/closed_cw_tickets_with_closure_requests?u_id='
+  //     +
+  //     param.u_id +
+  //     '&&page=' +
+  //     param.page
+  //   );
+  // }
+
+  get_cw_tickets_closed_with_closure_requests(param: any) {
+    let httpParams = new HttpParams()
+      .set('u_id', param.u_id ?? '')
+      .set('page', param.page ?? '');
+
+    if (param.search) httpParams = httpParams.set('search', param.search);
+    if (param.t_id) httpParams = httpParams.set('t_id', param.t_id);
+    if (param.station_code) httpParams = httpParams.set('station_code', param.station_code);
+    if (param.issue) httpParams = httpParams.set('issue', param.issue);
+
     return this.http.get(
-      this.base_url +
-      'index.php/Api_mobile/Api_admin/closed_cw_tickets_with_closure_requests?u_id='
-      // 'api/mobile/closed_cw_tickets_with_closure_requests?u_id='
-      +
-      param.u_id +
-      '&&page=' +
-      param.page
+      `${this.base_url}index.php/Api_mobile/Api_admin/closed_cw_tickets_with_closure_requests`,
+      { params: httpParams }
     );
   }
 

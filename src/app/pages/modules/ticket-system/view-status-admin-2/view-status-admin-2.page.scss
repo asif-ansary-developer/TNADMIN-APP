@@ -339,3 +339,335 @@ ion-input {
 .ticket-card:first-of-type {
   margin-top: 2px !important; // Pulls the top ticket card right up under the search bar
 }
+
+
+.search-action-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 6px;
+}
+
+.payment-search-wrapper {
+  flex: 1;
+  margin: 0 !important;
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid #dcdfe4;
+  box-shadow: none;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.toolbar-icon-btn {
+  --border-radius: 10px;
+  --border-color: #dcdfe4;
+  --border-width: 1px;
+  --background: #ffffff;
+  --padding-start: 10px;
+  --padding-end: 10px;
+  height: 40px;
+  min-width: 40px;
+  margin: 0;
+  position: relative;
+
+  ion-icon {
+    font-size: 18px;
+    --ionicon-stroke-width: 40px;
+  }
+}
+
+.active-filter-dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ion-color-primary, #3880ff);
+}
+
+
+.filter-count-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+  padding: 1px 7px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 999px;
+  background: var(--ion-color-primary, #3880ff);
+  color: #ffffff;
+  vertical-align: middle;
+}
+
+.filter-list {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 0;
+  margin-top: 8px;
+
+  ion-item {
+    --padding-start: 14px;
+    --padding-end: 14px;
+    --min-height: 48px;
+    font-size: 14px;
+
+    ion-select {
+      width: 100%;
+      max-width: 100%;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: #334155;
+      --placeholder-color: #64748b;
+    }
+  }
+}
+
+
+
+/* Search + Filter/Sort Row */
+.payment-search-toolbar {
+  --background: var(--ion-background-color, #ffffff);
+  --border-width: 0 !important;
+  --padding-top: 4px;
+  --padding-bottom: 6px;
+  --padding-start: calc(16px + env(safe-area-inset-left, 0px));
+  --padding-end: calc(16px + env(safe-area-inset-right, 0px));
+  --min-height: 46px;
+}
+
+.search-action-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0 6px;
+  box-sizing: border-box;
+}
+
+.payment-search-wrapper {
+  flex: 1 1 auto;
+  min-width: 0; // Prevents overflow on small 320px-360px screens
+  margin: 0 !important;
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid #dcdfe4;
+  box-shadow: none;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.payment-searchbar-direct {
+  width: 100%;
+  margin: 0 !important;
+  padding: 0 2px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  --background: transparent;
+  --box-shadow: none;
+  --placeholder-color: #8c95a2;
+  --placeholder-opacity: 1;
+  --icon-color: #5c6672;
+  --clear-button-color: #5c6672;
+  --color: #1e242b;
+  font-size: clamp(11.5px, 3.2vw, 13.5px);
+
+  ::ng-deep .searchbar-input-container {
+    height: 40px !important;
+    min-height: 40px !important;
+    display: flex;
+    align-items: center;
+  }
+
+  ::ng-deep input.searchbar-input {
+    height: 40px !important;
+    font-size: clamp(11.5px, 3.2vw, 13.5px) !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-inline-start: 32px !important;
+    padding-inline-end: 28px !important;
+    text-overflow: ellipsis;
+  }
+
+  /* Perfectly vertically centered search icon */
+  ::ng-deep .searchbar-search-icon {
+    width: 16px !important;
+    height: 16px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    margin-top: 0 !important;
+    --ionicon-stroke-width: 44px !important;
+    inset-inline-start: 10px !important;
+  }
+
+  ::ng-deep .searchbar-clear-button {
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    margin-top: 0 !important;
+  }
+}
+
+.toolbar-icon-btn {
+  flex: 0 0 auto;
+  --border-radius: 10px;
+  --border-color: #dcdfe4;
+  --border-width: 1px;
+  --background: #ffffff;
+  --padding-start: 0;
+  --padding-end: 0;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  margin: 0;
+  position: relative;
+
+  ion-icon {
+    font-size: 18px;
+    --ionicon-stroke-width: 42px;
+  }
+}
+
+.active-filter-dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ion-color-primary, #3880ff);
+}
+
+/* Filter Bottom Sheet Modal */
+.filter-count-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+  padding: 1px 7px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 999px;
+  background: var(--ion-color-primary, #3880ff);
+  color: #ffffff;
+  vertical-align: middle;
+}
+
+.filter-list {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 0;
+  margin-top: 10px;
+  overflow: hidden;
+
+  ion-item {
+    --padding-start: 14px;
+    --padding-end: 12px;
+    --inner-padding-end: 0;
+    --min-height: 48px;
+  }
+}
+
+.filter-row-label {
+  flex: 0 0 auto;
+  max-width: 42%;
+  font-size: clamp(12.5px, 3.4vw, 14px) !important;
+  font-weight: 500;
+  color: #1e293b;
+  margin: 0 !important;
+}
+
+.filter-row-select {
+  flex: 1 1 auto;
+  max-width: 58%;
+  text-align: right;
+  font-size: clamp(12.5px, 3.4vw, 13.5px);
+  font-weight: 500;
+  color: #475569;
+  --padding-start: 8px;
+  --padding-end: 4px;
+}
+
+/* Small screens (320px - 360px) */
+@media (max-width: 360px) {
+  .search-action-row {
+    gap: 6px;
+    padding: 0 4px;
+  }
+
+  .payment-searchbar-direct,
+  .toolbar-icon-btn {
+    height: 36px !important;
+    min-height: 36px !important;
+  }
+
+  .toolbar-icon-btn {
+    width: 36px;
+    min-width: 36px;
+  }
+
+  .payment-searchbar-direct {
+
+    ::ng-deep .searchbar-input-container,
+    ::ng-deep input.searchbar-input {
+      height: 36px !important;
+      min-height: 36px !important;
+      font-size: 11px !important;
+    }
+
+    ::ng-deep input.searchbar-input {
+      padding-inline-start: 28px !important;
+      padding-inline-end: 24px !important;
+    }
+
+    ::ng-deep .searchbar-search-icon {
+      width: 14px !important;
+      height: 14px !important;
+      inset-inline-start: 8px !important;
+    }
+  }
+}
+
+/* Tablets & larger viewports */
+@media (min-width: 768px) {
+  .search-action-row {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+}
+
+.filter-row-label {
+  font-size: clamp(13px, 3.5vw, 14px) !important;
+  font-weight: 500;
+  color: #1e293b;
+  white-space: nowrap;
+  margin-right: 12px !important;
+}
+
+.filter-row-select {
+  max-width: 62%;
+  font-size: clamp(12.5px, 3.3vw, 13.5px);
+  font-weight: 500;
+  color: #475569;
+  --padding-start: 0;
+  --padding-end: 0;
+
+  &::part(text) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 6px;
+    text-align: right;
+  }
+
+  &::part(icon) {
+    width: 14px;
+    height: 14px;
+    margin-left: 4px;
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+}

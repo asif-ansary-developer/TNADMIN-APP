@@ -8,7 +8,7 @@ import {
   NavController,
 } from '@ionic/angular';
 import * as moment from 'moment';
-import { take } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { AuthService } from 'src/app/guard/auth.service';
 import { ApiService } from 'src/app/providers/api.service';
 var _router;
@@ -34,6 +34,15 @@ export class ViewClosuresPage implements OnInit {
 
   modal_state = false;
   public selected_ticket: any;
+
+
+  openSearchTerm: string = '';
+  openSearchRequestId = 0;
+  openSearchSub: Subscription;
+
+  closedSearchTerm: string = '';
+  closedSearchRequestId = 0;
+  closedSearchSub: Subscription;
   _moment;
   constructor(
     private router: Router,
@@ -52,9 +61,7 @@ export class ViewClosuresPage implements OnInit {
     this._moment = moment;
   }
 
-  ngOnDestroy() {
-    _router.unsubscribe();
-  }
+
 
   ngOnInit() {
     _router = this.router.events.subscribe((event) => {
@@ -85,6 +92,8 @@ export class ViewClosuresPage implements OnInit {
     this.open_tickets = [];
     this.no_more_data = [false, false];
     this.current_page = [1, 1];
+    this.openSearchTerm = '';
+    this.closedSearchTerm = '';
     this.getOpenTickets(null);
     this.getClosedTickets(null);
   }
@@ -111,34 +120,139 @@ export class ViewClosuresPage implements OnInit {
     }
   }
 
+  // getOpenTickets(event) {
+  //   if (this.no_more_data[0]) {
+  //     this.clearEvent(event);
+  //     return;
+  //   }
+
+  //   let params = {
+  //     u_id: this.user_id,
+  //     page: this.current_page[0],
+  //   };
+  //   console.log(params);
+
+  //   this.api
+  //     .get_cw_tickets_open_with_closure_requests(params)
+  //     .subscribe((data: any) => {
+  //       if (data.length === 0 && !this.loading_open_tickets) {
+  //         this.no_more_data[0] = true;
+  //         this.current_page[0] = 1;
+  //         this.open_tickets = this.open_tickets.concat(data);
+  //         this.clearEvent(event);
+  //         return;
+  //       }
+  //       this.open_tickets = this.open_tickets.concat(data);
+  //       this.loading_open_tickets = false;
+  //       console.log('open tickets are..', this.open_tickets);
+  //       this.current_page[0]++;
+  //       this.clearEvent(event);
+  //     });
+  // }
+
+  // getClosedTickets(event) {
+  //   if (this.no_more_data[1]) {
+  //     this.clearEvent(event);
+  //     return;
+  //   }
+
+  //   let params = {
+  //     u_id: this.user_id,
+  //     page: this.current_page[1],
+  //   };
+
+  //   this.api
+  //     .get_cw_tickets_closed_with_closure_requests(params)
+  //     .subscribe((data: any) => {
+  //       if (data.length === 0 && !this.loading_closed_tickets) {
+  //         this.no_more_data[1] = true;
+  //         this.current_page[1] = 1;
+  //         this.closed_tickets = this.closed_tickets.concat(data);
+  //         this.clearEvent(event);
+  //         return;
+  //       }
+  //       this.closed_tickets = this.closed_tickets.concat(data);
+  //       this.loading_closed_tickets = false;
+  //       console.log('closed tickets are..', this.closed_tickets);
+  //       this.current_page[1]++;
+  //       this.clearEvent(event);
+  //     });
+  // }
+
+
+
   getOpenTickets(event) {
     if (this.no_more_data[0]) {
       this.clearEvent(event);
       return;
     }
 
-    let params = {
+    if (this.current_page[0] === 1) {
+      this.loading_open_tickets = true;
+    }
+
+    if (this.openSearchSub) {
+      this.openSearchSub.unsubscribe();
+    }
+
+    const requestId = this.openSearchRequestId;
+
+    let params: {
+      u_id: any;
+      page: number;
+      search?: string;
+    } = {
       u_id: this.user_id,
       page: this.current_page[0],
     };
-    console.log(params);
 
-    this.api
+    const keyword = this.openSearchTerm?.trim();
+    if (keyword) {
+      params.search = keyword;
+    }
+
+    this.openSearchSub = this.api
       .get_cw_tickets_open_with_closure_requests(params)
-      .subscribe((data: any) => {
-        if (data.length === 0 && !this.loading_open_tickets) {
-          this.no_more_data[0] = true;
-          this.current_page[0] = 1;
+      .subscribe(
+        (data: any) => {
+          if (requestId !== this.openSearchRequestId) {
+            this.clearEvent(event);
+            return;
+          }
+
+          if (!Array.isArray(data) || data.length === 0) {
+            this.no_more_data[0] = true;
+            this.current_page[0] = 0;
+            this.loading_open_tickets = false;
+            this.clearEvent(event);
+            return;
+          }
+
           this.open_tickets = this.open_tickets.concat(data);
+          this.loading_open_tickets = false;
+          this.current_page[0]++;
           this.clearEvent(event);
-          return;
+        },
+        (error) => {
+          if (requestId === this.openSearchRequestId) {
+            this.loading_open_tickets = false;
+          }
+          console.error('Open closure search error:', error);
+          this.clearEvent(event);
         }
-        this.open_tickets = this.open_tickets.concat(data);
-        this.loading_open_tickets = false;
-        console.log('open tickets are..', this.open_tickets);
-        this.current_page[0]++;
-        this.clearEvent(event);
-      });
+      );
+  }
+
+  filterOpenTickets(ev: any) {
+    this.openSearchTerm = ev.detail.value || '';
+
+    this.openSearchRequestId++;
+    this.current_page[0] = 1;
+    this.no_more_data[0] = false;
+    this.open_tickets = [];
+    this.loading_open_tickets = true;
+
+    this.getOpenTickets(null);
   }
 
   getClosedTickets(event) {
@@ -147,27 +261,72 @@ export class ViewClosuresPage implements OnInit {
       return;
     }
 
-    let params = {
+    if (this.current_page[1] === 1) {
+      this.loading_closed_tickets = true;
+    }
+
+    if (this.closedSearchSub) {
+      this.closedSearchSub.unsubscribe();
+    }
+
+    const requestId = this.closedSearchRequestId;
+
+    let params: {
+      u_id: any;
+      page: number;
+      search?: string;
+    } = {
       u_id: this.user_id,
       page: this.current_page[1],
     };
 
-    this.api
+    const keyword = this.closedSearchTerm?.trim();
+    if (keyword) {
+      params.search = keyword;
+    }
+
+    this.closedSearchSub = this.api
       .get_cw_tickets_closed_with_closure_requests(params)
-      .subscribe((data: any) => {
-        if (data.length === 0 && !this.loading_closed_tickets) {
-          this.no_more_data[1] = true;
-          this.current_page[1] = 1;
+      .subscribe(
+        (data: any) => {
+          if (requestId !== this.closedSearchRequestId) {
+            this.clearEvent(event);
+            return;
+          }
+
+          if (!Array.isArray(data) || data.length === 0) {
+            this.no_more_data[1] = true;
+            this.current_page[1] = 0;
+            this.loading_closed_tickets = false;
+            this.clearEvent(event);
+            return;
+          }
+
           this.closed_tickets = this.closed_tickets.concat(data);
+          this.loading_closed_tickets = false;
+          this.current_page[1]++;
           this.clearEvent(event);
-          return;
+        },
+        (error) => {
+          if (requestId === this.closedSearchRequestId) {
+            this.loading_closed_tickets = false;
+          }
+          console.error('Closed closure search error:', error);
+          this.clearEvent(event);
         }
-        this.closed_tickets = this.closed_tickets.concat(data);
-        this.loading_closed_tickets = false;
-        console.log('closed tickets are..', this.closed_tickets);
-        this.current_page[1]++;
-        this.clearEvent(event);
-      });
+      );
+  }
+
+  filterClosedTickets(ev: any) {
+    this.closedSearchTerm = ev.detail.value || '';
+
+    this.closedSearchRequestId++;
+    this.current_page[1] = 1;
+    this.no_more_data[1] = false;
+    this.closed_tickets = [];
+    this.loading_closed_tickets = true;
+
+    this.getClosedTickets(null);
   }
 
   openTicketAction(ticket) {
@@ -261,5 +420,12 @@ export class ViewClosuresPage implements OnInit {
     if (this.modal_state) {
       this.modal_state = false;
     }
+  }
+
+  ngOnDestroy() {
+    _router.unsubscribe();
+    if (_router) _router.unsubscribe();
+    if (this.openSearchSub) this.openSearchSub.unsubscribe();
+    if (this.closedSearchSub) this.closedSearchSub.unsubscribe();
   }
 }

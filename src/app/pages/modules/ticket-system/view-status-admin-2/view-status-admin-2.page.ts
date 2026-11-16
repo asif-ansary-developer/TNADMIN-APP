@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { LoadingController, ModalController, NavController } from '@ionic/angular';
+import { ActionSheetController, LoadingController, ModalController, NavController } from '@ionic/angular';
 import { ApiService } from 'src/app/providers/api.service';
 import { DistrictSelectorPage } from '../district-selector/district-selector.page';
 import * as moment from 'moment';
@@ -48,11 +48,30 @@ export class ViewStatusAdmin2Page implements OnInit {
   assignedSearchRequestId = 0;
   assignedSearchSub: Subscription;
 
+  unassignedSearchTerm: string = '';
+  unassignedSearchRequestId = 0;
+  unassignedSearchSub: Subscription;
+
+  raisedSearchTerm: string = '';
+  raisedSearchRequestId = 0;
+  raisedSearchSub: Subscription;
+
   previousUrl;
   refreshSubscription;
   paymentSearchSub: Subscription;
   reload = true;
   _moment;
+
+
+  // Filter & Sort State
+  selectedStatusFilter: string = 'all';
+  selectedDistrictFilter: string = 'all';
+  selectedTalukFilter: string = 'all';
+  selectedIssueTypeFilter: string = 'all';
+  selectedRaiserFilter: string = 'all';
+  sortOrder: 'newest' | 'oldest' | 'id_desc' | 'id_asc' = 'newest';
+  filterModalOpen: boolean = false;
+
   constructor(
     private router: Router,
     private nav: NavController,
@@ -61,6 +80,7 @@ export class ViewStatusAdmin2Page implements OnInit {
     private authService: AuthService,
     private modalCtrl: ModalController,
     private actRoute: ActivatedRoute,
+    private actionSheetCtrl: ActionSheetController,
     private cdr: ChangeDetectorRef,
     private refreshHelper: RefreshHelperService,
     private loadingCtrl: LoadingController,
@@ -142,12 +162,7 @@ export class ViewStatusAdmin2Page implements OnInit {
     this.payment_tickets = [];
     this.no_more_data = [false, false, false, false, false, false];
     this.current_page = [1, 1, 1, 1, 1, 1];
-
-    // this.getRaisedTickets(null);
-    // if (this.role == '1') this.getunassignedTickets(null);
-    // this.getTickets(null);
-    // if (this.role != 1) this.getAllTickets(null);
-    // else this.getAdminAllTickets(null);
+    this.resetFilters();
 
     this.loadMore(null);
   }
@@ -159,41 +174,41 @@ export class ViewStatusAdmin2Page implements OnInit {
     }, 500);
   }
 
-  getRaisedTickets(event) {
-    if (this.no_more_data[0]) {
-      this.clearEvent(event);
-      return;
-    }
+  // getRaisedTickets(event) {
+  //   if (this.no_more_data[0]) {
+  //     this.clearEvent(event);
+  //     return;
+  //   }
 
-    var params;
-    if ((this.role = '1'))
-      params = {
-        v_id: this.username,
-        page: this.current_page[0],
-        type: '0',
-      };
-    else
-      params = {
-        v_id: this.username,
-        page: this.current_page[0],
-      };
+  //   var params;
+  //   if ((this.role = '1'))
+  //     params = {
+  //       v_id: this.username,
+  //       page: this.current_page[0],
+  //       type: '0',
+  //     };
+  //   else
+  //     params = {
+  //       v_id: this.username,
+  //       page: this.current_page[0],
+  //     };
 
-    this.api.get_cw_tickets_by_raiser_id(params).subscribe((data: any) => {
-      if (data.length === 0 && !this.loading_raised_tickets) {
-        this.no_more_data[0] = true;
-        this.current_page[0] = 0;
+  //   this.api.get_cw_tickets_by_raiser_id(params).subscribe((data: any) => {
+  //     if (data.length === 0 && !this.loading_raised_tickets) {
+  //       this.no_more_data[0] = true;
+  //       this.current_page[0] = 0;
 
-        this.clearEvent(event);
-        return;
-      }
+  //       this.clearEvent(event);
+  //       return;
+  //     }
 
-      this.raised_tickets = this.raised_tickets.concat(data);
-      this.loading_raised_tickets = false;
-      console.log('raised_tickets are..', this.raised_tickets);
-      this.current_page[0]++;
-      this.clearEvent(event);
-    });
-  }
+  //     this.raised_tickets = this.raised_tickets.concat(data);
+  //     this.loading_raised_tickets = false;
+  //     console.log('raised_tickets are..', this.raised_tickets);
+  //     this.current_page[0]++;
+  //     this.clearEvent(event);
+  //   });
+  // }
 
   // getTickets(event) {
   //   if (this.no_more_data[1]) {
@@ -224,6 +239,81 @@ export class ViewStatusAdmin2Page implements OnInit {
   //     this.clearEvent(event);
   //   });
   // }
+
+  getRaisedTickets(event) {
+    if (this.no_more_data[0]) {
+      this.clearEvent(event);
+      return;
+    }
+
+    if (this.current_page[0] === 1) {
+      this.loading_raised_tickets = true;
+    }
+
+    if (this.raisedSearchSub) {
+      this.raisedSearchSub.unsubscribe();
+    }
+
+    const requestId = this.raisedSearchRequestId;
+
+    let params: any = {
+      v_id: this.username,
+      page: this.current_page[0],
+    };
+
+    if (this.role == '1') {
+      params.type = '0';
+    }
+
+    const keyword = this.raisedSearchTerm?.trim();
+    if (keyword) {
+      params.search = keyword;
+    }
+
+    this.raisedSearchSub = this.api
+      .get_cw_tickets_by_raiser_id(params)
+      .subscribe(
+        (data: any) => {
+          if (requestId !== this.raisedSearchRequestId) {
+            this.clearEvent(event);
+            return;
+          }
+
+          if (!Array.isArray(data) || data.length === 0) {
+            this.no_more_data[0] = true;
+            this.current_page[0] = 0;
+            this.loading_raised_tickets = false;
+            this.clearEvent(event);
+            return;
+          }
+
+          this.raised_tickets = this.raised_tickets.concat(data);
+          this.loading_raised_tickets = false;
+          this.current_page[0]++;
+          this.clearEvent(event);
+        },
+        (error) => {
+          if (requestId === this.raisedSearchRequestId) {
+            this.loading_raised_tickets = false;
+          }
+          console.error('Raised ticket search error:', error);
+          this.clearEvent(event);
+        }
+      );
+  }
+
+  filterRaisedTickets(ev: any) {
+    this.raisedSearchTerm = ev.detail.value || '';
+
+    this.raisedSearchRequestId++;
+    this.current_page[0] = 1;
+    this.no_more_data[0] = false;
+    this.raised_tickets = [];
+    this.loading_raised_tickets = true;
+
+    this.getRaisedTickets(null);
+  }
+
 
   getTickets(event) {
     if (this.no_more_data[1]) {
@@ -299,14 +389,7 @@ export class ViewStatusAdmin2Page implements OnInit {
     this.getTickets(null);
   }
 
-  // Unified search handler for the shared header searchbar
-  onTabSearch(ev: any) {
-    if (this.tab === 'vendor_payment_tickets') {
-      this.filterPaymentTickets(ev);
-    } else if (this.tab === 'assigned_tickets') {
-      this.filterAssignedTickets(ev);
-    }
-  }
+
 
   getAllTickets(event) {
     if (this.no_more_data[2]) {
@@ -342,26 +425,72 @@ export class ViewStatusAdmin2Page implements OnInit {
       return;
     }
 
-    let params = {
+    if (this.current_page[2] === 1) {
+      this.loading_unassigned_tickets = true;
+    }
+
+    if (this.unassignedSearchSub) {
+      this.unassignedSearchSub.unsubscribe();
+    }
+
+    const requestId = this.unassignedSearchRequestId;
+
+    let params: {
+      role: string;
+      page: number;
+      search?: string;
+    } = {
       role: this.role + '_unassigned',
       page: this.current_page[2],
     };
 
-    this.api.get_cw_tickets_by_admin_role(params).subscribe((data: any) => {
-      if (data.length === 0 && !this.loading_unassigned_tickets) {
-        this.no_more_data[2] = true;
-        this.current_page[2] = 0;
+    const keyword = this.unassignedSearchTerm?.trim();
+    if (keyword) {
+      params.search = keyword;
+    }
 
-        this.clearEvent(event);
-        return;
-      }
+    this.unassignedSearchSub = this.api
+      .get_cw_tickets_by_admin_role(params)
+      .subscribe(
+        (data: any) => {
+          if (requestId !== this.unassignedSearchRequestId) {
+            this.clearEvent(event);
+            return;
+          }
 
-      this.unassigned_tickets = this.unassigned_tickets.concat(data);
-      this.loading_unassigned_tickets = false;
-      console.log('unassigned tickets are..', this.unassigned_tickets);
-      this.current_page[2]++;
-      this.clearEvent(event);
-    });
+          if (!Array.isArray(data) || data.length === 0) {
+            this.no_more_data[2] = true;
+            this.current_page[2] = 0;
+            this.loading_unassigned_tickets = false;
+            this.clearEvent(event);
+            return;
+          }
+
+          this.unassigned_tickets = this.unassigned_tickets.concat(data);
+          this.loading_unassigned_tickets = false;
+          this.current_page[2]++;
+          this.clearEvent(event);
+        },
+        (error) => {
+          if (requestId === this.unassignedSearchRequestId) {
+            this.loading_unassigned_tickets = false;
+          }
+          console.error('Unassigned ticket search error:', error);
+          this.clearEvent(event);
+        }
+      );
+  }
+
+  filterUnassignedTickets(ev: any) {
+    this.unassignedSearchTerm = ev.detail.value || '';
+
+    this.unassignedSearchRequestId++;
+    this.current_page[2] = 1;
+    this.no_more_data[2] = false;
+    this.unassigned_tickets = [];
+    this.loading_unassigned_tickets = true;
+
+    this.getunassignedTickets(null);
   }
 
   getOverallTickets(event, dis_id) {
@@ -670,4 +799,248 @@ export class ViewStatusAdmin2Page implements OnInit {
       this.assignedSearchSub.unsubscribe();
     }
   }
+
+
+  onTabSearch(ev: any) {
+    if (this.tab === 'vendor_payment_tickets') {
+      this.filterPaymentTickets(ev);
+    } else if (this.tab === 'assigned_tickets') {
+      this.filterAssignedTickets(ev);
+    } else if (this.tab === 'unassigned_tickets') {
+      this.filterUnassignedTickets(ev);
+    } else if (this.tab === 'raised_tickets') {
+      this.filterRaisedTickets(ev);
+    }
+  }
+
+  get activeSearchTerm(): string {
+    if (this.tab === 'vendor_payment_tickets') return this.paymentSearchTerm;
+    if (this.tab === 'assigned_tickets') return this.assignedSearchTerm;
+    if (this.tab === 'unassigned_tickets') return this.unassignedSearchTerm;
+    if (this.tab === 'raised_tickets') return this.raisedSearchTerm;
+    return '';
+  }
+
+
+
+  // Sort and filter methods
+  get activeTabRawTickets(): any[] {
+    switch (this.tab) {
+      case 'raised_tickets':
+        return this.raised_tickets;
+      case 'assigned_tickets':
+        return this.tickets;
+      case 'unassigned_tickets':
+        return this.unassigned_tickets;
+      case 'vendor_payment_tickets':
+        return this.payment_tickets;
+      default:
+        return [];
+    }
+  }
+
+  get hasActiveFilters(): boolean {
+    return (
+      this.selectedStatusFilter !== 'all' ||
+      this.selectedDistrictFilter !== 'all' ||
+      this.selectedTalukFilter !== 'all' ||
+      this.selectedIssueTypeFilter !== 'all' ||
+      this.selectedRaiserFilter !== 'all'
+    );
+  }
+
+  get activeFilterCount(): number {
+    let count = 0;
+    if (this.selectedStatusFilter !== 'all') count++;
+    if (this.selectedDistrictFilter !== 'all') count++;
+    if (this.selectedTalukFilter !== 'all') count++;
+    if (this.selectedIssueTypeFilter !== 'all') count++;
+    if (this.selectedRaiserFilter !== 'all') count++;
+    return count;
+  }
+
+
+  // Helper to get the latest status text from a ticket's threads
+  getTicketCurrentStatus(ticket: any): string {
+    if (Array.isArray(ticket?.threads) && ticket.threads.length > 0) {
+      const lastThread = ticket.threads[ticket.threads.length - 1];
+      if (lastThread?.text) {
+        return String(lastThread.text).trim();
+      }
+    }
+    return '';
+  }
+
+  // Dynamically extract all unique statuses from the loaded tickets
+  getUniqueStatusOptions(): string[] {
+    const list = this.activeTabRawTickets;
+    if (!Array.isArray(list)) return [];
+
+    const statuses = list
+      .map((ticket) => this.getTicketCurrentStatus(ticket))
+      .filter((status) => status !== '');
+
+    return Array.from(new Set(statuses)).sort((a, b) => a.localeCompare(b));
+  }
+
+  getUniqueOptions(key: string): string[] {
+    let list = this.activeTabRawTickets;
+    if (!Array.isArray(list)) return [];
+
+    // Narrow taluks to the selected district if one is picked
+    if (key === 'taluk' && this.selectedDistrictFilter !== 'all') {
+      list = list.filter(
+        (t) =>
+          (t.district || '').trim().toLowerCase() ===
+          this.selectedDistrictFilter.toLowerCase()
+      );
+    }
+
+    const values = list
+      .map((item) => {
+        if (key === 'raiser_name') {
+          return (item.raiser_name || item.ticket_owner || '').trim();
+        }
+        return item[key] ? String(item[key]).trim() : '';
+      })
+      .filter((val) => val !== '');
+
+    return Array.from(new Set(values)).sort((a, b) => a.localeCompare(b));
+  }
+
+  onDistrictFilterChange() {
+    this.selectedTalukFilter = 'all';
+  }
+
+  getProcessedTickets(sourceList: any[]): any[] {
+    if (!Array.isArray(sourceList)) return [];
+
+    const filtered = sourceList.filter((ticket) => {
+      const lastThread =
+        ticket.threads && ticket.threads.length > 0
+          ? ticket.threads[ticket.threads.length - 1]
+          : null;
+      const lastStatus = lastThread ? Number(lastThread.status) : null;
+
+
+      // 1. Dynamic Status Filter
+      if (
+        this.selectedStatusFilter !== 'all' &&
+        this.getTicketCurrentStatus(ticket).toLowerCase() !==
+        this.selectedStatusFilter.toLowerCase()
+      ) {
+        return false;
+      }
+
+      // 2. District Filter
+      if (
+        this.selectedDistrictFilter !== 'all' &&
+        (ticket.district || '').trim().toLowerCase() !==
+        this.selectedDistrictFilter.toLowerCase()
+      ) {
+        return false;
+      }
+
+      // 3. Taluk Filter
+      if (
+        this.selectedTalukFilter !== 'all' &&
+        (ticket.taluk || '').trim().toLowerCase() !==
+        this.selectedTalukFilter.toLowerCase()
+      ) {
+        return false;
+      }
+
+      // 4. Issue Type (difficulty) Filter
+      if (
+        this.selectedIssueTypeFilter !== 'all' &&
+        (ticket.difficulty || '').trim().toLowerCase() !==
+        this.selectedIssueTypeFilter.toLowerCase()
+      ) {
+        return false;
+      }
+
+      // 5. Raiser Name Filter
+      const raiser = (ticket.raiser_name || ticket.ticket_owner || '').trim().toLowerCase();
+      if (
+        this.selectedRaiserFilter !== 'all' &&
+        raiser !== this.selectedRaiserFilter.toLowerCase()
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+
+    // 6. Safe cross-browser timestamp / ID sorting
+    return [...filtered].sort((a, b) => {
+      if (this.sortOrder === 'newest' || this.sortOrder === 'oldest') {
+        const timeA = a.timestamp ? new Date(String(a.timestamp).replace(' ', 'T')).getTime() : 0;
+        const timeB = b.timestamp ? new Date(String(b.timestamp).replace(' ', 'T')).getTime() : 0;
+        return this.sortOrder === 'newest' ? timeB - timeA : timeA - timeB;
+      }
+      if (this.sortOrder === 'id_desc') {
+        return Number(b.id) - Number(a.id);
+      }
+      if (this.sortOrder === 'id_asc') {
+        return Number(a.id) - Number(b.id);
+      }
+      return 0;
+    });
+  }
+
+  async openSortOptions() {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Sort Tickets By',
+      mode: 'ios',
+      cssClass: 'custom-sort-sheet',
+      buttons: [
+        {
+          text: 'Newest First',
+          cssClass: this.sortOrder === 'newest' ? 'sort-option-selected' : '',
+          handler: () => {
+            this.sortOrder = 'newest';
+            this.cdr.detectChanges();
+          },
+        },
+        {
+          text: 'Oldest First',
+          cssClass: this.sortOrder === 'oldest' ? 'sort-option-selected' : '',
+          handler: () => {
+            this.sortOrder = 'oldest';
+            this.cdr.detectChanges();
+          },
+        },
+        {
+          text: 'Ticket ID (High to Low)',
+          cssClass: this.sortOrder === 'id_desc' ? 'sort-option-selected' : '',
+          handler: () => {
+            this.sortOrder = 'id_desc';
+            this.cdr.detectChanges();
+          },
+        },
+        {
+          text: 'Ticket ID (Low to High)',
+          cssClass: this.sortOrder === 'id_asc' ? 'sort-option-selected' : '',
+          handler: () => {
+            this.sortOrder = 'id_asc';
+            this.cdr.detectChanges();
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+      ],
+    });
+    await actionSheet.present();
+  }
+
+  resetFilters() {
+    this.selectedStatusFilter = 'all';
+    this.selectedDistrictFilter = 'all';
+    this.selectedTalukFilter = 'all';
+    this.selectedIssueTypeFilter = 'all';
+    this.selectedRaiserFilter = 'all';
+  }
+
 }

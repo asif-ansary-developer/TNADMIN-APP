@@ -876,3 +876,86 @@ ion-popover::part(content) {
 .pac-logo:after {
   display: none;
 }
+
+.custom-sort-sheet .sort-option-selected {
+  background: rgba(56, 128, 255, 0.12) !important;
+  color: var(--ion-color-primary, #3880ff) !important;
+  font-weight: 600 !important;
+}
+
+
+.custom-filter-sheet {
+  .filter-count-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 6px;
+    padding: 1px 7px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 999px;
+    background: var(--ion-color-primary, #3880ff);
+    color: #ffffff;
+    vertical-align: middle;
+  }
+
+  .filter-list {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    padding: 0;
+    margin-top: 10px;
+    overflow: hidden;
+
+    ion-item {
+      --padding-start: 14px;
+      --padding-end: 14px;
+      --inner-padding-end: 0px;
+      --min-height: 48px;
+
+      ion-label {
+        flex: 0 0 auto !important;
+        width: auto !important;
+        font-size: 13.5px !important;
+        font-weight: 500 !important;
+        color: #1e293b !important;
+        white-space: nowrap !important;
+        margin: 0 12px 0 0 !important;
+      }
+
+      ion-select {
+        flex: 1 1 auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        color: #475569 !important;
+        --padding-start: 0px;
+        --padding-end: 0px;
+
+        &::part(text) {
+          flex: 1 1 auto !important;
+          white-space: normal !important;
+          overflow: visible !important;
+          text-overflow: unset !important;
+          text-align: right !important;
+          line-height: 1.3 !important;
+          padding: 6px 22px 6px 0 !important; // Keeps text 22px away from the <> icon
+          margin: 0 !important;
+        }
+
+        &::part(icon) {
+          position: absolute !important;
+          right: 0 !important;
+          top: 50% !important;
+          transform: translateY(-50%) !important;
+          width: 14px !important;
+          height: 14px !important;
+          margin: 0 !important;
+          opacity: 0.75 !important;
+        }
+      }
+    }
+  }
+}
