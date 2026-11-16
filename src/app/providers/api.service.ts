@@ -5,7 +5,7 @@ Author: Mohammed Rizwan S
 Date:   23/09/2022 *
 **************************************************************/
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -784,12 +784,41 @@ export class ApiService {
   }
 
   //get payment involved tickets by rasier id HQ
-  get_payment_involved_tickets_by_raiser_id(param) {
+  // get_payment_involved_tickets_by_raiser_id(param) {
+  //   return this.http.get(
+  //     `${this.base_url
+  //     }index.php/Api_mobile/Api_admin/cw_tickets_hq_payment_involved_get?page=${param.page ? param.page : ''
+  //     //}api/mobile/cw_tickets_hq_payment_involved_get?page=${param.page ? param.page : ''
+  //     }&r_id=${param.r_id ? param.r_id : ''}`
+  //   );
+  // }
+
+
+  get_payment_involved_tickets_by_raiser_id(param: any) {
+    let httpParams = new HttpParams();
+
+    if (param.page) {
+      httpParams = httpParams.set('page', param.page);
+    }
+    if (param.r_id) {
+      httpParams = httpParams.set('r_id', param.r_id);
+    }
+    if (param.search) {
+      httpParams = httpParams.set('search', param.search);
+    }
+    if (param.t_id) {
+      httpParams = httpParams.set('t_id', param.t_id);
+    }
+    if (param.station_code) {
+      httpParams = httpParams.set('station_code', param.station_code);
+    }
+    if (param.issue) {
+      httpParams = httpParams.set('issue', param.issue);
+    }
+
     return this.http.get(
-      `${this.base_url
-      }index.php/Api_mobile/Api_admin/cw_tickets_hq_payment_involved_get?page=${param.page ? param.page : ''
-      //}api/mobile/cw_tickets_hq_payment_involved_get?page=${param.page ? param.page : ''
-      }&r_id=${param.r_id ? param.r_id : ''}`
+      `${this.base_url}index.php/Api_mobile/Api_admin/cw_tickets_hq_payment_involved_get`,
+      { params: httpParams }
     );
   }
 

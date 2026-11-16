@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { ModalController, NavController } from '@ionic/angular';
+import { LoadingController, ModalController, NavController } from '@ionic/angular';
 import { ApiService } from 'src/app/providers/api.service';
 import { DistrictSelectorPage } from '../district-selector/district-selector.page';
 import * as moment from 'moment';
 import { AuthService } from 'src/app/guard/auth.service';
 import { RefreshHelperService } from 'src/app/helper/refresh-helper.service';
+import { Subscription } from 'rxjs';
 var _router;
 @Component({
   selector: 'app-view-status-admin-2',
@@ -45,6 +46,7 @@ export class ViewStatusAdmin2Page implements OnInit {
 
   previousUrl;
   refreshSubscription;
+  paymentSearchSub: Subscription;
   reload = true;
   _moment;
   constructor(
@@ -56,7 +58,8 @@ export class ViewStatusAdmin2Page implements OnInit {
     private modalCtrl: ModalController,
     private actRoute: ActivatedRoute,
     private cdr: ChangeDetectorRef,
-    private refreshHelper: RefreshHelperService
+    private refreshHelper: RefreshHelperService,
+    private loadingCtrl: LoadingController,
   ) {
     this.role = localStorage.getItem('role');
     this.rr = localStorage.getItem('_role');
@@ -409,30 +412,36 @@ export class ViewStatusAdmin2Page implements OnInit {
   // }
 
 
+
   getPaymentTickets(event) {
     if (this.no_more_data[5]) {
       this.clearEvent(event);
       return;
     }
 
+    // Show tab loader only on first page (initial load or new search), not infinite scroll
+    if (this.current_page[5] === 1) {
+      this.loading_payment_tickets = true;
+    }
+
+    // Cancel previous slow search request if still running
+    if (this.paymentSearchSub) {
+      this.paymentSearchSub.unsubscribe();
+    }
+
     const requestId = this.paymentSearchRequestId;
 
-    let params: {
-      page: number;
-      r_id: any;
-      search?: string;
-    } = {
+    let params: any = {
       page: this.current_page[5],
       r_id: this.username,
     };
 
     const keyword = this.paymentSearchTerm?.trim();
-
     if (keyword) {
       params.search = keyword;
     }
 
-    this.api
+    this.paymentSearchSub = this.api
       .get_payment_involved_tickets_by_raiser_id(params)
       .subscribe(
         (data: any) => {
@@ -451,7 +460,6 @@ export class ViewStatusAdmin2Page implements OnInit {
 
           this.payment_tickets = this.payment_tickets.concat(data);
           this.loading_payment_tickets = false;
-
           this.current_page[5]++;
           this.clearEvent(event);
         },
@@ -459,12 +467,84 @@ export class ViewStatusAdmin2Page implements OnInit {
           if (requestId === this.paymentSearchRequestId) {
             this.loading_payment_tickets = false;
           }
-
           console.error('Payment ticket search error:', error);
           this.clearEvent(event);
         }
       );
   }
+
+
+  // async getPaymentTickets(event) {
+  //   if (this.no_more_data[5]) {
+  //     this.clearEvent(event);
+  //     return;
+  //   }
+
+  //   const requestId = this.paymentSearchRequestId;
+  //   const keyword = this.paymentSearchTerm?.trim();
+
+  //   let loader: HTMLIonLoadingElement | null = null;
+  //   if (keyword && this.current_page[5] === 1) {
+  //     loader = await this.loadingCtrl.create({
+  //       message: 'Searching tickets...',
+  //       spinner: 'crescent',
+  //     });
+  //     await loader.present();
+  //   }
+
+  //   let params: any = {
+  //     page: this.current_page[5],
+  //     r_id: this.username,
+  //   };
+
+
+
+
+  //   if (keyword) {
+  //     params.search = keyword;
+  //   }
+
+
+  //   if (this.paymentSearchSub) {
+  //     this.paymentSearchSub.unsubscribe();
+  //   }
+  //   this.paymentSearchSub = this.api
+  //     .get_payment_involved_tickets_by_raiser_id(params)
+  //     .subscribe(
+  //       (data: any) => {
+  //         if (requestId !== this.paymentSearchRequestId) {
+  //           this.clearEvent(event);
+  //           return;
+  //         }
+
+  //         if (!Array.isArray(data) || data.length === 0) {
+  //           this.no_more_data[5] = true;
+  //           this.current_page[5] = 0;
+  //           this.loading_payment_tickets = false;
+  //           this.clearEvent(event);
+  //           return;
+  //         }
+
+  //         this.payment_tickets = this.payment_tickets.concat(data);
+  //         this.loading_payment_tickets = false;
+
+  //         this.current_page[5]++;
+  //         this.clearEvent(event);
+  //       },
+  //       (error) => {
+  //         if (requestId === this.paymentSearchRequestId) {
+  //           this.loading_payment_tickets = false;
+  //         }
+
+  //         console.error('Payment ticket search error:', error);
+  //         this.clearEvent(event);
+  //       }
+  //     );
+  // }
+
+
+
+
 
 
   loadMore(event) {

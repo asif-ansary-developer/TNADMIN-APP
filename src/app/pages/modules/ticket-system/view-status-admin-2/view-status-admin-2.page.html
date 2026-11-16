@@ -668,12 +668,18 @@ Data:   11/7/2022
   <div class="container" *ngIf="tab=='vendor_payment_tickets'">
 
 
-    <ion-card class="ion-padding" style="margin-bottom: 12px;">
-      <ion-searchbar mode="ios" [(ngModel)]="paymentSearchTerm" (ionInput)="filterPaymentTickets($event)"
-        placeholder="Search by Ticket ID, Difficulty or Station Code" debounce="350" clearText="true"
-        style="padding: 0; --border-radius: 100px; --background: #f3f3f3;">
+    <ion-card class="payment-search-wrapper">
+      <ion-searchbar class="payment-searchbar-direct" placeholder="Search by Ticket ID, Station Code, or Issue"
+        [value]="paymentSearchTerm" (ionInput)="filterPaymentTickets($event)" [debounce]="500"
+        show-clear-button="always">
       </ion-searchbar>
     </ion-card>
+
+
+    <div *ngIf="loading_payment_tickets" class="ion-text-center ion-padding">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Searching tickets...</p>
+    </div>
     <div *ngIf="loading_payment_tickets">
       <div class="skeleton-container" style="margin: 40px 0 0 0 ;">
         <div class="skeleton skeleton-card" style="height: 300px; margin-top: -15px;margin-bottom:22px;"></div>
