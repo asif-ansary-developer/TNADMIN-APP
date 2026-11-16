@@ -727,15 +727,44 @@ export class ApiService {
   }
 
   //get cw ticket by resolver id
-  get_cw_tickets_by_resolver_id(param) {
+  // get_cw_tickets_by_resolver_id(param) {
+  //   return this.http.get(
+  //     // 'https://beta-tnsmart.rimes.int/index.php/Api_mobile/Api_admin/cw_tickets_by_resolver_id_get?r_id=' +
+  //     this.base_url +
+  //     'index.php/Api_mobile/Api_admin/cw_tickets_by_resolver_id_get?page=' +
+  //     param.page +
+  //     '&&r_id=' +
+  //     param.r_id +
+  //     (param['type'] ? '&type=' + param.type : '')
+  //   );
+  // }
+
+
+
+  get_cw_tickets_by_resolver_id(param: any) {
+    let httpParams = new HttpParams()
+      .set('page', param.page ?? '')
+      .set('r_id', param.r_id ?? '');
+
+    if (param['type']) {
+      httpParams = httpParams.set('type', param.type);
+    }
+    if (param.search) {
+      httpParams = httpParams.set('search', param.search);
+    }
+    if (param.t_id) {
+      httpParams = httpParams.set('t_id', param.t_id);
+    }
+    if (param.station_code) {
+      httpParams = httpParams.set('station_code', param.station_code);
+    }
+    if (param.issue) {
+      httpParams = httpParams.set('issue', param.issue);
+    }
+
     return this.http.get(
-      // 'https://beta-tnsmart.rimes.int/index.php/Api_mobile/Api_admin/cw_tickets_by_resolver_id_get?r_id=' +
-      this.base_url +
-      'index.php/Api_mobile/Api_admin/cw_tickets_by_resolver_id_get?page=' +
-      param.page +
-      '&&r_id=' +
-      param.r_id +
-      (param['type'] ? '&type=' + param.type : '')
+      `${this.base_url}index.php/Api_mobile/Api_admin/cw_tickets_by_resolver_id_get`,
+      { params: httpParams }
     );
   }
 

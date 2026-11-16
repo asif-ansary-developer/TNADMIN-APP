@@ -17,7 +17,18 @@ Data:   11/7/2022
       <ion-back-button *ngIf="role =='ven_master'" mode="ios" defaultHref="/home"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
+
+
+  <ion-toolbar *ngIf="tab=='vendor_payment_tickets' || tab=='assigned_tickets'" class="payment-search-toolbar">
+    <ion-card class="payment-search-wrapper">
+      <ion-searchbar class="payment-searchbar-direct" placeholder="Search by Ticket ID, Station Code, or Issue"
+        [value]="tab=='vendor_payment_tickets' ? paymentSearchTerm : assignedSearchTerm"
+        (ionInput)="onTabSearch($event)" [debounce]="500" show-clear-button="always">
+      </ion-searchbar>
+    </ion-card>
+  </ion-toolbar>
 </ion-header>
+
 
 
 <ion-content>
@@ -138,13 +149,22 @@ Data:   11/7/2022
 
   <div class="container" *ngIf="tab=='assigned_tickets'">
     <div *ngIf="loading_tickets">
+
+      <div *ngIf="loading_payment_tickets" class="ion-text-center ion-padding">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Fetching Assigned Tickets...</p>
+      </div>
+
       <div class="skeleton-container" style="margin: 40px 0 0 0 ;">
         <div class="skeleton skeleton-card" style="height: 300px; margin-top: -15px;margin-bottom:22px;"></div>
         <div class="skeleton skeleton-card" style="margin-top: 16px;height: 300px;padding: 0;"></div>
         <div class="skeleton skeleton-card" style="margin-top: 16px;height: 300px;padding: 0;"></div>
       </div>
     </div>
-    <ion-card class="ion-padding  ion-text-center" *ngIf=" tickets.length==0 && !loading_tickets">No tickets</ion-card>
+    <ion-card class="ion-padding  ion-text-center" *ngIf=" tickets.length==0 && !loading_tickets">No matching tickets
+      found</ion-card>
+
+
 
     <ion-card class="ion-padding ticket-card" *ngFor="let ticket of tickets"
       (click)="openTicketResolverAction(ticket['t_id'])">
@@ -668,17 +688,17 @@ Data:   11/7/2022
   <div class="container" *ngIf="tab=='vendor_payment_tickets'">
 
 
-    <ion-card class="payment-search-wrapper">
+    <!-- <ion-card class="payment-search-wrapper">
       <ion-searchbar class="payment-searchbar-direct" placeholder="Search by Ticket ID, Station Code, or Issue"
         [value]="paymentSearchTerm" (ionInput)="filterPaymentTickets($event)" [debounce]="500"
         show-clear-button="always">
       </ion-searchbar>
-    </ion-card>
+    </ion-card> -->
 
 
     <div *ngIf="loading_payment_tickets" class="ion-text-center ion-padding">
       <ion-spinner name="crescent"></ion-spinner>
-      <p>Searching tickets...</p>
+      <p>Fetching Tickets...</p>
     </div>
     <div *ngIf="loading_payment_tickets">
       <div class="skeleton-container" style="margin: 40px 0 0 0 ;">

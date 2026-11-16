@@ -44,6 +44,10 @@ export class ViewStatusAdmin2Page implements OnInit {
   paymentSearchTerm: string = '';
   paymentSearchRequestId = 0;
 
+  assignedSearchTerm: string = '';
+  assignedSearchRequestId = 0;
+  assignedSearchSub: Subscription;
+
   previousUrl;
   refreshSubscription;
   paymentSearchSub: Subscription;
@@ -76,13 +80,7 @@ export class ViewStatusAdmin2Page implements OnInit {
   // 3-being addressed
   // 4-being addressed
 
-  ngOnDestroy() {
-    _router.unsubscribe();
 
-    if (this.refreshSubscription) {
-      this.refreshSubscription.unsubscribe();
-    }
-  }
 
   ngOnInit() {
     this.actRoute.queryParams.subscribe((params) => {
@@ -197,34 +195,117 @@ export class ViewStatusAdmin2Page implements OnInit {
     });
   }
 
+  // getTickets(event) {
+  //   if (this.no_more_data[1]) {
+  //     this.clearEvent(event);
+  //     return;
+  //   }
+
+  //   let params = {
+  //     r_id: this.username,
+  //     page: this.current_page[1],
+  //   };
+
+  //   this.api.get_cw_tickets_by_resolver_id(params).subscribe((data: any) => {
+  //     if (data.length === 0 && !this.loading_tickets) {
+  //       this.no_more_data[1] = true;
+  //       this.current_page[1] = 0;
+
+  //       this.clearEvent(event);
+  //       return;
+  //     }
+
+  //     this.tickets = this.tickets.concat(data);
+  //     this.loading_tickets = false;
+  //     console.log('tickets are..', this.tickets);
+
+  //     this.current_page[1]++;
+
+  //     this.clearEvent(event);
+  //   });
+  // }
+
   getTickets(event) {
     if (this.no_more_data[1]) {
       this.clearEvent(event);
       return;
     }
 
-    let params = {
+    if (this.current_page[1] === 1) {
+      this.loading_tickets = true;
+    }
+
+    if (this.assignedSearchSub) {
+      this.assignedSearchSub.unsubscribe();
+    }
+
+    const requestId = this.assignedSearchRequestId;
+
+    let params: {
+      r_id: any;
+      page: number;
+      search?: string;
+    } = {
       r_id: this.username,
       page: this.current_page[1],
     };
 
-    this.api.get_cw_tickets_by_resolver_id(params).subscribe((data: any) => {
-      if (data.length === 0 && !this.loading_tickets) {
-        this.no_more_data[1] = true;
-        this.current_page[1] = 0;
+    const keyword = this.assignedSearchTerm?.trim();
+    if (keyword) {
+      params.search = keyword;
+    }
 
-        this.clearEvent(event);
-        return;
-      }
+    this.assignedSearchSub = this.api
+      .get_cw_tickets_by_resolver_id(params)
+      .subscribe(
+        (data: any) => {
+          if (requestId !== this.assignedSearchRequestId) {
+            this.clearEvent(event);
+            return;
+          }
 
-      this.tickets = this.tickets.concat(data);
-      this.loading_tickets = false;
-      console.log('tickets are..', this.tickets);
+          if (!Array.isArray(data) || data.length === 0) {
+            this.no_more_data[1] = true;
+            this.current_page[1] = 0;
+            this.loading_tickets = false;
+            this.clearEvent(event);
+            return;
+          }
 
-      this.current_page[1]++;
+          this.tickets = this.tickets.concat(data);
+          this.loading_tickets = false;
+          this.current_page[1]++;
+          this.clearEvent(event);
+        },
+        (error) => {
+          if (requestId === this.assignedSearchRequestId) {
+            this.loading_tickets = false;
+          }
+          console.error('Assigned ticket search error:', error);
+          this.clearEvent(event);
+        }
+      );
+  }
 
-      this.clearEvent(event);
-    });
+  filterAssignedTickets(ev: any) {
+    this.assignedSearchTerm = ev.detail.value || '';
+
+    this.assignedSearchRequestId++;
+    this.current_page[1] = 1;
+    this.no_more_data[1] = false;
+    this.tickets = [];
+    this.loading_tickets = true;
+
+    this.getTickets(null);
+  }
+
+  // Unified search handler for the shared header searchbar
+  onTabSearch(ev: any) {
+    if (this.tab === 'vendor_payment_tickets') {
+      this.filterPaymentTickets(ev);
+    } else if (this.tab === 'assigned_tickets') {
+      this.filterAssignedTickets(ev);
+    }
   }
 
   getAllTickets(event) {
@@ -356,60 +437,6 @@ export class ViewStatusAdmin2Page implements OnInit {
     });
   }
 
-  // getPaymentTickets(event) {
-  //   if (this.no_more_data[5]) {
-  //     this.clearEvent(event);
-  //     return;
-  //     ``;
-  //   }
-
-  //   const requestId = this.paymentSearchRequestId;
-
-  //   let params: {
-  //     page: number;
-  //     r_id: any;
-  //     search?: string;
-  //   } = {
-  //     page: this.current_page[5],
-  //     r_id: this.username,
-  //   };
-
-  //   const keyword = this.paymentSearchTerm?.trim();
-
-  //   if (keyword) {
-  //     params.search = keyword;
-  //   }
-
-  //   this.api
-  //     .get_payment_involved_tickets_by_raiser_id(params)
-  //     .subscribe((data: any) => {
-  //       if (requestId !== this.paymentSearchRequestId) {
-  //         this.clearEvent(event);
-  //         return;
-  //       }
-  //       if (data.length === 0 && !this.loading_payment_tickets) {
-  //         this.no_more_data[5] = true;
-  //         this.current_page[5] = 0;
-
-  //         this.clearEvent(event);
-  //         return;
-  //       }
-  //       this.payment_tickets = this.payment_tickets.concat(data);
-  //       this.loading_payment_tickets = false;
-  //       console.log('payment tickets are..', this.payment_tickets);
-  //       this.current_page[5]++;
-  //       this.clearEvent(event);
-  //     }, (error) => {
-  //       if (requestId === this.paymentSearchRequestId) {
-  //         this.loading_payment_tickets = false;
-  //       }
-
-  //       console.error('Payment ticket search error:', error);
-  //       this.clearEvent(event);
-  //     }
-  //     );
-
-  // }
 
 
 
@@ -472,75 +499,6 @@ export class ViewStatusAdmin2Page implements OnInit {
         }
       );
   }
-
-
-  // async getPaymentTickets(event) {
-  //   if (this.no_more_data[5]) {
-  //     this.clearEvent(event);
-  //     return;
-  //   }
-
-  //   const requestId = this.paymentSearchRequestId;
-  //   const keyword = this.paymentSearchTerm?.trim();
-
-  //   let loader: HTMLIonLoadingElement | null = null;
-  //   if (keyword && this.current_page[5] === 1) {
-  //     loader = await this.loadingCtrl.create({
-  //       message: 'Searching tickets...',
-  //       spinner: 'crescent',
-  //     });
-  //     await loader.present();
-  //   }
-
-  //   let params: any = {
-  //     page: this.current_page[5],
-  //     r_id: this.username,
-  //   };
-
-
-
-
-  //   if (keyword) {
-  //     params.search = keyword;
-  //   }
-
-
-  //   if (this.paymentSearchSub) {
-  //     this.paymentSearchSub.unsubscribe();
-  //   }
-  //   this.paymentSearchSub = this.api
-  //     .get_payment_involved_tickets_by_raiser_id(params)
-  //     .subscribe(
-  //       (data: any) => {
-  //         if (requestId !== this.paymentSearchRequestId) {
-  //           this.clearEvent(event);
-  //           return;
-  //         }
-
-  //         if (!Array.isArray(data) || data.length === 0) {
-  //           this.no_more_data[5] = true;
-  //           this.current_page[5] = 0;
-  //           this.loading_payment_tickets = false;
-  //           this.clearEvent(event);
-  //           return;
-  //         }
-
-  //         this.payment_tickets = this.payment_tickets.concat(data);
-  //         this.loading_payment_tickets = false;
-
-  //         this.current_page[5]++;
-  //         this.clearEvent(event);
-  //       },
-  //       (error) => {
-  //         if (requestId === this.paymentSearchRequestId) {
-  //           this.loading_payment_tickets = false;
-  //         }
-
-  //         console.error('Payment ticket search error:', error);
-  //         this.clearEvent(event);
-  //       }
-  //     );
-  // }
 
 
 
@@ -695,5 +653,21 @@ export class ViewStatusAdmin2Page implements OnInit {
     this.loading_payment_tickets = true;
 
     this.getPaymentTickets(null);
+  }
+
+  ngOnDestroy() {
+
+
+    _router.unsubscribe();
+
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
+    if (this.paymentSearchSub) {
+      this.paymentSearchSub.unsubscribe();
+    }
+    if (this.assignedSearchSub) {
+      this.assignedSearchSub.unsubscribe();
+    }
   }
 }

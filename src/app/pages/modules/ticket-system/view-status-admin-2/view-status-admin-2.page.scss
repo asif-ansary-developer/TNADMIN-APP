@@ -87,8 +87,10 @@ ion-searchbar {
 }
 
 .ticket-card {
+
+
   ion-row {
-    // padding: 8px 4px;
+
     display: flex;
     align-items: flex-start;
     height: 100%;
@@ -314,4 +316,26 @@ ion-input {
       padding-inline-end: 26px !important;
     }
   }
+}
+
+.payment-search-toolbar {
+  --background: transparent;
+  --border-width: 0 !important;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-bottom: 6px;
+}
+
+.container {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+.ticket-card {
+  margin-top: 8px !important; // Tighter vertical gap between ticket cards
+  margin-bottom: 8px !important;
+}
+
+.ticket-card:first-of-type {
+  margin-top: 2px !important; // Pulls the top ticket card right up under the search bar
 }
