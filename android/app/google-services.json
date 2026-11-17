@@ -1,80 +1,26 @@
 {
   "project_info": {
-    "project_number": "1031884805412",
-    "firebase_url": "https://tnsmart-9dc6f.firebaseio.com",
-    "project_id": "tnsmart-9dc6f",
-    "storage_bucket": "tnsmart-9dc6f.appspot.com"
+    "project_number": "195800847793",
+    "project_id": "tn-admin-15da6",
+    "storage_bucket": "tn-admin-15da6.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1031884805412:android:59ee08285148626a4d8fb1",
+        "mobilesdk_app_id": "1:195800847793:android:c8ea976887428a426d5990",
         "android_client_info": {
           "package_name": "com.rimes.tnsmartadmin"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "1031884805412-q2ts04ircs1bv65d6npr92kmsiscprp3.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyA28uGZh4SxhNkT4WXSPPVZZBPG8Apg5-M"
+          "current_key": "AIzaSyCGSqYFIfuPTfoMiJ1-SQdyde7L1jE50AA"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1031884805412-q2ts04ircs1bv65d6npr92kmsiscprp3.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "1031884805412-dpsra92fq8vvrpks9kldf21t5pl4gpia.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.rimes.tnsmartadmin"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1031884805412:android:330224334fccb4b34d8fb1",
-        "android_client_info": {
-          "package_name": "com.rimes.tnsmartadmin"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1031884805412-q2ts04ircs1bv65d6npr92kmsiscprp3.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyA28uGZh4SxhNkT4WXSPPVZZBPG8Apg5-M"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1031884805412-q2ts04ircs1bv65d6npr92kmsiscprp3.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "1031884805412-dpsra92fq8vvrpks9kldf21t5pl4gpia.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "int_.rimes.tnsmart_admin"
-              }
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }
