@@ -862,13 +862,8 @@ export class ViewStatusAdmin2Page implements OnInit {
 
   // Helper to get the latest status text from a ticket's threads
   getTicketCurrentStatus(ticket: any): string {
-    if (Array.isArray(ticket?.threads) && ticket.threads.length > 0) {
-      const lastThread = ticket.threads[ticket.threads.length - 1];
-      if (lastThread?.text) {
-        return String(lastThread.text).trim();
-      }
-    }
-    return '';
+
+    return ticket?.difficulty ? String(ticket.difficulty).trim() : '';
   }
 
   // Dynamically extract all unique statuses from the loaded tickets
