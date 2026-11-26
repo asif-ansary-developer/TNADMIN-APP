@@ -186,17 +186,52 @@ export class TicketRaiserActionPage
     }
   }
 
-  getTicket() {
-    let params = {
-      t_id: this.ticket_id,
-    };
-    this.api.get_cw_ticket_by_id(params).subscribe((data) => {
-      if (data) {
-        this.ticket = data[0];
-      }
-      console.log('ticket ..', this.ticket);
+  // getTicket() {
+  //   let params = {
+  //     t_id: this.ticket_id,
+  //   };
+  //   this.api.get_cw_ticket_by_id(params).subscribe((data) => {
+  //     if (data) {
+  //       this.ticket = data[0];
+  //     }
+  //     console.log('ticket ..', this.ticket);
 
-      this.scrollToLastedEL();
+  //     this.scrollToLastedEL();
+  //   });
+
+  //   this.reply_text = null;
+  // }
+
+  async getTicket(showLoader = false) {
+    let loadingEl: HTMLIonLoadingElement | undefined;
+
+    if (showLoader) {
+      loadingEl = await this.loadingCtrl.create({
+        message: 'Loading ticket details...',
+        spinner: 'dots',
+        mode: 'ios'
+      });
+
+      await loadingEl.present();
+    }
+
+    this.api.get_cw_ticket_by_id({
+      t_id: this.ticket_id
+    }).subscribe({
+      next: (data: any) => {
+        if (Array.isArray(data) && data.length > 0) {
+          this.ticket = data[0];
+        }
+
+        this.scrollToLastedEL();
+      },
+      error: async (err) => {
+        console.error(err);
+        await loadingEl?.dismiss();
+      },
+      complete: async () => {
+        await loadingEl?.dismiss();
+      }
     });
 
     this.reply_text = null;
@@ -238,7 +273,7 @@ export class TicketRaiserActionPage
   }
 
   display() {
-    this.getTicket();
+    this.getTicket(true);
   }
   doRefresh(event) {
     this.display();

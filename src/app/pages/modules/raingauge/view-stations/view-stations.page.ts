@@ -71,6 +71,7 @@ export class ViewStationsPage implements OnInit {
 
   getStations() {
     this.loading = true;
+    this.stations = [];
 
     this.api
       .get_arg_aws_stations_by_district_id({
@@ -79,8 +80,9 @@ export class ViewStationsPage implements OnInit {
       })
       .subscribe({
         next: (data) => {
-          this.stations = data || [];
-          console.log('stations ..', this.stations);
+          this.stations = Array.isArray(data) ? data : [];
+          this.loading = false;
+          this.stationLoader?.dismiss();
         },
         error: (err) => {
           console.log('Stations error:', err);

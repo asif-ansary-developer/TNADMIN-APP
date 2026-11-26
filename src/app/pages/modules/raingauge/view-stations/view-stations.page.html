@@ -49,113 +49,136 @@
     </div>
 
     <!-- Station List Heading -->
-    <div class="station-list-heading" *ngIf="!loading && stations.length > 0">
+    <div class="station-list-heading" *ngIf="loading || stations.length > 0">
       <ion-label>{{ 'Station List' | translate }}</ion-label>
-      <span class="count-pill">{{ stations.length }} {{ stations.length === 1 ? 'Station' : 'Stations' }}</span>
+      <span class="count-pill" *ngIf="!loading">
+        {{ stations.length }} {{ stations.length === 1 ? 'Station' : 'Stations' }}
+      </span>
+      <span class="loading-pill" *ngIf="loading">
+        <ion-spinner name="crescent"></ion-spinner> Loading...
+      </span>
     </div>
 
-    <!-- Skeleton Loader -->
-    <div *ngIf="loading" class="skeleton-container" style="margin: 18px 0 0 0">
-      <div class="skeleton skeleton-card" style="height: 260px; margin-bottom: 18px"></div>
-      <div class="skeleton skeleton-card" style="height: 260px; margin-bottom: 18px"></div>
+    <div *ngIf="loading" class="skeleton-list">
+      <ion-card class="ion-padding ticket-card" *ngFor="let item of [1, 2, 3]">
+        <ion-grid>
+          <ion-row style="background: #e2e8f0; border-radius: 6px; margin-bottom: 8px;">
+            <ion-col size="5"><ion-skeleton-text [animated]="true"
+                style="width: 75%; height: 14px;"></ion-skeleton-text></ion-col>
+            <ion-col size="7"><ion-skeleton-text [animated]="true"
+                style="width: 50%; height: 14px;"></ion-skeleton-text></ion-col>
+          </ion-row>
+          <ion-row *ngFor="let row of [1, 2, 3, 4, 5]">
+            <ion-col size="5"><ion-skeleton-text [animated]="true"
+                style="width: 65%; height: 12px;"></ion-skeleton-text></ion-col>
+            <ion-col size="7"><ion-skeleton-text [animated]="true"
+                style="width: 80%; height: 12px;"></ion-skeleton-text></ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
     </div>
 
     <!-- Empty State -->
-    <ion-card class="ion-padding ion-text-center empty-card" *ngIf="stations.length == 0 && !loading">
-      No stations found for {{ getDistrictName() || 'selected district' }}.
+    <ion-card class="ion-padding ion-text-center empty-card" *ngIf="!loading && stations.length === 0">
+      <ion-icon name="cloud-offline-outline" style="font-size: 28px; color: #94a3b8; margin-bottom: 6px;"></ion-icon>
+      <p style="margin: 0; color: #475569;">
+        No stations found for <strong>{{ getDistrictName() || 'selected district' }}</strong>.
+      </p>
     </ion-card>
-    <ion-card class="ion-padding ticket-card" *ngFor="let station of stations">
-      <ion-label class="ticket-card-label">
-        {{station['difficulty']}}</ion-label>
+    <ng-container *ngIf="!loading">
+      <ion-card class="ion-padding ticket-card" *ngFor="let station of stations">
+        <ion-label class="ticket-card-label">
+          {{station['difficulty']}}</ion-label>
 
-      <ion-grid>
-        <ion-row style="background: #3b93ed7a">
-          <ion-col> <ion-label>{{"Station code"}} :</ion-label></ion-col>
-          <ion-col>
-            <ion-label>{{station['station_code'] | translate}}</ion-label>
-          </ion-col>
-        </ion-row>
+        <ion-grid>
+          <ion-row style="background: #3b93ed7a">
+            <ion-col> <ion-label>{{"Station code"}} :</ion-label></ion-col>
+            <ion-col>
+              <ion-label>{{station['station_code'] | translate}}</ion-label>
+            </ion-col>
+          </ion-row>
 
-        <ion-row>
-          <ion-col> <ion-label>{{"District"}} :</ion-label></ion-col>
-          <ion-col>
-            <ion-label>{{station['district_name'] | translate}}</ion-label>
-          </ion-col>
-        </ion-row>
+          <ion-row>
+            <ion-col> <ion-label>{{"District"}} :</ion-label></ion-col>
+            <ion-col>
+              <ion-label>{{station['district_name'] | translate}}</ion-label>
+            </ion-col>
+          </ion-row>
 
-        <ion-row>
-          <ion-col> <ion-label>{{"Taluk"}} :</ion-label></ion-col>
-          <ion-col>
-            <ion-label>{{station['taluk_name'] | translate}}</ion-label>
-          </ion-col>
-        </ion-row>
+          <ion-row>
+            <ion-col> <ion-label>{{"Taluk"}} :</ion-label></ion-col>
+            <ion-col>
+              <ion-label>{{station['taluk_name'] | translate}}</ion-label>
+            </ion-col>
+          </ion-row>
 
-        <ion-row>
-          <ion-col> <ion-label>{{"Firka"}} :</ion-label></ion-col>
-          <ion-col>
-            <ion-label>{{station['firka_name'] | translate}}</ion-label>
-          </ion-col>
-        </ion-row>
+          <ion-row>
+            <ion-col> <ion-label>{{"Firka"}} :</ion-label></ion-col>
+            <ion-col>
+              <ion-label>{{station['firka_name'] | translate}}</ion-label>
+            </ion-col>
+          </ion-row>
 
-        <ion-row>
-          <ion-col><ion-label>{{"Village"}} :</ion-label></ion-col>
-          <ion-col>
-            <ion-label>{{station['village_name'] | translate}}</ion-label>
-          </ion-col>
-        </ion-row>
+          <ion-row>
+            <ion-col><ion-label>{{"Village"}} :</ion-label></ion-col>
+            <ion-col>
+              <ion-label>{{station['village_name'] | translate}}</ion-label>
+            </ion-col>
+          </ion-row>
 
-        <ion-row>
-          <ion-col><ion-label>{{"Installed Method"}} :</ion-label></ion-col>
-          <ion-col>
-            <ion-label>{{station['installation_method'] | translate}}</ion-label>
-          </ion-col>
-        </ion-row>
+          <ion-row>
+            <ion-col><ion-label>{{"Installed Method"}} :</ion-label></ion-col>
+            <ion-col>
+              <ion-label>{{station['installation_method'] | translate}}</ion-label>
+            </ion-col>
+          </ion-row>
 
-        <ion-row>
-          <ion-col> <ion-label>{{"Owned by"}} :</ion-label></ion-col>
-          <ion-col>
-            <ion-label>{{station['ownership'] | translate}}</ion-label>
-          </ion-col>
-        </ion-row>
+          <ion-row>
+            <ion-col> <ion-label>{{"Owned by"}} :</ion-label></ion-col>
+            <ion-col>
+              <ion-label>{{station['ownership'] | translate}}</ion-label>
+            </ion-col>
+          </ion-row>
 
-        <ion-row style="height: max-content">
-          <ion-col style="height: unset">
-            <ion-label>{{"Sensors" | translate}} :</ion-label></ion-col>
-          <ion-col style="display: block">
-            <ion-label *ngIf="station['rainfall']=='1'"><span class="pointer">•</span>Rainfall</ion-label>
-            <ion-label *ngIf="station['air_temp']=='1'"><span class="pointer">•</span>Air Tempertature</ion-label>
-            <ion-label *ngIf="station['relative_humidity']=='1'"><span class="pointer">•</span>Relative
-              Humidity</ion-label>
-            <ion-label *ngIf="station['air_pressure']=='1'"><span class="pointer">•</span>Air Pressure</ion-label>
-            <ion-label *ngIf="station['wind_speed']=='1'"><span class="pointer">•</span>Wind Speed</ion-label>
-            <ion-label *ngIf="station['wind_direction']=='1'"><span class="pointer">•</span>Wind Direction</ion-label>
-            <ion-label *ngIf="station['solar_radiation']=='1'"><span class="pointer">•</span>Solar Radiation</ion-label>
-            <ion-label *ngIf="station['soil_moisture']=='1'"><span class="pointer">•</span>Soil Moisture</ion-label>
-          </ion-col>
-        </ion-row>
+          <ion-row style="height: max-content">
+            <ion-col style="height: unset">
+              <ion-label>{{"Sensors" | translate}} :</ion-label></ion-col>
+            <ion-col style="display: block">
+              <ion-label *ngIf="station['rainfall']=='1'"><span class="pointer">•</span>Rainfall</ion-label>
+              <ion-label *ngIf="station['air_temp']=='1'"><span class="pointer">•</span>Air Tempertature</ion-label>
+              <ion-label *ngIf="station['relative_humidity']=='1'"><span class="pointer">•</span>Relative
+                Humidity</ion-label>
+              <ion-label *ngIf="station['air_pressure']=='1'"><span class="pointer">•</span>Air Pressure</ion-label>
+              <ion-label *ngIf="station['wind_speed']=='1'"><span class="pointer">•</span>Wind Speed</ion-label>
+              <ion-label *ngIf="station['wind_direction']=='1'"><span class="pointer">•</span>Wind Direction</ion-label>
+              <ion-label *ngIf="station['solar_radiation']=='1'"><span class="pointer">•</span>Solar
+                Radiation</ion-label>
+              <ion-label *ngIf="station['soil_moisture']=='1'"><span class="pointer">•</span>Soil Moisture</ion-label>
+            </ion-col>
+          </ion-row>
 
-        <ion-row>
-          <ion-col> <ion-label>{{"Installed on"}} :</ion-label></ion-col>
-          <ion-col>
-            <ion-label>{{station['installed_date'] | translate}}</ion-label>
-          </ion-col>
-        </ion-row>
+          <ion-row>
+            <ion-col> <ion-label>{{"Installed on"}} :</ion-label></ion-col>
+            <ion-col>
+              <ion-label>{{station['installed_date'] | translate}}</ion-label>
+            </ion-col>
+          </ion-row>
 
-        <ion-row *ngIf="station['photo']=='1'">
-          <ion-col> <ion-label>{{"Attached Photo"}} :</ion-label></ion-col>
-          <ion-col>
-            <ion-button mode="ios" style="--background: none; margin-top: 4px" size="small"
-              (click)="preview(station['station_code']);">
-              <ion-icon name="image-outline" style="
+          <ion-row *ngIf="station['photo']=='1'">
+            <ion-col> <ion-label>{{"Attached Photo"}} :</ion-label></ion-col>
+            <ion-col>
+              <ion-button mode="ios" style="--background: none; margin-top: 4px" size="small"
+                (click)="preview(station['station_code']);">
+                <ion-icon name="image-outline" style="
                   padding: unset;
                   max-width: unset !important;
                   max-height: unset !important;
                 "></ion-icon>
-            </ion-button>
-          </ion-col>
-        </ion-row>
+              </ion-button>
+            </ion-col>
+          </ion-row>
 
-        <!-- <ion-row *ngIf="station['photo']">
+          <!-- <ion-row *ngIf="station['photo']">
           <ion-col> <ion-label>{{"Attached Photo"}} :</ion-label></ion-col>
           <ion-col>
             <ion-button size="small" fill="clear" (click)="preview(station['photo'])">
@@ -163,8 +186,9 @@
             </ion-button>
           </ion-col>
         </ion-row> -->
-      </ion-grid>
-    </ion-card>
+        </ion-grid>
+      </ion-card>
+    </ng-container>
   </div>
 
   <ion-modal #modal [isOpen]="preview_state" [canDismiss]="canDismiss" mode="ios" class="photo-preview-modal">

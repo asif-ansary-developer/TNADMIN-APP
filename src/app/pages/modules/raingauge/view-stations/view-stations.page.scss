@@ -400,3 +400,33 @@ ion-select {
     border-radius: 999px;
   }
 }
+
+
+.loading-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2563eb;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 3px 10px;
+  border-radius: 999px;
+
+  ion-spinner {
+    width: 14px;
+    height: 14px;
+    color: #2563eb;
+  }
+}
+
+.skeleton-list {
+  margin-top: 8px;
+
+  ion-card {
+    margin-inline: 0;
+    margin-bottom: 14px;
+    border-radius: 12px;
+  }
+}
