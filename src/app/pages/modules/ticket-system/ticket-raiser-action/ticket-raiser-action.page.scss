@@ -478,3 +478,269 @@ ion-modal {
 ion-footer {
   z-index: 1000 !important;
 }
+
+
+/* Ticket Attachment Gallery */
+.ticket-attachment-section {
+  width: 100%;
+  margin: 16px 0 8px;
+  padding: 12px;
+  background: #f7faff;
+  border: 1px solid #e2eaf4;
+  border-radius: 14px;
+  box-sizing: border-box;
+}
+
+/* Gallery Header */
+.attachment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.attachment-heading {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #244d78;
+  font-size: 13px;
+  font-weight: 600;
+
+  ion-icon {
+    font-size: 18px;
+    color: #2878bd;
+  }
+}
+
+.attachment-count {
+  padding: 4px 9px;
+  border-radius: 20px;
+  background: #e5f1fc;
+  color: #24669e;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Image Gallery */
+.ticket-image-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+/* Individual Image */
+.ticket-image-item {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 11px;
+  background: #e8eef5;
+  border: 1px solid #dce5ef;
+  cursor: pointer;
+  box-shadow: 0 3px 9px rgba(35, 75, 115, 0.10);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &:active img {
+    transform: scale(1.05);
+  }
+}
+
+/* Zoom Overlay */
+.image-zoom-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(13, 39, 67, 0.25);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+
+  ion-icon {
+    color: #ffffff;
+    font-size: 23px;
+    background: rgba(20, 57, 91, 0.65);
+    border-radius: 50%;
+    padding: 8px;
+  }
+}
+
+.ticket-image-item:hover .image-zoom-overlay {
+  opacity: 1;
+}
+
+/* Image Number */
+.image-number {
+  position: absolute;
+  left: 7px;
+  bottom: 7px;
+  min-width: 21px;
+  height: 21px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgba(17, 48, 78, 0.75);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* Mobile Layout */
+@media (max-width: 360px) {
+  .ticket-image-gallery {
+    gap: 6px;
+  }
+
+  .ticket-attachment-section {
+    padding: 9px;
+  }
+}
+
+
+.ticket-image-item {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 13px;
+
+  /* Highlighted image card */
+  background: #ffffff;
+  border: 2px solid #9fc5eb;
+  box-shadow:
+    0 3px 8px rgba(30, 91, 145, 0.14),
+    0 6px 14px rgba(30, 91, 145, 0.10),
+    inset 0 0 0 2px #ffffff;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    border-color: #2878bd;
+    box-shadow:
+      0 5px 14px rgba(30, 91, 145, 0.22),
+      0 0 0 3px rgba(40, 120, 189, 0.10);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &:active img {
+    transform: scale(1.05);
+  }
+}
+
+
+.image-zoom-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 54, 91, 0.30);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+
+  ion-icon {
+    color: #ffffff;
+    font-size: 22px;
+    background: #1766a5;
+    border-radius: 50%;
+    padding: 9px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.ticket-image-item:hover .image-zoom-overlay {
+  opacity: 1;
+}
+
+.photo-preview-modal {
+  --width: 92%;
+  --height: 75%;
+  --border-radius: 16px;
+}
+
+.img-holder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  box-sizing: border-box;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+  }
+}
+
+ion-modal.photo-preview-modal {
+  --width: 90%;
+  --max-width: 480px;
+  --height: 75%;
+  --max-height: 680px;
+  --border-radius: 10px;
+  --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+
+  ion-toolbar {
+    --background: #ffffff;
+    --color: #1f2937;
+    border-bottom: 1px solid #f1f5f9;
+
+    ion-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+  }
+
+  ion-content.preview-content {
+    --background: #ffffff;
+  }
+
+  .img-holder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+  }
+}

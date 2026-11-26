@@ -50,6 +50,8 @@ export class TicketRaiserActionPage
   today;
   refreshSubscription;
 
+  ticketImages: string[] = [];
+
   constructor(
     private api: ApiService,
     private router: Router,
@@ -221,6 +223,14 @@ export class TicketRaiserActionPage
       next: (data: any) => {
         if (Array.isArray(data) && data.length > 0) {
           this.ticket = data[0];
+
+          // Split multiple Base64 images using pipe separator
+          this.ticketImages = this.ticket.image
+            ? this.ticket.image.split('|').filter(img => img.trim() !== '')
+            : [];
+        } else {
+          this.ticket = null;
+          this.ticketImages = [];
         }
 
         this.scrollToLastedEL();

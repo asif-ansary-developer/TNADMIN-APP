@@ -12,21 +12,23 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ion-modal #modal [isOpen]="preview_state" [canDismiss]="canDismiss" mode="ios" class="photo-preview-modal"
+  <ion-modal [isOpen]="preview_state" [canDismiss]="canDismiss" class="photo-preview-modal"
     (willDismiss)="handleModalDismiss($event)">
     <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Preview</ion-title>
+      <ion-header class="ion-no-border">
+        <ion-toolbar mode="ios">
+          <ion-title>Image Preview</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="modal.dismiss();preview_state=false"><ion-icon name="close"></ion-icon></ion-button>
+            <ion-button fill="clear" color="medium" (click)="preview_state = false">
+              <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+            </ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-      <ion-content>
-        <div *ngIf="preview_img" class="img-holder">
-          <a href="{{preview_img}}" download>
-            <img *ngIf="preview_img" src="{{preview_img}}" /></a>
+
+      <ion-content class="preview-content" [scrollY]="false">
+        <div class="img-holder" *ngIf="preview_img">
+          <img [src]="preview_img" alt="Ticket image preview" />
         </div>
       </ion-content>
     </ng-template>
@@ -121,10 +123,33 @@
         <span>{{ticket['resolver_history'][ticket['resolver_history'].length-1]['entity_tag']}}</span><br />
         Issue : <span>{{ticket['issue']}}</span><br />
 
-        <div class="img-grid" *ngIf="ticket['image']">
-          <ion-img class="thread_img" src="{{ticket['image']}}"
-            (click)="preview_img=preview_img=ticket['image'];preview_state=true"></ion-img>
+
+        <!-- Ticket Image Gallery -->
+        <div class="ticket-attachment-section" *ngIf="ticketImages.length > 0">
+
+          <div class="attachment-header">
+            <div class="attachment-heading">
+              <ion-icon name="images-outline"></ion-icon>
+              <span>Attached Images</span>
+            </div>
+
+            <span class="attachment-count">
+              {{ ticketImages.length }} {{ ticketImages.length === 1 ? 'Photo' : 'Photos' }}
+            </span>
+          </div>
+
+          <div class="ticket-image-gallery">
+            <div class="ticket-image-item" *ngFor="let img of ticketImages; let i = index"
+              (click)="preview_img = img; preview_state = true">
+
+              <img [src]="img" [alt]="'Ticket image ' + (i + 1)" />
+
+              <span class="image-number">{{ i + 1 }}</span>
+
+            </div>
+          </div>
         </div>
+
 
       </ion-card>
 
