@@ -7,15 +7,18 @@
   margin-bottom: 22px;
   border-radius: 12px;
   padding: 6px 20px;
+
   ion-label {
     display: block;
     font-weight: var(--ion-font-weight-medium);
   }
 }
+
 ion-card {
   box-shadow: none;
   outline: 1.2px #d7d7d7 solid;
 }
+
 ion-button {
   margin: 0 auto;
   width: 50%;
@@ -78,6 +81,7 @@ ion-input {
   position: absolute;
   margin-top: 78px;
   margin-left: 128px;
+
   ion-icon {
     color: var(--ion-color-primary);
     font-size: 25px;
@@ -87,6 +91,7 @@ ion-input {
 img-holder {
   background: #efefef;
 }
+
 img {
   width: 150px;
   border-radius: 6px;
@@ -104,6 +109,7 @@ img {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -113,7 +119,139 @@ img {
   from {
     opacity: 1;
   }
+
   to {
     opacity: 0;
+  }
+}
+
+
+
+.image-preview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #f1f5f9;
+  border: 1px solid #dbe4ef;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  --padding-start: 4px;
+  --padding-end: 4px;
+  --background: rgba(255, 255, 255, 0.9);
+  --border-radius: 50%;
+  width: 28px;
+  height: 28px;
+}
+
+.image-preview-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.image-preview-popup-content {
+  position: relative;
+
+  width: 100%;
+  max-width: 320px;
+  padding: 10px;
+
+  background: #ffffff;
+  border-radius: 16px;
+
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+
+  img {
+    display: block;
+    width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+    border-radius: 10px;
+  }
+}
+
+.preview-close-button {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+
+  width: 30px;
+  height: 30px;
+
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+
+  background: #164e85;
+  color: #ffffff;
+
+  font-size: 22px;
+  line-height: 24px;
+
+  z-index: 2;
+}
+
+
+.selected-images-grid {
+  padding: 8px 0;
+}
+
+.image-preview {
+  position: relative;
+  width: 100%;
+  height: 95px;
+  border-radius: 10px;
+  overflow: visible;
+  background: #f1f5f9;
+  border: 1px solid #dbe5ef;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+    cursor: pointer;
+  }
+
+  .remove-image {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    z-index: 5;
+
+    --padding-start: 0;
+    --padding-end: 0;
+    --padding-top: 0;
+    --padding-bottom: 0;
+
+    width: 26px;
+    height: 26px;
+    margin: 0;
+
+    background: #ffffff;
+    border-radius: 50%;
   }
 }

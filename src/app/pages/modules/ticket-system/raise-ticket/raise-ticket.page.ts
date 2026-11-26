@@ -41,6 +41,17 @@ export class RaiseTicketPage implements OnInit {
   raiser_id;
   role;
   paymentInvolved = '1';
+
+  images: {
+    file: File;
+    preview: string;
+  }[] = [];
+
+  isTicketSubmitting = false;
+  isTicketAlertOpen = false;
+
+  selectedImagePreview: string | null = null;
+
   constructor(
     private modalCtrl: ModalController,
     private navCtrl: NavController,
@@ -194,91 +205,307 @@ export class RaiseTicketPage implements OnInit {
     this.img = null;
   }
 
-  raiseTicket() {
-    this.alertCtrl
-      .create({
-        cssClass: 'alert-custom',
-        message: 'Raise Ticket?',
-        buttons: [
-          { text: 'No', role: 'cancel' },
-          {
-            text: 'Yes',
-            role: 'ok',
-            handler: async () => {
-              this.loadingCtrl
-                .create({
-                  keyboardClose: true,
-                  spinner: 'dots',
-                  cssClass: 'loading-backdrop',
-                  mode: 'ios',
-                })
-                .then((loadingEl) => {
-                  loadingEl.present();
+  // raiseTicket() {
+  //   this.alertCtrl
+  //     .create({
+  //       cssClass: 'alert-custom',
+  //       message: 'Raise Ticket?',
+  //       buttons: [
+  //         { text: 'No', role: 'cancel' },
+  //         {
+  //           text: 'Yes',
+  //           role: 'ok',
+  //           handler: async () => {
+  //             this.loadingCtrl
+  //               .create({
+  //                 keyboardClose: true,
+  //                 spinner: 'dots',
+  //                 cssClass: 'loading-backdrop',
+  //                 mode: 'ios',
+  //               })
+  //               .then((loadingEl) => {
+  //                 loadingEl.present();
 
-                  var params = {
-                    // author: localStorage.getItem('user_id'),
-                    // v_id: 'v001',
-                    v_id: this.raiser_id,
-                    station_code: this.stationCode,
-                    district: this.district,
-                    district_id: this.district_id,
-                    firka_id: this.firka_id,
-                    taluk: this.taluk,
-                    village: '',
-                    difficulty: this.difficultyFaced,
-                    issue: this.issueDetail,
-                    raiser_name: this.role == '1' ? this.raiserName : null,
-                    resolver: this.resolvingEntity,
-                    img: this.img != null ? this.img : '',
-                    payment_involved:
-                      this.role == '1' && this.resolvingEntity == 'ven'
-                        ? this.paymentInvolved
-                        : 0,
-                    extra_param: 'raise_cwt',
-                  };
+  //                 var params = {
+  //                   // author: localStorage.getItem('user_id'),
+  //                   // v_id: 'v001',
+  //                   v_id: this.raiser_id,
+  //                   station_code: this.stationCode,
+  //                   district: this.district,
+  //                   district_id: this.district_id,
+  //                   firka_id: this.firka_id,
+  //                   taluk: this.taluk,
+  //                   village: '',
+  //                   difficulty: this.difficultyFaced,
+  //                   issue: this.issueDetail,
+  //                   raiser_name: this.role == '1' ? this.raiserName : null,
+  //                   resolver: this.resolvingEntity,
+  //                   img: this.img != null ? this.img : '',
+  //                   payment_involved:
+  //                     this.role == '1' && this.resolvingEntity == 'ven'
+  //                       ? this.paymentInvolved
+  //                       : 0,
+  //                   extra_param: 'raise_cwt',
+  //                 };
 
-                  console.log('param', params);
-                  this.api
-                    .post_admin(params)
-                    .pipe(take(1))
-                    .subscribe(
-                      (data) => {
-                        console.log(data);
-                        loadingEl.dismiss();
-                        if (data['error'] != undefined) {
-                          this.authService.showAlert('Oops!', data['error']);
-                        } else {
-                          this.authService.showAlert(
-                            data['title'],
-                            data['msg']
-                          );
-                          this.navCtrl.navigateBack('/ticket-system');
-                        }
-                        // if (typeof data === 'string') {
-                        //   this.authService.showAlert(
-                        //     'Success!',
-                        //     'Ticket created'
-                        //   );
-                        //   this.navCtrl.back();
-                        // } else {
-                        //   this.authService.showAlert('Oops!', data['error']);
-                        // }
-                      },
-                      (err) => {
-                        console.log('ERROR!: ', err);
-                        loadingEl.dismiss();
-                        this.authService.showAlert('Failed!', 'Try again');
-                      }
-                    );
-                });
-            },
-          },
-        ],
-      })
-      .then((alertEl) => alertEl.present());
+  //                 console.log('param', params);
+  //                 this.api
+  //                   .post_admin(params)
+  //                   .pipe(take(1))
+  //                   .subscribe(
+  //                     (data) => {
+  //                       console.log(data);
+  //                       loadingEl.dismiss();
+  //                       if (data['error'] != undefined) {
+  //                         this.authService.showAlert('Oops!', data['error']);
+  //                       } else {
+  //                         this.authService.showAlert(
+  //                           data['title'],
+  //                           data['msg']
+  //                         );
+  //                         this.navCtrl.navigateBack('/ticket-system');
+  //                       }
+  //                       // if (typeof data === 'string') {
+  //                       //   this.authService.showAlert(
+  //                       //     'Success!',
+  //                       //     'Ticket created'
+  //                       //   );
+  //                       //   this.navCtrl.back();
+  //                       // } else {
+  //                       //   this.authService.showAlert('Oops!', data['error']);
+  //                       // }
+  //                     },
+  //                     (err) => {
+  //                       console.log('ERROR!: ', err);
+  //                       loadingEl.dismiss();
+  //                       this.authService.showAlert('Failed!', 'Try again');
+  //                     }
+  //                   );
+  //               });
+  //           },
+  //         },
+  //       ],
+  //     })
+  //     .then((alertEl) => alertEl.present());
+  // }
+
+
+  async fileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        resolve(reader.result as string);
+      };
+
+      reader.onerror = () => reject(reader.error);
+
+      reader.readAsDataURL(file);
+    });
   }
+
+  async raiseTicket() {
+    // Prevent opening the confirmation popup multiple times
+    if (this.isTicketAlertOpen || this.isTicketSubmitting) {
+      return;
+    }
+
+    this.isTicketAlertOpen = true;
+
+    const alertEl = await this.alertCtrl.create({
+      cssClass: 'alert-custom',
+      message: 'Raise Ticket?',
+      backdropDismiss: false,
+
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel',
+        },
+        {
+          text: 'Yes',
+          role: 'ok',
+
+          handler: () => {
+            // Prevent duplicate API submission
+            if (this.isTicketSubmitting) {
+              return false;
+            }
+
+            this.isTicketSubmitting = true;
+
+            // Start submission once
+            this.submitTicketRequest();
+
+            // Return true so Ionic closes the confirmation alert
+            return true;
+          },
+        },
+      ],
+    });
+
+    alertEl.onDidDismiss().then(() => {
+      this.isTicketAlertOpen = false;
+    });
+
+    await alertEl.present();
+  }
+
+  async submitTicketRequest() {
+    const loadingEl = await this.loadingCtrl.create({
+      keyboardClose: true,
+      spinner: 'dots',
+      cssClass: 'loading-backdrop',
+      mode: 'ios',
+    });
+
+    await loadingEl.present();
+
+    try {
+      // Convert all selected images to Base64
+      const uploadedImages = await Promise.all(
+        this.images.map(image =>
+          this.fileToBase64(image.file)
+        )
+      );
+
+      const params: any = {
+        v_id: this.raiser_id,
+        station_code: this.stationCode,
+        district: this.district,
+        district_id: this.district_id,
+        firka_id: this.firka_id,
+        taluk: this.taluk,
+        village: '',
+        difficulty: this.difficultyFaced,
+        issue: this.issueDetail,
+        raiser_name: this.role == '1' ? this.raiserName : null,
+        resolver: this.resolvingEntity,
+
+        // Send all images through the existing img parameter
+        img: uploadedImages.join('|'),
+
+        payment_involved:
+          this.role == '1' && this.resolvingEntity == 'ven'
+            ? this.paymentInvolved
+            : 0,
+
+        extra_param: 'raise_cwt',
+      };
+
+      console.log('Ticket params:', params);
+
+      this.api.post_admin(params)
+        .pipe(take(1))
+        .subscribe({
+          next: async (data: any) => {
+            await loadingEl.dismiss();
+
+            this.isTicketSubmitting = false;
+
+            if (data['error'] != undefined) {
+              this.authService.showAlert(
+                'Oops!',
+                data['error']
+              );
+            } else {
+              this.authService.showAlert(
+                data['title'],
+                data['msg']
+              );
+
+              this.clearImages();
+
+              this.navCtrl.navigateBack('/ticket-system');
+            }
+          },
+
+          error: async (err) => {
+            console.log('ERROR!: ', err);
+
+            await loadingEl.dismiss();
+
+            this.isTicketSubmitting = false;
+
+            this.authService.showAlert(
+              'Failed!',
+              'Try again'
+            );
+          },
+        });
+
+    } catch (error) {
+      console.log('Image conversion error:', error);
+
+      await loadingEl.dismiss();
+
+      this.isTicketSubmitting = false;
+
+      this.authService.showAlert(
+        'Failed!',
+        'Unable to process selected images'
+      );
+    }
+  }
+
 
   selectPreventDefault(event) {
     event.preventDefault();
   }
+
+
+
+  onImagesSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files) {
+      return;
+    }
+
+    const selectedFiles = Array.from(input.files);
+
+    for (const file of selectedFiles) {
+      if (this.images.length >= 3) {
+        this.authService.showToast('You can upload maximum 3 images');
+        break;
+      }
+
+      if (!file.type.startsWith('image/')) {
+        this.authService.showToast('Please select image files only');
+        continue;
+      }
+
+      const preview = URL.createObjectURL(file);
+
+      this.images.push({
+        file: file,
+        preview: preview
+      });
+    }
+
+    // Allow selecting the same image again after removing it
+    input.value = '';
+  }
+
+  removeImage(index: number) {
+    URL.revokeObjectURL(this.images[index].preview);
+    this.images.splice(index, 1);
+  }
+
+  clearImages() {
+    this.images.forEach(image => {
+      URL.revokeObjectURL(image.preview);
+    });
+
+    this.images = [];
+  }
+
+  previewImage(image: string) {
+    this.selectedImagePreview = image;
+  }
+
+  closeImagePreview() {
+    this.selectedImagePreview = null;
+  }
+
 }

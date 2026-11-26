@@ -1,17 +1,10 @@
-<!---------------------------
-Name: tnalert admin
------------------------------
-Author: Mohammed Rizwan S
-Date:   23/02/2024
----------------------------->
-
 <ion-header class="ion-no-border ion-text-center">
   <ion-toolbar mode="ios">
     <!-- <ion-title>{{"Report Civil Work Issue"| translate}}</ion-title> -->
     <ion-title>{{"Report Issue"| translate}}</ion-title>
     <ion-buttons slot="start">
       <ion-back-button mode="ios" defaultHref="/ticket-system"></ion-back-button>
-    </ion-buttons> 
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -110,16 +103,64 @@ Date:   23/02/2024
 
 
 
-    <ion-input label="{{ 'Attach Image' | translate}} (If
+    <!-- <ion-input label="{{ 'Attach Image' | translate}} (If
           available)" class="ip-cursor" label-placement="stacked" fill="outline" class="attach-input" readonly
       clickable mode="md">
       <ion-button slot="start" size="small" fill="outline" style="width: 50px; margin-top: 20px" (click)="getPhoto()">
         <ion-icon name="attach-outline" size="large"></ion-icon>
       </ion-button>
+    </ion-input> -->
+
+
+
+    <!-- Attach images -->
+    <ion-input label="{{ 'Attach Image' | translate }} (Max 3 images)" label-placement="stacked" fill="outline"
+      class="attach-input" readonly mode="md">
+
+      <ion-button slot="start" size="small" fill="outline" style="width: 50px; margin-top: 20px"
+        (click)="imageInput.click()" [disabled]="images.length >= 3">
+
+        <ion-icon name="attach-outline" size="large"></ion-icon>
+      </ion-button>
+
+      <ion-text slot="end" color="medium">
+        {{ images.length }}/3
+      </ion-text>
     </ion-input>
-    <ion-button *ngIf="img" fill="clear" size="small" (click)="clearAttachment()" class="circular-close-btn">
-      <ion-icon name="close-circle"></ion-icon>
-    </ion-button>
+
+    <!-- Hidden multiple image picker -->
+    <input #imageInput type="file" accept="image/*" multiple hidden (change)="onImagesSelected($event)" />
+
+    <!-- Selected image thumbnails -->
+    <ion-grid *ngIf="images.length > 0" class="selected-images-grid">
+      <ion-row>
+        <ion-col size="4" *ngFor="let image of images; let i = index">
+
+          <div class="image-preview">
+
+            <!-- Click image to open preview -->
+            <img [src]="image.preview" alt="Selected image" (click)="previewImage(image.preview)" />
+
+            <!-- Remove image -->
+            <ion-button class="remove-image" fill="clear" size="small" (click)="removeImage(i)">
+
+              <ion-icon name="close-circle" color="danger">
+              </ion-icon>
+            </ion-button>
+
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+
+    <!-- Hidden multiple image picker -->
+    <input #imageInput type="file" accept="image/*" multiple hidden (change)="onImagesSelected($event)" />
+
+
+
+
+
     <ion-card *ngIf="img" class="img-holder">
       <img src="{{this.img}}" />
     </ion-card>
@@ -137,3 +178,16 @@ Date:   23/02/2024
     </ion-row>
   </ion-grid>
 </ion-content>
+
+<!-- Image preview popup -->
+<div class="image-preview-popup" *ngIf="selectedImagePreview" (click)="closeImagePreview()">
+  <div class="image-preview-popup-content" (click)="$event.stopPropagation()">
+
+    <button type="button" class="preview-close-button" (click)="closeImagePreview()">
+      ×
+    </button>
+
+    <img [src]="selectedImagePreview" alt="Image preview" />
+
+  </div>
+</div>
