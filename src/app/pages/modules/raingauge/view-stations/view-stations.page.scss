@@ -80,11 +80,13 @@ ion-searchbar {
       display: flex;
       height: 100%;
       align-items: center;
+
       ion-label {
         // min-height: 28px;
         min-height: 36px;
       }
     }
+
     ion-col:first-child {
       //   justify-content: center;
       //   max-width: 590px !important;
@@ -105,6 +107,7 @@ ion-searchbar {
         align-items: center;
       }
     }
+
     ion-icon {
       padding: 2.2px 10px 17.8px 0;
       min-width: 18px !important;
@@ -116,6 +119,7 @@ ion-searchbar {
       z-index: 1;
     }
   }
+
   ion-row:last-child {
     .vert-line {
       display: none;
@@ -131,6 +135,7 @@ ion-searchbar {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
   }
+
   ion-row:nth-child(odd) {
     background: var(--ion-color-light);
   }
@@ -143,6 +148,7 @@ ion-searchbar {
 .on-progress {
   color: #ffba19 !important;
 }
+
 .on-hold {
   color: #ff3b19 !important;
 }
@@ -156,6 +162,7 @@ ion-searchbar {
   --box-shadow: none;
   position: absolute;
   right: 10px;
+
   ion-icon {
     color: var(--ion-color-primary);
     font-size: 18px;
@@ -169,11 +176,13 @@ ion-searchbar {
 }
 
 .photo-preview-modal {
+
   // --border-radius: 15px;
   ion-icon {
     transform: scale(1.4);
     margin-right: 10px;
   }
+
   .img-holder {
     position: absolute;
     top: 0;
@@ -186,20 +195,208 @@ ion-searchbar {
     justify-content: center;
     align-items: center;
   }
+
   img {
     width: auto;
     border-radius: 6px;
     background: #fff;
   }
+
   .img-holder:hover,
   .img-holder:active {
     opacity: 1;
   }
 }
+
 ion-select {
   --background: #f3f3f3;
   border-radius: 4px;
   padding: auto 10px;
   --border-width: 1px !important;
   padding: 16px 0 !important;
+}
+
+
+
+.district-header-card {
+  margin: 18px 0;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(21, 101, 168, 0.10);
+  border: 1px solid #e1edf8;
+}
+
+.district-header-card ion-card-content {
+  padding: 16px;
+}
+
+.district-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.district-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #eaf4fd, #cfe3f7);
+  box-shadow: 3px 3px 7px rgba(21, 101, 168, 0.12),
+    -2px -2px 6px #ffffff;
+}
+
+.district-icon ion-icon {
+  font-size: 24px;
+  color: #1565a8;
+}
+
+.district-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.district-heading {
+  font-size: 11px;
+  font-weight: 600;
+  color: #7b8b9c;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+
+.district-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: #173f69;
+}
+
+.district-id {
+  font-size: 11px;
+  color: #8795a5;
+}
+
+.station-list-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 22px 4px 12px;
+}
+
+.station-list-heading ion-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: #173f69;
+}
+
+.station-list-heading span {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1565a8;
+  background: #eaf4fd;
+  padding: 5px 10px;
+  border-radius: 20px;
+}
+
+
+
+.district-context-banner {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #f0f7ff 0%, #e6f0fd 100%);
+  border: 1px solid #cce0ff;
+  border-left: 4px solid #2563eb;
+  border-radius: 12px;
+
+  .banner-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .banner-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .pin-icon {
+      font-size: 22px;
+      color: #2563eb;
+      background: #ffffff;
+      padding: 8px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.12);
+    }
+
+    .banner-eyebrow {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #64748b;
+    }
+
+    .banner-district-name {
+      margin: 2px 0 0;
+      font-size: 18px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+  }
+
+  .default-badge {
+    font-size: 11px;
+    font-weight: 600;
+    color: #1d4ed8;
+    background: #dbeafe;
+    border: 1px solid #bfdbfe;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .banner-helper-text {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin: 10px 0 0;
+    padding-top: 10px;
+    border-top: 1px dashed #cbd5e1;
+    font-size: 12px;
+    line-height: 1.4;
+    color: #475569;
+
+    ion-icon {
+      font-size: 15px;
+      color: #2563eb;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+  }
+}
+
+.station-list-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 2px 10px;
+
+  ion-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1e293b;
+  }
+
+  .count-pill {
+    font-size: 12px;
+    font-weight: 600;
+    color: #334155;
+    background: #f1f5f9;
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
 }
