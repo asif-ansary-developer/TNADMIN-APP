@@ -18,8 +18,10 @@ export class ViewStatusAdmin2Page implements OnInit {
   role;
   username;
   rr;
-  districtId;
-  districtName;
+
+  filtereditems: any;
+  searchTerm: string = '';
+  districtSearchRequestId = 0;
   modalState = false;
   public tickets: any = [];
   public all_tickets: any = [];
@@ -38,6 +40,16 @@ export class ViewStatusAdmin2Page implements OnInit {
   no_more_data = [false, false, false, false, false, false];
   tab = 'assigned_tickets';
   tab2 = 'HQ';
+
+  districtId: string = '2'; // Replace '1' with Chennai's exact district_id in your DB/DistrictSelectorPage
+  districtName: string = 'Chennai';
+
+  districtFilterModalOpen: boolean = false;
+  selectedDistrictStation: string = 'all';
+  districtDateFrom: string | null = null;
+  districtDateTo: string | null = null;
+  todayIso: string = moment().format('YYYY-MM-DD');
+  filtering_district_tickets: boolean = false;
 
   current_page = [1, 1, 1, 1, 1];
 
@@ -106,6 +118,10 @@ export class ViewStatusAdmin2Page implements OnInit {
     this.actRoute.queryParams.subscribe((params) => {
       this.tab = params['tab'];
       this.tab2 = params['tab2'] ? params['tab2'] : null;
+
+      if (this.tab === 'others_admin' && this.tab2 === 'district') {
+        this.initDefaultDistrict();
+      }
     });
 
     _router = this.router.events.subscribe((event) => {
@@ -119,6 +135,8 @@ export class ViewStatusAdmin2Page implements OnInit {
         this.previousUrl = event.url;
       }
     });
+
+
     // this.refreshSubscription = this.refreshHelper
     //   .refresh()
     //   .subscribe((needRefresh) => {
@@ -128,6 +146,20 @@ export class ViewStatusAdmin2Page implements OnInit {
     //       this.refreshHelper.needPageRefresh.next(false);
     //     }
     //   });
+  }
+
+  initDefaultDistrict() {
+    if (!this.districtId) {
+      this.districtId = '2'; // Match Chennai's district_id from DistrictSelectorPage
+      this.districtName = 'Chennai';
+    }
+
+    if (this.overall_tickets.length === 0) {
+      this.loading_overall_tickets = true;
+      this.no_more_data[4] = false;
+      this.current_page[4] = 1;
+      this.getOverallTickets(null, this.districtId);
+    }
   }
   closeModal() {
     this.router.navigateByUrl('/ticket-system');
@@ -164,6 +196,14 @@ export class ViewStatusAdmin2Page implements OnInit {
     this.current_page = [1, 1, 1, 1, 1, 1];
     this.resetFilters();
 
+
+    if (this.tab === 'others_admin' && this.tab2 === 'district') {
+      if (!this.districtId) {
+        this.districtId = '2';
+        this.districtName = 'Chennai';
+      }
+      this.loading_overall_tickets = true;
+    }
     this.loadMore(null);
   }
 
@@ -681,6 +721,49 @@ export class ViewStatusAdmin2Page implements OnInit {
     return null;
   }
 
+  // async presentDistrictSelector() {
+  //   if (!this.modalState) {
+  //     this.modalState = true;
+  //     const modal = await this.modalCtrl.create({
+  //       component: DistrictSelectorPage,
+  //       cssClass: 'station-li-popup',
+  //     });
+
+  //     this.loading_overall_tickets = true;
+  //     this.overall_tickets = [];
+  //     this.no_more_data[4] = false;
+  //     this.current_page[4] = 1;
+
+  //     modal.onDidDismiss().then((dataReturned) => {
+  //       if (dataReturned != null) {
+  //         if (
+  //           dataReturned['data'] != undefined &&
+  //           dataReturned['data'] != null
+  //         ) {
+  //           if (dataReturned['data']['district'].length != 0) {
+  //             this.districtId = dataReturned.data['district'][0]['district_id'];
+  //             this.districtName =
+  //               dataReturned.data['district'][0]['district_name'];
+  //             console.log(this.districtName, this.districtId);
+
+  //             this.loading_overall_tickets = true;
+  //             this.overall_tickets = [];
+  //             if (!this.searchTerm)
+  //               this.getOverallTickets(null, this.districtId);
+  //             else this.fetchSearchResults(this.searchTerm);
+  //           }
+  //         } else {
+  //           this.districtId = null;
+  //           this.districtName = null;
+  //         }
+  //       }
+  //       this.modalState = false;
+  //     });
+  //     return await modal.present().then(() => { });
+  //   }
+  // }
+
+
   async presentDistrictSelector() {
     if (!this.modalState) {
       this.modalState = true;
@@ -689,86 +772,107 @@ export class ViewStatusAdmin2Page implements OnInit {
         cssClass: 'station-li-popup',
       });
 
-      this.loading_overall_tickets = true;
-      this.overall_tickets = [];
-      this.no_more_data[4] = false;
-      this.current_page[4] = 1;
-
       modal.onDidDismiss().then((dataReturned) => {
-        if (dataReturned != null) {
-          if (
-            dataReturned['data'] != undefined &&
-            dataReturned['data'] != null
-          ) {
-            if (dataReturned['data']['district'].length != 0) {
-              this.districtId = dataReturned.data['district'][0]['district_id'];
-              this.districtName =
-                dataReturned.data['district'][0]['district_name'];
-              console.log(this.districtName, this.districtId);
+        if (
+          dataReturned?.data?.district &&
+          dataReturned.data.district.length !== 0
+        ) {
+          this.districtId = dataReturned.data.district[0].district_id;
+          this.districtName = dataReturned.data.district[0].district_name;
 
-              this.loading_overall_tickets = true;
-              this.overall_tickets = [];
-              if (!this.searchTerm)
-                this.getOverallTickets(null, this.districtId);
-              else this.fetchSearchResults(this.searchTerm);
-            }
+          // Reset station/date filters when switching to a new district
+          this.resetDistrictTabFilters();
+
+          this.loading_overall_tickets = true;
+          this.overall_tickets = [];
+          this.no_more_data[4] = false;
+          this.current_page[4] = 1;
+
+          if (!this.searchTerm || this.searchTerm.trim() === '') {
+            this.getOverallTickets(null, this.districtId);
           } else {
-            this.districtId = null;
-            this.districtName = null;
+            this.fetchSearchResults(this.searchTerm.trim());
           }
         }
         this.modalState = false;
       });
-      return await modal.present().then(() => { });
+
+      return await modal.present();
     }
   }
 
-  filtereditems: any;
-  searchTerm: string = '';
 
-  async filterItems(ev: any) {
-    this.searchTerm = ev.target.value;
-    console.log('searchterm', this.searchTerm);
-    if (this.searchTerm && this.searchTerm.trim() != '') {
-      console.log(this.searchTerm);
-      if (this.searchTerm.length > 0) {
-        this.fetchSearchResults(this.searchTerm.trim());
-      } else {
-        this.filtereditems = null;
-      }
+  filterItems(ev: any) {
+    const rawVal = ev?.detail?.value ?? ev?.target?.value ?? '';
+    this.searchTerm = String(rawVal).trim();
+
+    if (this.searchTerm.length >= 1) {
+      this.fetchSearchResults(this.searchTerm);
     } else {
-      this.filtereditems = null;
+      this.resetSearch();
     }
   }
 
   resetSearch() {
-    this.searchTerm = null;
+    this.searchTerm = '';
+    this.filtereditems = null;
+    this.districtSearchRequestId++;
+
+    if (!this.districtId) {
+      this.districtId = '1'; // Default Chennai ID
+      this.districtName = 'Chennai';
+    }
+
+    this.loading_overall_tickets = true;
+    this.overall_tickets = [];
+    this.no_more_data[4] = false;
+    this.current_page[4] = 1;
+    this.cdr.detectChanges();
+
     this.getOverallTickets(null, this.districtId);
   }
 
   fetchSearchResults(keyword: string) {
-    if (keyword) {
-      var param;
-      param = {
-        t_id: 'cwt' + keyword,
-        d_id: this.districtId,
-        role: this.role,
-      };
-
-      this.api.get_cw_tickets_by_id_search(param).subscribe(
-        (data) => {
-          if (this.searchTerm && this.searchTerm.trim() != '') {
-            this.overall_tickets = data;
-            this.loading_overall_tickets = false;
-          }
-        },
-        (error) => {
-          console.error('Error fetching search results', error);
-        }
-      );
-    } else {
-      this.authService.showToast('Please select a District');
+    if (!this.districtId) {
+      this.districtId = '1'; // Default Chennai ID
+      this.districtName = 'Chennai';
     }
+
+    const cleanKeyword = String(keyword).trim();
+    if (!cleanKeyword) {
+      this.resetSearch();
+      return;
+    }
+
+    const requestId = ++this.districtSearchRequestId;
+    this.loading_overall_tickets = true;
+    this.overall_tickets = [];
+    this.no_more_data[4] = true; // Prevent infinite scroll from mixing unfiltered pages into search results
+    this.cdr.detectChanges();
+
+    const param = {
+      t_id: 'cwt' + cleanKeyword,
+      d_id: this.districtId,
+      role: this.role,
+    };
+
+    this.api.get_cw_tickets_by_id_search(param).subscribe({
+      next: (data: any) => {
+        if (requestId !== this.districtSearchRequestId) return;
+
+        this.overall_tickets = Array.isArray(data) ? data : [];
+        this.loading_overall_tickets = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        if (requestId !== this.districtSearchRequestId) return;
+
+        console.error('Error fetching search results', error);
+        this.overall_tickets = [];
+        this.loading_overall_tickets = false;
+        this.cdr.detectChanges();
+      },
+    });
   }
 
 
@@ -903,9 +1007,9 @@ export class ViewStatusAdmin2Page implements OnInit {
     return Array.from(new Set(values)).sort((a, b) => a.localeCompare(b));
   }
 
-  onDistrictFilterChange() {
-    this.selectedTalukFilter = 'all';
-  }
+  // onDistrictFilterChange() {
+  //   this.selectedTalukFilter = 'all';
+  // }
 
   getProcessedTickets(sourceList: any[]): any[] {
     if (!Array.isArray(sourceList)) return [];
@@ -1038,4 +1142,149 @@ export class ViewStatusAdmin2Page implements OnInit {
     this.selectedRaiserFilter = 'all';
   }
 
+
+
+
+
+
+  get hasDistrictTabFilters(): boolean {
+    return (
+      this.selectedDistrictStation !== 'all' ||
+      !!this.districtDateFrom ||
+      !!this.districtDateTo
+    );
+  }
+
+  get districtTabFilterCount(): number {
+    let count = 0;
+    if (this.selectedDistrictStation !== 'all') count++;
+    if (this.districtDateFrom || this.districtDateTo) count++;
+    return count;
+  }
+
+  // Extract YYYY-MM-DD cleanly from any ISO datetime or DB string
+  private normalizeDateOnly(value: any): string | null {
+    if (!value) return null;
+    const str = String(value).trim();
+    // If ISO string like "2026-10-28T14:30:00+05:30" or "2026-10-28 18:25:11"
+    const isoMatch = str.match(/^(\d{4}-\d{2}-\d{2})/);
+    if (isoMatch) return isoMatch[1];
+
+    const parsed = moment(str, ['DD-MM-YYYY', 'YYYY/MM/DD', 'DD/MM/YYYY'], true);
+    return parsed.isValid() ? parsed.format('YYYY-MM-DD') : null;
+  }
+
+  getDistrictStationOptions(): string[] {
+    if (!Array.isArray(this.overall_tickets)) return [];
+    const stations = this.overall_tickets
+      .map((t) => (t.station_code ? String(t.station_code).trim() : ''))
+      .filter((s) => s !== '');
+    return Array.from(new Set(stations)).sort((a, b) => a.localeCompare(b));
+  }
+
+  getFilteredDistrictTickets(): any[] {
+    if (!Array.isArray(this.overall_tickets)) return [];
+
+    const fromStr = this.normalizeDateOnly(this.districtDateFrom);
+    const toStr = this.normalizeDateOnly(this.districtDateTo);
+
+    return this.overall_tickets.filter((ticket) => {
+      // 1. Station-wise filter
+      if (
+        this.selectedDistrictStation !== 'all' &&
+        (ticket.station_code || '').trim().toLowerCase() !==
+        this.selectedDistrictStation.toLowerCase()
+      ) {
+        return false;
+      }
+
+      // 2. Date-wise filter (compares pure YYYY-MM-DD strings: "2026-10-28")
+      if (fromStr || toStr) {
+        const rawDate = ticket.threads?.[0]?.date || ticket.timestamp;
+        const ticketDateStr = this.normalizeDateOnly(rawDate);
+
+        if (!ticketDateStr) return false;
+        if (fromStr && ticketDateStr < fromStr) return false;
+        if (toStr && ticketDateStr > toStr) return false;
+      }
+
+      return true;
+    });
+  }
+
+  // Triggered whenever Station, From Date, or To Date changes
+  async onDistrictFilterChange() {
+    this.filtering_district_tickets = true;
+    this.cdr.detectChanges();
+
+    // If a date/station filter is active and no matches are in the currently loaded page,
+    // keep fetching remaining pages for this district until matches are found or data ends
+    if (
+      this.districtId &&
+      this.hasDistrictTabFilters &&
+      this.getFilteredDistrictTickets().length === 0 &&
+      !this.no_more_data[4]
+    ) {
+      await this.fetchRemainingDistrictPages();
+    }
+
+    setTimeout(() => {
+      this.filtering_district_tickets = false;
+      this.cdr.detectChanges();
+    }, 250);
+  }
+
+  private fetchRemainingDistrictPages(): Promise<void> {
+    return new Promise((resolve) => {
+      const fetchNext = () => {
+        if (
+          this.no_more_data[4] ||
+          this.getFilteredDistrictTickets().length > 0
+        ) {
+          resolve();
+          return;
+        }
+
+        const params = {
+          d_id: this.districtId,
+          page: this.current_page[4],
+        };
+
+        const req$ =
+          this.role == 'ven_master'
+            ? this.api.get_cw_tickets_districtwise_ven(params)
+            : this.api.get_cw_tickets_districtwise(params);
+
+        req$.subscribe({
+          next: (data: any) => {
+            if (!Array.isArray(data) || data.length === 0) {
+              this.no_more_data[4] = true;
+              this.current_page[4] = 0;
+              resolve();
+              return;
+            }
+            this.overall_tickets = this.overall_tickets.concat(data);
+            this.current_page[4]++;
+            fetchNext();
+          },
+          error: () => resolve(),
+        });
+      };
+
+      fetchNext();
+    });
+  }
+
+  clearDistrictDates() {
+    this.districtDateFrom = null;
+    this.districtDateTo = null;
+    this.onDistrictFilterChange();
+  }
+
+  resetDistrictTabFilters() {
+    this.selectedDistrictStation = 'all';
+    this.districtDateFrom = null;
+    this.districtDateTo = null;
+    this.onDistrictFilterChange();
+  }
 }

@@ -143,6 +143,89 @@
     </ng-template>
   </ion-modal>
 
+
+  <ion-modal [isOpen]="districtFilterModalOpen" (didDismiss)="districtFilterModalOpen = false"
+    [initialBreakpoint]="0.62" [breakpoints]="[0, 0.62, 0.85]" mode="ios" cssClass="custom-filter-sheet">
+    <ng-template>
+      <ion-header class="ion-no-border">
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button color="danger" fill="clear" (click)="resetDistrictTabFilters()"
+              [disabled]="!hasDistrictTabFilters">
+              Reset
+            </ion-button>
+          </ion-buttons>
+          <ion-title>
+            Filter Tickets
+            <span *ngIf="districtTabFilterCount > 0" class="filter-count-pill">{{ districtTabFilterCount }}</span>
+          </ion-title>
+          <ion-buttons slot="end">
+            <ion-button strong="true" color="primary" (click)="districtFilterModalOpen = false">Done</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding-horizontal">
+        <ion-list lines="full" class="filter-list">
+          <!-- District Selector -->
+          <ion-item button detail="true" (click)="districtFilterModalOpen = false; presentDistrictSelector()">
+            <ion-label>District :</ion-label>
+            <ion-note slot="end" color="dark" style="font-weight: 500;">
+              {{ districtName || 'Select District' }}
+            </ion-note>
+          </ion-item>
+
+          <!-- Station-wise Filter -->
+          <ion-item>
+            <ion-label>Station Code :</ion-label>
+            <ion-select interface="action-sheet" [(ngModel)]="selectedDistrictStation"
+              (ionChange)="onDistrictFilterChange()" [disabled]="getDistrictStationOptions().length === 0">
+              <ion-select-option value="all">All Stations</ion-select-option>
+              <ion-select-option *ngFor="let st of getDistrictStationOptions()" [value]="st">
+                {{ st }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <!-- From Date -->
+          <ion-item>
+            <ion-label>From Date :</ion-label>
+            <ion-datetime-button datetime="districtFromDate"></ion-datetime-button>
+          </ion-item>
+
+          <!-- To Date -->
+          <ion-item lines="none">
+            <ion-label>To Date :</ion-label>
+            <ion-datetime-button datetime="districtToDate"></ion-datetime-button>
+          </ion-item>
+        </ion-list>
+
+        <!-- Date Popovers -->
+        <ion-popover [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime id="districtFromDate" presentation="date" [max]="districtDateTo || todayIso"
+              [(ngModel)]="districtDateFrom" (ionChange)="onDistrictFilterChange()">
+            </ion-datetime>
+          </ng-template>
+        </ion-popover>
+
+        <ion-popover [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime id="districtToDate" presentation="date" [min]="districtDateFrom" [max]="todayIso"
+              [(ngModel)]="districtDateTo" (ionChange)="onDistrictFilterChange()">
+            </ion-datetime>
+          </ng-template>
+        </ion-popover>
+
+        <div class="ion-padding-top">
+          <ion-button expand="block" shape="round" (click)="districtFilterModalOpen = false">
+            Show Tickets
+          </ion-button>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
   <!-- <ion-segment [(ngModel)]="tab" mode="ios">
     <ion-segment-button value="raised_tickets">
       <ion-label [ngClass]="tab=='raised_tickets'? 'segement-transition':''">My Tickets</ion-label>
@@ -368,7 +451,7 @@
 
 
 
-  <div *ngIf="tab=='others_admin' && tab2=='district'" class="container" style="position: fixed; width: calc(100% - 0px);z-index: 2;margin: 0;padding: 0 16px;background: #fff;box-shadow: rgb(0 0 0 / 12%) 0px 0px 10px;  outline: 1.2px #d7d7d7 solid;
+  <!-- <div *ngIf="tab=='others_admin' && tab2=='district'" class="container" style="position: fixed; width: calc(100% - 0px);z-index: 2;margin: 0;padding: 0 16px;background: #fff;box-shadow: rgb(0 0 0 / 12%) 0px 0px 10px;  outline: 1.2px #d7d7d7 solid;
   ">
     <ion-card style="padding: 16px 10px 16px 10px;">
 
@@ -493,7 +576,163 @@
         </ng-container>
       </ng-container>
     </ion-card>
-  </div>
+  </div> -->
+
+
+
+  <ng-container *ngIf="tab=='others_admin' && tab2=='district'">
+    <!-- Formal Sticky Search & Filter Header -->
+    <div class="district-filter-bar">
+      <div class="district-search-row">
+        <div class="cwt-search-box">
+          <span class="cwt-prefix">CWT</span>
+          <ion-searchbar id="search-bar" mode="ios" inputmode="numeric" show-clear-button="always"
+            (ionInput)="filterItems($event)" (ionClear)="resetSearch()" [(ngModel)]="searchTerm"
+            placeholder="{{'Search Ticket ID' | translate}}" debounce="250" #searchbar>
+          </ion-searchbar>
+        </div>
+
+        <ion-button fill="outline" size="small" class="toolbar-icon-btn"
+          [color]="hasDistrictTabFilters ? 'primary' : 'medium'" (click)="districtFilterModalOpen = true">
+          <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+          <span *ngIf="hasDistrictTabFilters" class="active-filter-dot"></span>
+        </ion-button>
+      </div>
+
+      <!-- Active Filter Summary Chips -->
+      <div class="active-chips-row">
+        <ion-chip outline color="primary" (click)="presentDistrictSelector()">
+          <ion-icon name="location-outline"></ion-icon>
+          <ion-label>{{ districtName || ('Select District' | translate) }}</ion-label>
+          <ion-icon name="chevron-down-outline"></ion-icon>
+        </ion-chip>
+
+        <ion-chip *ngIf="selectedDistrictStation !== 'all'" color="primary" (click)="selectedDistrictStation = 'all'">
+          <ion-label>Station: {{ selectedDistrictStation }}</ion-label>
+          <ion-icon name="close-circle"></ion-icon>
+        </ion-chip>
+
+        <ion-chip *ngIf="districtDateFrom || districtDateTo" color="primary" (click)="clearDistrictDates()">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <ion-label>
+            {{ districtDateFrom ? (_moment(districtDateFrom).format('DD MMM YYYY')) : 'Start' }}
+            –
+            {{ districtDateTo ? (_moment(districtDateTo).format('DD MMM YYYY')) : 'Today' }}
+          </ion-label>
+          <ion-icon name="close-circle"></ion-icon>
+        </ion-chip>
+      </div>
+    </div>
+
+    <!-- Ticket List -->
+    <div class="container district-list-container">
+      <!-- Loading State (Initial District Load OR Filter/Search Processing) -->
+      <div *ngIf="loading_overall_tickets || filtering_district_tickets">
+        <div class="ion-text-center ion-padding">
+          <ion-spinner name="crescent" color="primary"></ion-spinner>
+          <p style="margin-top: 8px; color: #64748b; font-size: 13px;">
+            {{ filtering_district_tickets ? 'Applying filters...' : 'Fetching district tickets...' }}
+          </p>
+        </div>
+        <div class="skeleton-container" style="margin: 8px 0 0 0;">
+          <div class="skeleton skeleton-card" style="height: 240px; margin-bottom: 16px;"></div>
+          <div class="skeleton skeleton-card" style="height: 240px; margin-bottom: 16px;"></div>
+        </div>
+      </div>
+
+      <!-- No Ticket Found Exception State -->
+      <ion-card class="ion-padding ion-text-center no-tickets-card"
+        *ngIf="!loading_overall_tickets && !filtering_district_tickets && getFilteredDistrictTickets().length === 0">
+        <ion-icon [name]="districtId ? 'document-text-outline' : 'location-outline'"
+          style="font-size: 36px; color: #94a3b8; margin-bottom: 8px;">
+        </ion-icon>
+        <h3 style="margin: 4px 0; font-size: 16px; font-weight: 600; color: #1e293b;">
+          {{ districtId ? 'No Tickets Found' : 'No District Selected' }}
+        </h3>
+        <p style="margin: 4px 0 12px; font-size: 13px; color: #64748b;">
+          <ng-container *ngIf="!districtId">
+            Select a district above to view its tickets.
+          </ng-container>
+          <ng-container *ngIf="districtId && (hasDistrictTabFilters || searchTerm)">
+            No tickets match the applied search or filter criteria in {{ districtName }}.
+          </ng-container>
+          <ng-container *ngIf="districtId && !hasDistrictTabFilters && !searchTerm">
+            There are no tickets recorded for {{ districtName }}.
+          </ng-container>
+        </p>
+        <ion-button *ngIf="hasDistrictTabFilters || searchTerm" size="small" fill="outline" color="primary"
+          (click)="resetDistrictTabFilters(); resetSearch()">
+          Clear All Filters
+        </ion-button>
+      </ion-card>
+
+      <!-- Ticket Cards (Hidden while loading/filtering) -->
+      <ng-container *ngIf="!loading_overall_tickets && !filtering_district_tickets">
+        <ion-card class="ion-padding ticket-card" *ngFor="let ticket of getFilteredDistrictTickets()"
+          (click)="openTicketResolverAction(ticket['t_id'])">
+          <ion-label class="ticket-card-label" style="font-family: monospace !important;">{{ticket['t_id']}}</ion-label>
+
+          <ion-label class="ticket-card-label" style="margin-top: 8px; font-size: 1.0rem;">
+            {{ticket['difficulty']}}
+          </ion-label>
+
+          <ion-button size="small" (click)="openTicketResolverAction(ticket['t_id'])" class="more-btn">
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </ion-button>
+
+          <p class="ticket-card-p" style="margin-top: 6px auto">Raiser : {{ticket['ticket_owner'] | translate}}</p>
+          <p class="ticket-card-p" style="margin-top: 6px auto">Station : {{ticket['station_code'] | translate}}</p>
+
+          <ng-container *ngIf="ticket['threads'][ticket['threads']?.length-1]['status']==100">
+            <ion-row class="closed-row">
+              <ion-col><ion-icon name="ellipse"></ion-icon></ion-col>
+              <ion-col>
+                <ion-label>{{ticket['threads'][ticket['threads']?.length-1]['text']}}
+                  <span class="timestamp">
+                    {{_moment(ticket['threads'][ticket['threads']?.length-1]['date']).format('DD-MM-yyyy')}}
+                    {{ticket['threads'][ticket['threads']?.length-1]['time']}}
+                  </span>
+                </ion-label>
+              </ion-col>
+            </ion-row>
+          </ng-container>
+
+          <ng-container *ngIf="ticket['threads'][ticket['threads']?.length-1]['status']!=100">
+            <ng-container *ngFor="let tic of ticket['threads']">
+              <ng-container
+                *ngIf="tic['status']==0 || tic['status']==1 || tic['status']==3 || tic['status']==50 || tic['status']==48 || tic['status']==49 || tic['status']==88">
+                <ion-row>
+                  <ion-col><ion-icon name="ellipse" [ngClass]="tic['status']==2?'on-progress':''"></ion-icon></ion-col>
+                  <ion-col>
+                    <ion-label *ngIf="tic['status']==0">Ticket raised
+                      <span class="timestamp">{{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                    </ion-label>
+                    <ion-label *ngIf="tic['status']!=0">{{tic['text']}}
+                      <span class="timestamp">{{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                    </ion-label>
+                    <div class="vert-line"></div>
+                  </ion-col>
+                </ion-row>
+              </ng-container>
+
+              <ng-container *ngIf="tic['status']==2 && ticket['threads'].length == 3">
+                <ion-row>
+                  <ion-col><ion-icon name="ellipse" [ngClass]="tic['status']==2?'on-progress':''"></ion-icon></ion-col>
+                  <ion-col>
+                    <ion-label>Yet to be Addressed
+                      <span class="timestamp">{{_moment(tic['date']).format('DD-MM-yyyy')}} {{tic['time']}}</span>
+                    </ion-label>
+                    <div class="vert-line"></div>
+                  </ion-col>
+                </ion-row>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ion-card>
+      </ng-container>
+    </div>
+  </ng-container>
+
 
 
   <div class="container" *ngIf="tab=='others_admin'" style="display: none;">
