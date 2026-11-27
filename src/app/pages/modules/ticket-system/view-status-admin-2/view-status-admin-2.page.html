@@ -13,22 +13,18 @@
   </ion-toolbar>
 
 
-  <!-- <ion-toolbar
-    *ngIf="tab=='vendor_payment_tickets' || tab=='assigned_tickets' || tab=='unassigned_tickets' || tab=='raised_tickets'"
-    class="payment-search-toolbar">
-    <ion-card class="payment-search-wrapper">
-      <ion-searchbar class="payment-searchbar-direct" placeholder="Search by Ticket ID, Station Code, or Issue"
-        [value]="activeSearchTerm" (ionInput)="onTabSearch($event)" [debounce]="500" show-clear-button="always">
-      </ion-searchbar>
-    </ion-card>
-  </ion-toolbar> -->
+
 
   <ion-toolbar
     *ngIf="tab=='vendor_payment_tickets' || tab=='assigned_tickets' || tab=='unassigned_tickets' || tab=='raised_tickets'"
     class="payment-search-toolbar">
     <div class="search-action-row">
-      <ion-card class="payment-search-wrapper">
-        <ion-searchbar class="payment-searchbar-direct" mode="ios" placeholder="Search ID, Station, or Issue"
+      <ion-card class="payment-search-wrapper" style="display: flex; align-items: center;">
+        <span class="cwt-prefix" *ngIf="showMainCwtPrefix"
+          style="padding: 0 8px 0 12px; font-weight: 600; color: #475569; font-size: 13px;">
+          CWT
+        </span>
+        <ion-searchbar class="payment-searchbar-direct" mode="ios" placeholder="ID (e.g. 1045), Station, or Issue"
           [value]="activeSearchTerm" (ionInput)="onTabSearch($event)" [debounce]="500" show-clear-button="always">
         </ion-searchbar>
       </ion-card>
@@ -41,10 +37,10 @@
       </ion-button>
 
       <!-- Sort Button (Right End) -->
-      <ion-button fill="outline" size="small" class="toolbar-icon-btn"
+      <!-- <ion-button fill="outline" size="small" class="toolbar-icon-btn"
         [color]="sortOrder !== 'newest' ? 'primary' : 'medium'" (click)="openSortOptions()">
         <ion-icon slot="icon-only" name="swap-vertical-outline"></ion-icon>
-      </ion-button>
+      </ion-button> -->
     </div>
   </ion-toolbar>
 
@@ -132,7 +128,7 @@
             </ion-select>
           </ion-item>
 
-          <ion-item lines="none">
+          <!-- <ion-item lines="none">
             <ion-label>Raiser Name :</ion-label>
             <ion-select interface="action-sheet" [(ngModel)]="selectedRaiserFilter">
               <ion-select-option value="all">All Raisers</ion-select-option>
@@ -140,7 +136,7 @@
                 {{ raiser }}
               </ion-select-option>
             </ion-select>
-          </ion-item>
+          </ion-item> -->
 
 
           <!-- From Date -->

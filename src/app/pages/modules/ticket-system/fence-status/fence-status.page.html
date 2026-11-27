@@ -1,10 +1,4 @@
-<!---------------------------
-Name: tnsmart
------------------------------
-Author: Mohammed Rizwan S
-Data:   10/2/2024
----------------------------->
-
+<!-- 
 <ion-header class="ion-no-border ion-text-center">
   <ion-toolbar mode="ios">
     <ion-title>{{"Station Info"| translate}}</ion-title>
@@ -38,16 +32,11 @@ Data:   10/2/2024
       </ion-select-option>
     </ion-select>
 
-    <!-- 
-    <ion-input label="{{ 'ARG Station' | translate}}" class="ip-cursor" label-placement="stacked" fill="outline"
-      placeholder="Select station" #stationCtrl="ngModel" [(ngModel)]="stationCode" required
-      errorText="*Please select a station" (click)="presentModal()" readonly clickable mode="md">
-      <ion-icon slot="end" name="caret-down-outline" aria-hidden="true"
-        style="width: 14px; color: grey"></ion-icon></ion-input> -->
+    
   </ion-card>
 
   <ion-card class="ion-padding ticket-card" *ngFor="let station of selected_station">
-    <!-- <ion-card class="ion-padding ticket-card" *ngFor="let station of stations"> -->
+   
     <ion-grid>
       <ion-row style="background: #3b93ed7a">
         <ion-col> <ion-label>{{"Station code"}} :</ion-label></ion-col>
@@ -98,4 +87,124 @@ Data:   10/2/2024
       </ion-row>
     </ion-grid>
   </ion-card>
+</ion-content> -->
+
+
+
+
+
+
+
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="ios" class="clean-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button mode="ios" defaultHref="/ticket-system" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'Station Info' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="clean-page-bg ion-padding">
+  <!-- Standard Flat Selection Card -->
+  <div class="selection-card">
+    <div class="select-group">
+      <ion-select label="{{ 'District' | translate }}" label-placement="stacked" fill="outline"
+        placeholder="Select district" #districtCtrl="ngModel" [(ngModel)]="district_id"
+        (ionChange)="getStationsByDistrict()" required interface="action-sheet">
+        <ion-select-option *ngFor="let dis of districts_data" [value]="dis.district_id">
+          {{ lang == 'ta' && dis.t_district_name ? dis.t_district_name : dis.district_name }}
+        </ion-select-option>
+      </ion-select>
+    </div>
+
+    <div class="select-group">
+      <ion-select label="{{ 'Station' | translate }}" label-placement="stacked" fill="outline"
+        placeholder="Select station" #stationCtrl="ngModel" [(ngModel)]="stationCode" required
+        (ionChange)="setSelectedStation()" interface="action-sheet">
+        <ion-select-option *ngFor="let stat of stations" [value]="stat.station_code">
+          {{ stat.station_code }} - {{ lang == 'ta' && stat.location_name_ta ? stat.location_name_ta :
+          stat.location_name }}
+        </ion-select-option>
+      </ion-select>
+    </div>
+  </div>
+
+  <!-- ONLY This Card Gets the Glassmorphic Outward-Bulge Effect -->
+  <div class="station-card" *ngFor="let station of selected_station">
+    <!-- Top Banner -->
+    <div class="station-banner">
+      <div class="banner-top">
+        <span class="station-code">{{ station.station_code }}</span>
+        <span class="arg-badge">{{ station.arg_code }}</span>
+      </div>
+      <div class="station-location">
+        {{ lang == 'ta' && station.location_name_ta ? station.location_name_ta : station.location_name }},
+        {{ lang == 'ta' && station.district_name_ta ? station.district_name_ta : station.district_name }}
+      </div>
+      <div class="station-type-pill">
+        <ion-icon name="rainy-outline"></ion-icon>
+        <span>{{ getStationType(station) }}</span>
+      </div>
+    </div>
+
+    <!-- Administrative Hierarchy -->
+    <div class="details-body">
+      <div class="section-heading">{{ 'Details :-' | translate }}</div>
+
+      <div class="info-grid-2col">
+        <div class="info-box">
+          <span class="info-label">{{ 'District' | translate }}</span>
+          <span class="info-value">
+            {{ lang == 'ta' && station.district_name_ta ? station.district_name_ta : station.district_name }}
+          </span>
+        </div>
+
+        <div class="info-box">
+          <span class="info-label">{{ 'Taluk' | translate }}</span>
+          <span class="info-value">
+            {{ lang == 'ta' && station.taluk_name_ta ? station.taluk_name_ta : station.taluk_name }}
+          </span>
+        </div>
+
+        <div class="info-box">
+          <span class="info-label">{{ 'Block' | translate }}</span>
+          <span class="info-value">
+            {{ lang == 'ta' && station.block_name_ta ? station.block_name_ta : station.block_name }}
+          </span>
+        </div>
+
+        <div class="info-box">
+          <span class="info-label">{{ 'Firka' | translate }}</span>
+          <span class="info-value">
+            {{ lang == 'ta' && station.firka_name_ta ? station.firka_name_ta : station.firka_name }}
+          </span>
+        </div>
+
+        <div class="info-box">
+          <span class="info-label">{{ 'Location' | translate }}</span>
+          <span class="info-value">
+            {{ lang == 'ta' && station.location_name_ta ? station.location_name_ta : station.location_name }}
+          </span>
+        </div>
+
+        <div class="info-box" *ngIf="station.source">
+          <span class="info-label">{{ 'Managed By' | translate }}</span>
+          <span class="info-value agency-tag">{{ station.source }}</span>
+        </div>
+      </div>
+
+      <!-- Bottom GPS Footer -->
+      <div class="gps-box">
+        <div class="gps-text">
+          <span class="info-label">{{ 'GPS Coordinates' | translate }}</span>
+          <span class="gps-coords">{{ station.latitude }}, {{ station.longitude }}</span>
+        </div>
+
+        <div class="map-chip" (click)="openInMaps(station.latitude, station.longitude)">
+          <ion-icon name="navigate-outline"></ion-icon>
+          <span>{{ 'View Map' | translate }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </ion-content>

@@ -44,6 +44,7 @@ export class ViewStatusAdmin2Page implements OnInit {
   tab2 = 'HQ';
   prefetching_pages: boolean = false;
 
+
   loading_filter_options: boolean = false;
   districtId: string = '2'; // Replace '1' with Chennai's exact district_id in your DB/DistrictSelectorPage
   districtName: string = 'Chennai';
@@ -224,71 +225,7 @@ export class ViewStatusAdmin2Page implements OnInit {
     }, 500);
   }
 
-  // getRaisedTickets(event) {
-  //   if (this.no_more_data[0]) {
-  //     this.clearEvent(event);
-  //     return;
-  //   }
 
-  //   var params;
-  //   if ((this.role = '1'))
-  //     params = {
-  //       v_id: this.username,
-  //       page: this.current_page[0],
-  //       type: '0',
-  //     };
-  //   else
-  //     params = {
-  //       v_id: this.username,
-  //       page: this.current_page[0],
-  //     };
-
-  //   this.api.get_cw_tickets_by_raiser_id(params).subscribe((data: any) => {
-  //     if (data.length === 0 && !this.loading_raised_tickets) {
-  //       this.no_more_data[0] = true;
-  //       this.current_page[0] = 0;
-
-  //       this.clearEvent(event);
-  //       return;
-  //     }
-
-  //     this.raised_tickets = this.raised_tickets.concat(data);
-  //     this.loading_raised_tickets = false;
-  //     console.log('raised_tickets are..', this.raised_tickets);
-  //     this.current_page[0]++;
-  //     this.clearEvent(event);
-  //   });
-  // }
-
-  // getTickets(event) {
-  //   if (this.no_more_data[1]) {
-  //     this.clearEvent(event);
-  //     return;
-  //   }
-
-  //   let params = {
-  //     r_id: this.username,
-  //     page: this.current_page[1],
-  //   };
-
-  //   this.api.get_cw_tickets_by_resolver_id(params).subscribe((data: any) => {
-  //     if (data.length === 0 && !this.loading_tickets) {
-  //       this.no_more_data[1] = true;
-  //       this.current_page[1] = 0;
-
-  //       this.clearEvent(event);
-  //       return;
-  //     }
-
-  //     this.tickets = this.tickets.concat(data);
-  //     this.loading_tickets = false;
-  //     console.log('tickets are..', this.tickets);
-
-  //     this.current_page[1]++;
-
-  //     this.clearEvent(event);
-  //   });
-  // }
 
   getRaisedTickets(event) {
     if (this.no_more_data[0]) {
@@ -315,7 +252,7 @@ export class ViewStatusAdmin2Page implements OnInit {
       params.type = '0';
     }
 
-    const keyword = this.raisedSearchTerm?.trim();
+    const keyword = this.formatSearchParam(this.raisedSearchTerm);
     if (keyword) {
       params.search = keyword;
     }
@@ -342,9 +279,12 @@ export class ViewStatusAdmin2Page implements OnInit {
           this.current_page[0]++;
           this.clearEvent(event);
 
-          if (this.current_page[0] === 2) {
+          const isIdSearch = /^cwt\d+$/i.test(keyword);
+          if (this.current_page[0] === 2 && keyword && !isIdSearch) {
             this.prefetchRemainingPagesInBackground();
           }
+
+
         },
         (error) => {
           if (requestId === this.raisedSearchRequestId) {
@@ -394,7 +334,7 @@ export class ViewStatusAdmin2Page implements OnInit {
       page: this.current_page[1],
     };
 
-    const keyword = this.assignedSearchTerm?.trim();
+    const keyword = this.formatSearchParam(this.assignedSearchTerm);
     if (keyword) {
       params.search = keyword;
     }
@@ -421,7 +361,8 @@ export class ViewStatusAdmin2Page implements OnInit {
           this.current_page[1]++;
           this.clearEvent(event);
 
-          if (this.current_page[1] === 2) {
+          const isIdSearch = /^cwt\d+$/i.test(keyword);
+          if (this.current_page[1] === 2 && keyword && !isIdSearch) {
             this.prefetchRemainingPagesInBackground();
           }
         },
@@ -502,7 +443,7 @@ export class ViewStatusAdmin2Page implements OnInit {
       page: this.current_page[2],
     };
 
-    const keyword = this.unassignedSearchTerm?.trim();
+    const keyword = this.formatSearchParam(this.unassignedSearchTerm);
     if (keyword) {
       params.search = keyword;
     }
@@ -529,7 +470,8 @@ export class ViewStatusAdmin2Page implements OnInit {
           this.current_page[2]++;
           this.clearEvent(event);
 
-          if (this.current_page[2] === 2) {
+          const isIdSearch = /^cwt\d+$/i.test(keyword);
+          if (this.current_page[2] === 2 && keyword && !isIdSearch) {
             this.prefetchRemainingPagesInBackground();
           }
         },
@@ -692,7 +634,7 @@ export class ViewStatusAdmin2Page implements OnInit {
       r_id: this.username,
     };
 
-    const keyword = this.paymentSearchTerm?.trim();
+    const keyword = this.formatSearchParam(this.paymentSearchTerm);
     if (keyword) {
       params.search = keyword;
     }
@@ -719,7 +661,8 @@ export class ViewStatusAdmin2Page implements OnInit {
           this.current_page[5]++;
           this.clearEvent(event);
 
-          if (this.current_page[5] === 2) {
+          const isIdSearch = /^cwt\d+$/i.test(keyword);
+          if (this.current_page[5] === 2 && keyword && !isIdSearch) {
             this.prefetchRemainingPagesInBackground();
           }
         },
@@ -896,48 +839,48 @@ export class ViewStatusAdmin2Page implements OnInit {
     this.getOverallTickets(null, this.districtId);
   }
 
-  fetchSearchResults(keyword: string) {
-    if (!this.districtId) {
-      this.districtId = '1'; // Default Chennai ID
-      this.districtName = 'Chennai';
-    }
+  // fetchSearchResults(keyword: string) {
+  //   if (!this.districtId) {
+  //     this.districtId = '1'; // Default Chennai ID
+  //     this.districtName = 'Chennai';
+  //   }
 
-    const cleanKeyword = String(keyword).trim();
-    if (!cleanKeyword) {
-      this.resetSearch();
-      return;
-    }
+  //   const cleanKeyword = String(keyword).trim();
+  //   if (!cleanKeyword) {
+  //     this.resetSearch();
+  //     return;
+  //   }
 
-    const requestId = ++this.districtSearchRequestId;
-    this.loading_overall_tickets = true;
-    this.overall_tickets = [];
-    this.no_more_data[4] = true; // Prevent infinite scroll from mixing unfiltered pages into search results
-    this.cdr.detectChanges();
+  //   const requestId = ++this.districtSearchRequestId;
+  //   this.loading_overall_tickets = true;
+  //   this.overall_tickets = [];
+  //   this.no_more_data[4] = true; // Prevent infinite scroll from mixing unfiltered pages into search results
+  //   this.cdr.detectChanges();
 
-    const param = {
-      t_id: 'cwt' + cleanKeyword,
-      d_id: this.districtId,
-      role: this.role,
-    };
+  //   const param = {
+  //     t_id: 'cwt' + cleanKeyword,
+  //     d_id: this.districtId,
+  //     role: this.role,
+  //   };
 
-    this.api.get_cw_tickets_by_id_search(param).subscribe({
-      next: (data: any) => {
-        if (requestId !== this.districtSearchRequestId) return;
+  //   this.api.get_cw_tickets_by_id_search(param).subscribe({
+  //     next: (data: any) => {
+  //       if (requestId !== this.districtSearchRequestId) return;
 
-        this.overall_tickets = Array.isArray(data) ? data : [];
-        this.loading_overall_tickets = false;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        if (requestId !== this.districtSearchRequestId) return;
+  //       this.overall_tickets = Array.isArray(data) ? data : [];
+  //       this.loading_overall_tickets = false;
+  //       this.cdr.detectChanges();
+  //     },
+  //     error: (error) => {
+  //       if (requestId !== this.districtSearchRequestId) return;
 
-        console.error('Error fetching search results', error);
-        this.overall_tickets = [];
-        this.loading_overall_tickets = false;
-        this.cdr.detectChanges();
-      },
-    });
-  }
+  //       console.error('Error fetching search results', error);
+  //       this.overall_tickets = [];
+  //       this.loading_overall_tickets = false;
+  //       this.cdr.detectChanges();
+  //     },
+  //   });
+  // }
 
 
   filterPaymentTickets(ev: any) {
@@ -1273,6 +1216,12 @@ export class ViewStatusAdmin2Page implements OnInit {
     const toStr = this.normalizeDateOnly(this.districtDateTo);
 
     return this.overall_tickets.filter((ticket) => {
+
+
+      if (this.searchTerm && !this.matchesStrictSearch(ticket, this.searchTerm)) {
+        return false;
+      }
+
       // 1. Station-wise filter
       if (
         this.selectedDistrictStation !== 'all' &&
@@ -1686,15 +1635,15 @@ export class ViewStatusAdmin2Page implements OnInit {
     );
   }
 
-  openFilterModal() {
-    this.filterModalOpen = true;
-  }
+  // openFilterModal() {
+  //   this.filterModalOpen = true;
+  // }
 
   async openSortOptions() {
-    if (this.isTabDataLoading) {
-      this.authService.showToast('Please wait, tickets are still loading...');
-      return;
-    }
+    // if (this.isTabDataLoading) {
+    //   this.authService.showToast('Please wait, tickets are still loading...');
+    //   return;
+    // }
 
     const actionSheet = await this.actionSheetCtrl.create({
       header: 'Sort Tickets By',
@@ -1881,8 +1830,17 @@ export class ViewStatusAdmin2Page implements OnInit {
 
     const fromStr = this.normalizeDateOnly(this.selectedFromDate);
     const toStr = this.normalizeDateOnly(this.selectedToDate);
+    const currentSearch = this.activeSearchTerm;
+
+
+
 
     const filtered = sourceList.filter((ticket) => {
+
+
+      if (currentSearch && !this.matchesStrictSearch(ticket, currentSearch)) {
+        return false;
+      }
       // 1. District Filter
       if (
         this.selectedDistrictFilter !== 'all' &&
@@ -2083,5 +2041,107 @@ export class ViewStatusAdmin2Page implements OnInit {
     return ticket.timestamp
       ? new Date(String(ticket.timestamp).replace(' ', 'T')).getTime()
       : 0;
+  }
+
+  private matchesStrictSearch(ticket: any, rawQuery: string): boolean {
+    const query = (rawQuery || '').trim().toLowerCase();
+    if (!query) return true;
+
+    const ticketId = String(ticket?.t_id || '').trim().toLowerCase();
+    const numericId = String(ticket?.id || '').trim().toLowerCase();
+    const stationCode = String(ticket?.station_code || '').trim().toLowerCase();
+    const issue = String(ticket?.difficulty || '').trim().toLowerCase();
+
+    // 1. Ticket ID Search (e.g., "CWT1234" or numeric "1234")
+    if (query.startsWith('cwt') || /^\d+$/.test(query)) {
+      const strippedQuery = query.replace(/^cwt/, '');
+      const strippedTicketId = ticketId.replace(/^cwt/, '');
+      return (
+        ticketId === query ||
+        strippedTicketId === strippedQuery ||
+        numericId === strippedQuery
+      );
+    }
+
+    // 2. Station Code Search (alphanumeric code without spaces, e.g., "TLRAVAAVA1" or "TLRAVA")
+    if (/^[a-z0-9_-]+$/i.test(query) && /\d/.test(query)) {
+      return stationCode === query || stationCode.startsWith(query);
+    }
+
+    // 3. Issue Type (difficulty) Search (e.g., "Battery", "Sensor")
+    return issue.includes(query);
+  }
+
+  fetchSearchResults(keyword: string) {
+    if (!this.districtId) {
+      this.districtId = '2';
+      this.districtName = 'Chennai';
+    }
+
+    const cleanKeyword = String(keyword).trim();
+    if (!cleanKeyword) {
+      this.resetSearch();
+      return;
+    }
+
+    const isIdQuery = /^cwt/i.test(cleanKeyword) || /^\d+$/.test(cleanKeyword);
+    const requestId = ++this.districtSearchRequestId;
+    this.loading_overall_tickets = true;
+    this.overall_tickets = [];
+    this.cdr.detectChanges();
+
+    if (isIdQuery) {
+      this.no_more_data[4] = true;
+      const numericPart = cleanKeyword.replace(/^cwt/i, '');
+      const param = {
+        t_id: 'cwt' + numericPart,
+        d_id: this.districtId,
+        role: this.role,
+      };
+
+      this.api.get_cw_tickets_by_id_search(param).subscribe({
+        next: (data: any) => {
+          if (requestId !== this.districtSearchRequestId) return;
+          this.overall_tickets = Array.isArray(data) ? data : [];
+          this.loading_overall_tickets = false;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          if (requestId !== this.districtSearchRequestId) return;
+          this.overall_tickets = [];
+          this.loading_overall_tickets = false;
+          this.cdr.detectChanges();
+        },
+      });
+    } else {
+      this.no_more_data[4] = false;
+      this.current_page[4] = 1;
+      this.fetchRemainingDistrictPages().then(() => {
+        if (requestId !== this.districtSearchRequestId) return;
+        this.loading_overall_tickets = false;
+        this.cdr.detectChanges();
+      });
+    }
+  }
+
+  private formatSearchParam(rawQuery: string): string {
+    const q = (rawQuery || '').trim();
+    if (!q) return '';
+    // If user entered only digits (skipping "CWT"), prepend "CWT" for the API
+    if (/^\d+$/.test(q)) {
+      return 'CWT' + q;
+    }
+    return q;
+  }
+
+  get showMainCwtPrefix(): boolean {
+    const q = (this.activeSearchTerm || '').trim();
+    return !q || /^\d+$/.test(q);
+  }
+  openFilterModal() {
+    this.filterModalOpen = true;
+    if (!this.isCurrentTabFullyLoaded()) {
+      this.prefetchRemainingPagesInBackground();
+    }
   }
 }

@@ -86,7 +86,33 @@ export class FenceStatusPage implements OnInit {
         }
         this.modalState = false;
       });
-      return await modal.present().then(() => {});
+      return await modal.present().then(() => { });
+    }
+  }
+
+  // Add inside FenceStatusPage class
+
+  getStationType(station: any): string {
+    if (station?.type) {
+      return station.type.toUpperCase();
+    }
+    const code = (station?.arg_code || '').toUpperCase();
+    if (code.startsWith('ARG')) {
+      return this.lang === 'ta'
+        ? 'ARG (தானியங்கி மழைமானி)'
+        : 'ARG (Automatic Rain Gauge)';
+    }
+    if (code.startsWith('AWS')) {
+      return this.lang === 'ta'
+        ? 'AWS (தானியங்கி வானிலை நிலையம்)'
+        : 'AWS (Automatic Weather Station)';
+    }
+    return 'N/A';
+  }
+
+  openInMaps(lat: string, lng: string) {
+    if (lat && lng) {
+      window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
     }
   }
 }
