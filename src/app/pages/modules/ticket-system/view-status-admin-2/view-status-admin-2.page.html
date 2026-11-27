@@ -35,7 +35,7 @@
 
       <!-- Filter Button (Right End) -->
       <ion-button fill="outline" size="small" class="toolbar-icon-btn" [color]="hasActiveFilters ? 'primary' : 'medium'"
-        (click)="filterModalOpen = true">
+        (click)="openFilterModal()">
         <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
         <span *ngIf="hasActiveFilters" class="active-filter-dot"></span>
       </ion-button>
@@ -79,9 +79,20 @@
         </ion-toolbar>
       </ion-header>
 
+
+
+
       <ion-content class="ion-padding-horizontal">
+
+        <!-- <div *ngIf="prefetching_pages"
+          style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 8px 0; color: #64748b; font-size: 12px;">
+          <ion-spinner name="dots" color="primary" style="width: 18px; height: 18px;"></ion-spinner>
+          <span>Syncing remaining filter options...</span>
+        </div> -->
+
+
         <ion-list lines="full" class="filter-list">
-          <ion-item>
+          <!-- <ion-item>
             <ion-label>Status :</ion-label>
             <ion-select interface="action-sheet" [(ngModel)]="selectedStatusFilter">
               <ion-select-option value="all">All Status</ion-select-option>
@@ -89,17 +100,16 @@
                 {{ status }}
               </ion-select-option>
             </ion-select>
-          </ion-item>
+          </ion-item> -->
 
-          <ion-item>
+
+
+          <!-- Opens your full DistrictSelectorPage master list -->
+          <ion-item button detail="true" (click)="openFilterDistrictSelector()">
             <ion-label>District :</ion-label>
-            <ion-select interface="action-sheet" [(ngModel)]="selectedDistrictFilter"
-              (ionChange)="onDistrictFilterChange()">
-              <ion-select-option value="all">All Districts</ion-select-option>
-              <ion-select-option *ngFor="let dist of getUniqueOptions('district')" [value]="dist">
-                {{ dist }}
-              </ion-select-option>
-            </ion-select>
+            <ion-note slot="end" color="dark" style="font-weight: 500;">
+              {{ selectedDistrictFilter === 'all' ? 'All Districts' : selectedDistrictFilter }}
+            </ion-note>
           </ion-item>
 
           <ion-item>
@@ -131,11 +141,54 @@
               </ion-select-option>
             </ion-select>
           </ion-item>
+
+
+          <!-- From Date -->
+          <ion-item>
+            <ion-label>From Date :</ion-label>
+            <ion-datetime-button datetime="mainTabFromDate"></ion-datetime-button>
+          </ion-item>
+
+          <!-- To Date -->
+          <!-- To Date -->
+          <ion-item>
+            <ion-label>To Date :</ion-label>
+            <ion-datetime-button datetime="mainTabToDate"></ion-datetime-button>
+          </ion-item>
+
+          <!-- Date Sort Order -->
+          <ion-item lines="none" *ngIf="selectedFromDate || selectedToDate">
+            <ion-label>Date Order :</ion-label>
+            <ion-select interface="action-sheet" [(ngModel)]="sortOrder">
+              <ion-select-option value="newest">Descending (Newest First)</ion-select-option>
+              <ion-select-option value="oldest">Ascending (Oldest First)</ion-select-option>
+            </ion-select>
+          </ion-item>
         </ion-list>
+
+
+        <!-- Date Popovers (Isolated IDs for Main Tabs) -->
+        <ion-popover [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime id="mainTabFromDate" presentation="date" [value]="selectedFromDate"
+              [max]="selectedToDate || undefined" (ionChange)="onMainFromDateChange($event)">
+            </ion-datetime>
+          </ng-template>
+        </ion-popover>
+
+        <ion-popover [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime id="mainTabToDate" presentation="date" [value]="selectedToDate"
+              [min]="selectedFromDate || undefined" (ionChange)="onMainToDateChange($event)">
+            </ion-datetime>
+          </ng-template>
+        </ion-popover>
+
 
         <div class="ion-padding-top">
           <ion-button expand="block" shape="round" (click)="filterModalOpen = false">
-            {{ activeFilterCount > 0 ? 'Apply ' + activeFilterCount + (activeFilterCount === 1 ? ' Filter' : ' Filters')
+            {{ activeFilterCount > 0 ? 'Apply ' + activeFilterCount + (activeFilterCount === 1 ? ' Filter' : '
+            Filters')
             : 'Show All Tickets' }}
           </ion-button>
         </div>
@@ -592,6 +645,8 @@
           </ion-searchbar>
         </div>
 
+
+        <!-- Filter Button (Right End) -->
         <ion-button fill="outline" size="small" class="toolbar-icon-btn"
           [color]="hasDistrictTabFilters ? 'primary' : 'medium'" (click)="districtFilterModalOpen = true">
           <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
@@ -1159,7 +1214,7 @@
 
   </div>
 
-  <ion-infinite-scroll (ionInfinite)="loadMore($event)">
+  <ion-infinite-scroll [disabled]="isInfiniteScrollDisabled" (ionInfinite)="loadMore($event)">
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>

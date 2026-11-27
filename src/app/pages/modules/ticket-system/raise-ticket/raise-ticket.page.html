@@ -114,7 +114,7 @@
 
 
     <!-- Attach images -->
-    <ion-input label="{{ 'Attach Image' | translate }} (Max 3 images)" label-placement="stacked" fill="outline"
+    <!-- <ion-input label="{{ 'Attach Image' | translate }} (Max 3 images)" label-placement="stacked" fill="outline"
       class="attach-input" readonly mode="md">
 
       <ion-button slot="start" size="small" fill="outline" style="width: 50px; margin-top: 20px"
@@ -128,7 +128,26 @@
       </ion-text>
     </ion-input>
 
-    <!-- Hidden multiple image picker -->
+    
+    <input #imageInput type="file" accept="image/*" multiple hidden (change)="onImagesSelected($event)" /> -->
+
+
+
+    <!-- Attach images -->
+    <ion-input label="{{ 'Attach Image' | translate }} (Max 3 images)" label-placement="stacked" fill="outline"
+      class="attach-input" readonly mode="md">
+
+      <ion-button slot="start" size="small" fill="outline" style="width: 50px; margin-top: 20px" (click)="getPhoto()"
+        [disabled]="images.length >= 3">
+        <ion-icon name="attach-outline" size="large"></ion-icon>
+      </ion-button>
+
+      <ion-text slot="end" color="medium">
+        {{ images.length }}/3
+      </ion-text>
+    </ion-input>
+
+    <!-- Hidden multiple image picker (used by Gallery option) -->
     <input #imageInput type="file" accept="image/*" multiple hidden (change)="onImagesSelected($event)" />
 
     <!-- Selected image thumbnails -->

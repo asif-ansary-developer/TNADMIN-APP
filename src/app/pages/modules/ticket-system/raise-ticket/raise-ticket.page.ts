@@ -1,5 +1,5 @@
 import { ApiService } from 'src/app/providers/api.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
   ActionSheetButton,
   ActionSheetController,
@@ -21,7 +21,9 @@ import { take } from 'rxjs/operators';
   styleUrls: ['./raise-ticket.page.scss'],
 })
 export class RaiseTicketPage implements OnInit {
+
   @ViewChild('diff') diff;
+  @ViewChild('imageInput') imageInput: ElementRef<HTMLInputElement>;
   lang;
   modalState = false;
   selected_station: any;
@@ -136,29 +138,29 @@ export class RaiseTicketPage implements OnInit {
     }
   }
 
-  async getPhoto() {
-    var buttons = [
-      {
-        text: this.lang == 'en' ? 'Camera' : 'கேமரா',
-        handler: () => {
-          this.getCamera(1);
-        },
-      },
-      {
-        text: this.lang == 'en' ? 'Gallery' : 'கேலரி',
-        handler: () => {
-          this.getCamera(2);
-        },
-      },
-      {
-        text: this.lang == 'en' ? 'Cancel' : 'ரத்துசெய்',
-        role: 'cancel',
-        handler: () => { },
-      },
-    ];
+  // async getPhoto() {
+  //   var buttons = [
+  //     {
+  //       text: this.lang == 'en' ? 'Camera' : 'கேமரா',
+  //       handler: () => {
+  //         this.getCamera(1);
+  //       },
+  //     },
+  //     {
+  //       text: this.lang == 'en' ? 'Gallery' : 'கேலரி',
+  //       handler: () => {
+  //         this.getCamera(2);
+  //       },
+  //     },
+  //     {
+  //       text: this.lang == 'en' ? 'Cancel' : 'ரத்துசெய்',
+  //       role: 'cancel',
+  //       handler: () => { },
+  //     },
+  //   ];
 
-    (await this.actionSheetCtrl.create({ buttons: buttons })).present();
-  }
+  //   (await this.actionSheetCtrl.create({ buttons: buttons })).present();
+  // }
 
   getCamera = (src) => {
     Camera.checkPermissions().then((status) => {
@@ -506,6 +508,122 @@ export class RaiseTicketPage implements OnInit {
 
   closeImagePreview() {
     this.selectedImagePreview = null;
+  }
+
+  async getPhoto() {
+    if (this.images.length >= 3) {
+      this.authService.showToast('You can upload maximum 3 images');
+      return;
+    }
+
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: this.lang == 'en' ? 'Select Image Source' : 'படத்தைத் தேர்ந்தெடுக்கவும்',
+      mode: 'ios',
+      buttons: [
+        {
+          text: this.lang == 'en' ? 'Camera' : 'கேமரா',
+          icon: 'camera-outline',
+          handler: () => {
+            this.captureMultipleFromCamera();
+          },
+        },
+        {
+          text: this.lang == 'en' ? 'Gallery' : 'கேலரி',
+          icon: 'images-outline',
+          handler: () => {
+            this.imageInput.nativeElement.click();
+          },
+        },
+        {
+          text: this.lang == 'en' ? 'Cancel' : 'ரத்துசெய்',
+          role: 'cancel',
+        },
+      ],
+    });
+
+    await actionSheet.present();
+  }
+
+  async captureMultipleFromCamera() {
+    try {
+      const status = await Camera.checkPermissions();
+      if (status.camera !== 'granted') {
+        const req = await Camera.requestPermissions({ permissions: ['camera'] });
+        if (req.camera !== 'granted') {
+          this.authService.showToast('Please enable camera access');
+          return;
+        }
+      }
+
+      while (this.images.length < 3) {
+        const photo = await Camera.getPhoto({
+          quality: 50,
+          allowEditing: false,
+          source: CameraSource.Camera,
+          resultType: CameraResultType.DataUrl,
+        });
+
+        if (!photo?.dataUrl) {
+          break;
+        }
+
+        const file = this.dataUrlToFile(
+          photo.dataUrl,
+          `camera_${Date.now()}_${this.images.length + 1}.jpg`
+        );
+        const preview = URL.createObjectURL(file);
+        this.images.push({ file, preview });
+
+        // Stop automatically once 3 images are captured
+        if (this.images.length >= 3) {
+          this.authService.showToast('Maximum 3 images captured');
+          break;
+        }
+
+        // Ask if user wants to capture the next photo right away
+        const takeAnother = await this.askTakeAnotherPhoto();
+        if (!takeAnother) {
+          break;
+        }
+      }
+    } catch (err) {
+      // User pressed back/cancel inside camera
+      console.log('Camera capture stopped:', err);
+    }
+  }
+
+  private askTakeAnotherPhoto(): Promise<boolean> {
+    return new Promise(async (resolve) => {
+      const alert = await this.alertCtrl.create({
+        header: `Photo Added (${this.images.length}/3)`,
+        message: 'Do you want to capture another photo?',
+        backdropDismiss: false,
+        buttons: [
+          {
+            text: 'Done',
+            role: 'cancel',
+            handler: () => resolve(false),
+          },
+          {
+            text: 'Capture Next',
+            handler: () => resolve(true),
+          },
+        ],
+      });
+      await alert.present();
+    });
+  }
+
+  private dataUrlToFile(dataUrl: string, filename: string): File {
+    const arr = dataUrl.split(',');
+    const mime = arr[0].match(/:(.*?);/)?.[1] || 'image/jpeg';
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
   }
 
 }
