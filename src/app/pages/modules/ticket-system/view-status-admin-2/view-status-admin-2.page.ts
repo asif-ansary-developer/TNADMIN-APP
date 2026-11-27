@@ -21,6 +21,8 @@ export class ViewStatusAdmin2Page implements OnInit {
   username;
   rr;
 
+
+
   filtereditems: any;
   searchTerm: string = '';
   districtSearchRequestId = 0;
@@ -43,6 +45,20 @@ export class ViewStatusAdmin2Page implements OnInit {
   tab = 'assigned_tickets';
   tab2 = 'HQ';
   prefetching_pages: boolean = false;
+
+
+  optionSelectorOpen: boolean = false;
+  optionSelectorType: 'taluk' | 'difficulty' = 'taluk';
+  optionSelectorTitle: string = '';
+  optionSelectorSearch: string = '';
+  optionDisplayLimit: number = 15;
+  loadingMoreOptions: boolean = false;
+
+
+  optionPopoverEvent: any = null;
+
+
+
 
 
   loading_filter_options: boolean = false;
@@ -2140,6 +2156,91 @@ export class ViewStatusAdmin2Page implements OnInit {
   }
   openFilterModal() {
     this.filterModalOpen = true;
+    if (!this.isCurrentTabFullyLoaded()) {
+      this.prefetchRemainingPagesInBackground();
+    }
+  }
+
+
+
+  get filteredSelectorOptions(): string[] {
+    const allOptions = this.getUniqueOptions(this.optionSelectorType);
+    const query = this.optionSelectorSearch.trim().toLowerCase();
+    if (!query) return allOptions;
+    return allOptions.filter((opt) => opt.toLowerCase().includes(query));
+  }
+
+  get visibleSelectorOptions(): string[] {
+    return this.filteredSelectorOptions.slice(0, this.optionDisplayLimit);
+  }
+
+  get hasMoreSelectorOptions(): boolean {
+    return (
+      this.optionDisplayLimit < this.filteredSelectorOptions.length ||
+      this.prefetching_pages ||
+      !this.isCurrentTabFullyLoaded()
+    );
+  }
+
+  // loadMoreSelectorOptions(event: any) {
+  //   this.loadingMoreOptions = true;
+
+  //   // If background pages are still fetching, trigger next batch
+  //   if (!this.isCurrentTabFullyLoaded() && !this.prefetching_pages) {
+  //     this.prefetchRemainingPagesInBackground();
+  //   }
+
+  //   setTimeout(() => {
+  //     this.optionDisplayLimit += 15; // Load next 15 items
+  //     this.loadingMoreOptions = false;
+  //     if (event?.target) {
+  //       event.target.complete();
+  //     }
+  //     this.cdr.detectChanges();
+  //   }, 350);
+  // }
+
+  selectPaginatedOption(value: string) {
+    if (this.optionSelectorType === 'taluk') {
+      this.selectedTalukFilter = value;
+    } else if (this.optionSelectorType === 'difficulty') {
+      this.selectedIssueTypeFilter = value;
+    }
+    this.optionSelectorOpen = false;
+    this.cdr.detectChanges();
+  }
+
+  onOptionSearchChange() {
+    this.optionDisplayLimit = 15;
+    if (!this.isCurrentTabFullyLoaded() && !this.prefetching_pages) {
+      this.prefetchRemainingPagesInBackground();
+    }
+  }
+
+  loadMoreSelectorOptions(event: any) {
+    if (!this.isCurrentTabFullyLoaded() && !this.prefetching_pages) {
+      this.prefetchRemainingPagesInBackground();
+    }
+
+    setTimeout(() => {
+      this.optionDisplayLimit += 15;
+      event?.target?.complete();
+      this.cdr.detectChanges();
+    }, 300);
+  }
+
+  openPaginatedOptionSelector(
+    event: any,
+    type: 'taluk' | 'difficulty',
+    title: string
+  ) {
+    this.optionPopoverEvent = event;
+    this.optionSelectorType = type;
+    this.optionSelectorTitle = title;
+    this.optionSelectorSearch = '';
+    this.optionDisplayLimit = 15;
+    this.optionSelectorOpen = true;
+
     if (!this.isCurrentTabFullyLoaded()) {
       this.prefetchRemainingPagesInBackground();
     }
